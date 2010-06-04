@@ -1,0 +1,25 @@
+Source: test-definition
+Section: devel
+Priority: optional
+Maintainer: Riku Halonen <riku.halonen@nokia.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: test-definition
+Architecture: all
+Provides: test-definition
+Replaces: test-definition
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Provides schemas for validating test definition XML.
+ Provides two validation schemas; testdefinition-syntax.xsd for validating XML schematics and
+ more strict testdefinition-tm_terms.xsd for validating schematics + certain mandatory attributes.
+ See: https://projects.maemo.org/docs/testing/xml-definition.html.
+
+Package: test-definition-tests
+Architecture: all
+Provides: test-definition-tests
+Replaces: test-definition-tests
+Depends: ci-testing, libxml2-utils
+XB-Maemo-CI-Packages: test-definition
+XB-Maemo-CI-Stage: fast, staging, acceptance, validation
+Description: Acceptance tests for schemas in package test-definiton

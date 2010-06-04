@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<testdefinition version="1.0">
+  <suite name="Test-definition-tests">
+    <set name="Check-schema-files-existence">
+      <case name="Check-basic-schema">
+	<step>[ -f /usr/share/test-definition/testdefinition-syntax.xsd ]</step>
+      </case>
+
+      <case name="Check-strict-schema">
+	<step>[ -f /usr/share/test-definition/testdefinition-tm_terms.xsd ]</step>
+      </case>
+    </set>
+
+    <set name="Schema-validation">
+      <case name="Validate-strict-schema">
+	<step>xmllint --noout --schema /usr/share/test-definition-tests/data/w3_XMLSchema.xsd /usr/share/test-definition/testdefinition-tm_terms.xsd</step>
+      </case>
+      <case name="misc-problems">
+	<step>xmllint --noout --schema /usr/share/test-definition/testdefinition-tm_terms.xsd /usr/share/test-definition-tests/data/misc_problems.xml</step>
+      </case>
+    </set>
+  </suite>
+</testdefinition>

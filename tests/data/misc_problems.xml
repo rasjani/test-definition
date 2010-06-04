@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<testdefinition version="0.1">
+  <suite name="testrunner-tests" domain="cita">
+    <set name="testset1" description="Tests for testrunner">
+
+      <case name="TestTestDefinitionParser" description="Tests for test definition parser">
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testGetXMLRoot</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testCreateTestpackagedata</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testCreateTestsuite</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testCreateTestset</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testCreateTestcase</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testFindNode</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testGetEnvironments</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testParseTestDefinition</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testGetPoststep</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testAttributeSuiteSet</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestDefinitionParser.testAttributeSetCase</step>
+      </case>
+
+      <case name="TestFilters" description="Tests for filters">
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testManualtestFilterForManualTests</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testManualtestFilterForAutomaticTests</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testCIFilter</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testEnvironmentFilterHardware</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testEnvironmentFilterScratchbox</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testDomainFilter</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testFeatureFilter</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testRequirementFilter</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestFilters.testTypeFilterValueWithQuotes</step>
+      </case>
+
+      <case name="TestTestrunnerBasic" description="High-level basic tests for testrunner">
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerBasic.testCommandLineOptions</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerBasic.testCommandLineOptionsInvalidFilters</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerBasic.testAll</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerBasic.testTextOutput</step>
+      </case>
+
+      <case name="TestTestrunnerFiltering" description="High-level filtering tests for testrunner">
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerFiltering.testFilterStringEmpty</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerFiltering.testFilterByDomain</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerFiltering.testFilterByFeature</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerFiltering.testFilterInvalidValueSpaceNotQuoted</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerFiltering.testFilterValueHasQuotationMark</step>
+        <step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerFiltering.testFilterValueWithSpace</step>
+        <!--step>cd /usr/share/testrunner; python2.5 tests.py TestTestrunnerFiltering.testFilterValueHasEqualSign</step -->
+      </case>
+
+      <environments>
+        <scratchbox>true</scratchbox>
+        <hardware>true</hardware>
+      </environments>
+
+    </set>
+  </suite>
+
+  <suite name="testsuite2" domain="cita"> <!-- Second test suite exists to see if multiple suites work ok -->
+
+    <set name="testset1" description="More tests for testrunner">
+      <case name="meaningless_test" description="Meaningless test">
+        <step>cd</step>
+      </case>
+    </set>
+
+  </suite>
+
+</testdefinition>
+
+

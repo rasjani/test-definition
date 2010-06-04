@@ -1,0 +1,36 @@
+test-definition (1.1.0-1) unstable; urgency=low
+
+  * Implemented: SWP#MTT-283 - Test package for test definition
+
+ -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Fri, 28 May 2010 10:31:20 +0300
+
+test-definition (1.0.1-1) unstable; urgency=low
+
+  * Changed architecture of binary package from any to all.
+
+ -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Wed, 05 May 2010 10:05:08 +0300
+
+test-definition (1.0.0-1) unstable; urgency=low
+
+  * Implemented MTT-208 and MTT-199.
+
+ -- Riku Halonen <riku.halonen@nokia.com>  Wed, 17 Mar 2010 08:43:08 +0200
+
+test-definition (0.0.3-1) unstable; urgency=low
+
+  * Man pages added.
+
+ -- Riku Halonen <riku.halonen@nokia.com>  Wed, 10 Mar 2010 08:24:41 +0200
+
+test-definition (0.0.2) unstable; urgency=low
+
+  * Version number incremented.
+
+ -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Tue, 02 Mar 2010 10:11:52 +0200
+
+test-definition (0.0.1-1) unstable; urgency=low
+
+  * Initial version.
+
+ -- Riku Halonen <riku.halonen@nokia.com>  Wed, 24 Feb 2010 12:49:31 +0200
+

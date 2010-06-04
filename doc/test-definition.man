@@ -1,0 +1,29 @@
+.TH TEST-DEFINITION 5 "March 2010" Linux "User Manuals"
+
+.SH NAME
+test-definition \- Schemas for validating test packages.
+
+.SH DESCRIPTION
+.B test-definition
+is used for validating test packages and test results.
+
+.SH FILES
+.TP
+.IR /usr/share/test-definition/testdefinition-syntax.xsd
+Used to validate test definition syntax so that automated testing can be done.
+.TP
+.IR /usr/share/test-definition/testdefinition-tm_terms.xsd 
+Used for validating schematics and terminology.
+.TP
+.IR /usr/share/test-definition/testdefinition-results.xsd 
+Used for validating test results.
+
+.SH AUTHOR
+Written by Riku Halonen and Sami Lahtinen
+
+.SH COPYRIGHT
+test-definition, © Nokia 2010, licensed under the GNU Lesser General Public License version 2.1, Contact: Ville Ilvonen, ville.p.ilvonen@nokia.com
+
+.SH "SEE ALSO"
+.BR http://wiki.meego.com/Test_Packaging, 
+.BR http://wiki.meego.com/Test_Packaging/Test_Plan

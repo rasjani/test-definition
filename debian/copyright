@@ -1,0 +1,28 @@
+This package was debianized by Riku Halonen <riku.halonen@nokia.com> on
+Wed, 24 Feb 2010 12:49:31 +0200.
+
+It was downloaded from <http://gitorious.org/qa-tools>
+
+Upstream Author(s): Riku Halonen <riku.halonen@nokia.com>
+                    Sami Lahtinen <ext-sami.t.lahtinen@nokia.com>
+  
+Copyright: Copyright (C) 2007-2010 Nokia Corporation.
+
+License:
+
+   This package is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   version 2.1 as published by the Free Software Foundation.
+  
+   This package is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   Lesser General Public License for more details.
+  
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+   02110-1301 USA
+
+The Debian packaging is copyright 2010 Nokia Corporation and/or its
+subsidiary(-ies) is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

@@ -1,0 +1,50 @@
+Name:		test-definition		
+Version:	1.0.1
+Release:	1%{?dist}
+Summary:	Provides schemas for validating test definition XML.
+
+Group:		testing
+License:	GPL
+URL:		http://meego.com
+Source0:	%{name}_%{version}-1+0m6.tar.gz
+BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+
+#BuildRequires:	
+#Requires:	
+
+%description
+Provides two validation schemas; testdefinition-syntax.xsd for validating XML schematics and
+more strict testdefinition-tm_terms.xsd for validating schematics + certain mandatory attributes.
+See: https://projects.maemo.org/docs/testing/xml-definition.html.
+
+%prep
+%setup -q -n %{name}-%{version}
+
+
+%build
+echo nada
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/usr/share/test-definition
+mkdir -p $RPM_BUILD_ROOT/usr/share/man/man5
+cp data/testdefinition-syntax.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
+cp data/testdefinition-tm_terms.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
+
+groff -man -Tascii doc/test-definition.man > doc/test-definition.5
+cp doc/test-definition.5 $RPM_BUILD_ROOT/usr/share/man/man5
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,-)
+%doc
+%{_mandir}/man5/test-definition.5.gz
+%{_datadir}/test-definition/* 
+
+
+%changelog
+* Mon May 10 2010 Timo Harkonen <timo.harkonen@digia.com> 1.0.1
+- Initial RPM packaging
