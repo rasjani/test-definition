@@ -9,12 +9,25 @@
       <case name="Check-strict-schema">
 	<step>[ -f /usr/share/test-definition/testdefinition-tm_terms.xsd ]</step>
       </case>
+
+      <case name="Check-result-schema">
+	<step>[ -f /usr/share/test-definition/testdefinition-results.xsd ]</step>
+      </case>
     </set>
 
     <set name="Schema-validation">
+      <case name="Validate-basic-schema">
+	<step>xmllint --noout --schema /usr/share/test-definition-tests/data/w3_XMLSchema.xsd /usr/share/test-definition/testdefinition-syntax.xsd</step>
+      </case>
+
       <case name="Validate-strict-schema">
 	<step>xmllint --noout --schema /usr/share/test-definition-tests/data/w3_XMLSchema.xsd /usr/share/test-definition/testdefinition-tm_terms.xsd</step>
       </case>
+
+      <case name="Validate-results-schema">
+	<step>xmllint --noout --schema /usr/share/test-definition-tests/data/w3_XMLSchema.xsd /usr/share/test-definition/testdefinition-results.xsd</step>
+      </case>
+
       <case name="misc-problems">
 	<step>xmllint --noout --schema /usr/share/test-definition/testdefinition-tm_terms.xsd /usr/share/test-definition-tests/data/misc_problems.xml</step>
       </case>

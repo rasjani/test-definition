@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- 
-  This file is part of test-definition
- 
-  Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
- 
-  Contact: Sami Lahtinen <ext-sami.t.lahtinen@nokia.com>
- 
-  This package is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public License
-  version 2.1 as published by the Free Software Foundation.
- 
-  This package is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  Lesser General Public License for more details.
- 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  02110-1301 USA
- 
--->
+    
+    This file is part of test-definition
+    
+    Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+    
+    Contact: Sami Lahtinen <ext-sami.t.lahtinen@nokia.com>
+    
+    This package is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public License
+    version 2.1 as published by the Free Software Foundation.
+    
+    This package is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA
+    
+  -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
@@ -103,7 +103,15 @@
       </xs:sequence>
 
       <xs:attributeGroup ref="general_attributes"/>
-      <xs:attribute name="result" use="required" />
+      <xs:attribute name="result" use="required">
+	<xs:simpleType>
+	  <xs:restriction base="xs:string">
+	    <xs:enumeration value="FAIL" />
+	    <xs:enumeration value="PASS" />
+	    <xs:enumeration value="N/A" />
+	  </xs:restriction>
+	</xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="subfeature"/>
       <xs:attribute name="comment"/>
     </xs:complexType>
@@ -121,7 +129,15 @@
       </xs:sequence>
 
       <xs:attribute name="command" use="required" />
-      <xs:attribute name="result" use="required" />
+      <xs:attribute name="result" use="required">
+	<xs:simpleType>
+	  <xs:restriction base="xs:string">
+	    <xs:enumeration value="FAIL" />
+	    <xs:enumeration value="PASS" />
+	    <xs:enumeration value="N/A" />
+	  </xs:restriction>
+	</xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="failure_info" />
     </xs:complexType>
   </xs:element>

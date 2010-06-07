@@ -46,10 +46,11 @@ install: build
 	# Add here commands to install the package into debian/test-definition.
 	cp data/testdefinition-syntax.xsd debian/test-definition/usr/share/test-definition
 	cp data/testdefinition-tm_terms.xsd debian/test-definition/usr/share/test-definition
+	cp data/testdefinition-results.xsd debian/test-definition/usr/share/test-definition
 
 	groff -man -Tascii doc/test-definition.man > doc/test-definition.5
 	cp doc/test-definition.5 debian/test-definition/usr/share/man/man5
-	
+
 # Build architecture-independent files here.
 binary-indep: build install
 # We have nothing to do by default.
