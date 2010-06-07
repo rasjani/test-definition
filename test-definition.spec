@@ -4,7 +4,7 @@ Release:	1%{?dist}
 Summary:	Provides schemas for validating test definition XML
 
 Group:		testing
-License:	GPL
+License:	LGPL 2.1
 URL:		http://meego.com
 Source0:	%{name}_%{version}-1+0m6.tar.gz
 BuildArch:      noarch
