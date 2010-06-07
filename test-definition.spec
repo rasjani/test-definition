@@ -1,5 +1,5 @@
 Name:		test-definition		
-Version:	1.1.0
+Version:	1.1.1
 Release:	1%{?dist}
 Summary:	Provides schemas for validating test definition XML
 
@@ -39,6 +39,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/test-definition
 mkdir -p $RPM_BUILD_ROOT/usr/share/man/man5
 cp data/testdefinition-syntax.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
 cp data/testdefinition-tm_terms.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
+cp data/testdefinition-results.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
 
 groff -man -Tascii doc/test-definition.man > doc/test-definition.5
 cp doc/test-definition.5 $RPM_BUILD_ROOT/usr/share/man/man5
@@ -64,6 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 7 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.1
+- Added XML Schema for results file of testrunner-lite
 * Fri Jun 4 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.0
 - Test package for test-definition
 * Mon May 10 2010 Timo Harkonen <timo.harkonen@digia.com> 1.0.1
