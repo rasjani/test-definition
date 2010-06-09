@@ -1,5 +1,5 @@
 Name:		test-definition		
-Version:	1.1.1
+Version:	1.1.2
 Release:	1%{?dist}
 Summary:	Provides schemas for validating test definition XML
 
@@ -65,6 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 9 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.2
+- License field in spec and dependencies updated
 * Mon Jun 7 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.1
 - Added XML Schema for results file of testrunner-lite
 * Fri Jun 4 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.0

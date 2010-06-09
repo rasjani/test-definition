@@ -1,3 +1,9 @@
+test-definition (1.1.2-1) unstable; urgency=low
+
+  * License field in spec and dependencies updated
+
+ -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Wed, 09 Jun 2010 09:29:27 +0300
+
 test-definition (1.1.1-1) unstable; urgency=low
 
   * Implemented: SWP#MTT-284 - Added XML Schema for results file of testrunner-lite
