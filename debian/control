@@ -19,7 +19,7 @@ Package: test-definition-tests
 Architecture: all
 Provides: test-definition-tests
 Replaces: test-definition-tests
-Depends: ci-testing, libxml2-utils
+Depends: test-definition, ci-testing, libxml2-utils
 XB-Maemo-CI-Packages: test-definition
 XB-Maemo-CI-Stage: fast, staging, acceptance, validation
 Description: Acceptance tests for schemas in package test-definiton
