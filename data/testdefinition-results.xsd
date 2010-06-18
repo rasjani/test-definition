@@ -114,6 +114,7 @@
       </xs:attribute>
       <xs:attribute name="subfeature"/>
       <xs:attribute name="comment"/>
+      <xs:attribute name="failure_info" />
     </xs:complexType>
   </xs:element>
 
