@@ -1,5 +1,5 @@
 Name:		test-definition		
-Version:	1.1.4
+Version:	1.1.5
 Release:	1%{?dist}
 Summary:	Provides schemas for validating test definition XML
 
@@ -65,6 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jun 28 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.5
+- Added delete_after attribute to file element
 * Mon Jun 21 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.4
 - Added failure_info attribute to test case in results schema
 * Tue Jun 15 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.3
