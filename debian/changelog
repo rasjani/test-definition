@@ -1,3 +1,9 @@
+test-definition (1.1.6-1) unstable; urgency=low
+
+  * Added domain attribute to test result schema
+
+ -- Sampo Saaristo <ext-sampo.2.saaristo@nokia.com>  Tue, 29 Jun 2010 15:23:37 +0300
+
 test-definition (1.1.5-1) unstable; urgency=low
 
   * Added delete_after attribute to file element
