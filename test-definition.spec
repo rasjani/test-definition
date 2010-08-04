@@ -6,16 +6,16 @@ Summary:	Provides schemas for validating test definition XML
 Group:		testing
 License:	LGPL 2.1
 URL:		http://meego.com
-Source0:	%{name}_%{version}-1+0m6.tar.gz
+Source0:	%{name}.tar.gz
 BuildArch:      noarch
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+BuildRoot:	mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-root
 
 #BuildRequires:
 #Requires:
 
 %package tests
 Summary: Acceptance tests for schemas in package test-definition
-Requires: test-definition, ci-testing, libxml2-utils
+Requires: test-definition, eat
 
 %description
 Provides two validation schemas; testdefinition-syntax.xsd for validating XML schematics and
@@ -27,7 +27,7 @@ Acceptance tests for schemas in package test-definition
 
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}
 
 
 %build
