@@ -141,6 +141,7 @@
     <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute name="expected_result" type="xs:unsignedShort" default="0" />
+        <xs:attribute name="manual" default="false" type="xs:boolean" />
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
