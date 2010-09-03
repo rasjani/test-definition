@@ -1,0 +1,18 @@
+* Fri Sep 03 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.7
+- Allow automatic/manual selection on test step level (BMC#5717) by Timo Härkönen
+* Tue Jun 29 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.6
+- Added domain attribute to result schema
+* Mon Jun 28 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.5
+- Added delete_after attribute to file element
+* Mon Jun 21 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.4
+- Added failure_info attribute to test case in results schema
+* Tue Jun 15 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.3
+- Added attribute timeout for elements pre_steps and post_steps in XML Schemas
+* Wed Jun 9 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.2
+- License field in spec and dependencies updated
+* Mon Jun 7 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.1
+- Added XML Schema for results file of testrunner-lite
+* Fri Jun 4 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.0
+- Test package for test-definition
+* Mon May 10 2010 Timo Harkonen <timo.harkonen@digia.com> 1.0.1
+- Initial RPM packaging

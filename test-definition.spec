@@ -1,5 +1,5 @@
 Name:		test-definition		
-Version:	1.1.6
+Version:	1.1.7
 Release:	1%{?dist}
 Summary:	Provides schemas for validating test definition XML
 
@@ -25,10 +25,8 @@ See: https://projects.maemo.org/docs/testing/xml-definition.html.
 %description tests
 Acceptance tests for schemas in package test-definition
 
-
 %prep
 %setup -q -n %{name}
-
 
 %build
 echo Nothing to build for test-definition
@@ -52,7 +50,6 @@ cp tests/data/* $RPM_BUILD_ROOT/usr/share/test-definition-tests/data
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-
 %files
 %defattr(-,root,root,-)
 %doc
@@ -63,21 +60,3 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 /usr/share/test-definition-tests/*
 
-
-%changelog
-* Tue Jun 29 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.6
-- Added domain attribute to result schema
-* Mon Jun 28 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.5
-- Added delete_after attribute to file element
-* Mon Jun 21 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.4
-- Added failure_info attribute to test case in results schema
-* Tue Jun 15 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.3
-- Added attribute timeout for elements pre_steps and post_steps in XML Schemas
-* Wed Jun 9 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.2
-- License field in spec and dependencies updated
-* Mon Jun 7 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.1
-- Added XML Schema for results file of testrunner-lite
-* Fri Jun 4 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.0
-- Test package for test-definition
-* Mon May 10 2010 Timo Harkonen <timo.harkonen@digia.com> 1.0.1
-- Initial RPM packaging
