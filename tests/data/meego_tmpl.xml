@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<testdefinition version="0.1">
+  <suite name="core_tests">
+    <set name="emmc_tests" description="example test definition"
+	 feature="emmc">
+
+      <case name="dataflow_FS_Copy-File-eMMC-to-MMC" 
+	    TC_Title="dataflow_FS_Copy-File-eMMC-to-MMC"
+	    TC_ID="dataflow_FS_Copy-File-eMMC-to-MMC"
+	    description="Tests for test definition parser"
+	    type="Functional"
+	    domain="Handheld"
+	    subfeature="Copy"
+	    component="Kernel"
+	    state="Approved">
+	<description> 
+          o Purpose: This case tests file can be copied from eMMC to eMMC
+          o Method: Test case copies file from eMMC to eMMC, file block size 1kB, block count 1000
+          o References: None
+          o Pre/Post-conditions: Test asset and MIN test frame Work is installed to the device. Memory card must be mounted in device. Test must be executed as root.
+          o Run instructions: Start 'min' in the shell of the device. Select a case, observe device, and check the test result from min and the log files. Or use command line format 'min -c -t "test case name"'.
+            o Pass/Fail criteria: Test case returns passed if operation was succesfull. Result is logged into /var/log/tests/."
+            o Test Environment: Handset device
+            o Required test data: None
+            o Change history:
+            + 11 May 2010. (v.0.1.8) Added steps to test.xml. Tommi Toropainen
+            + 21 Apr 2010. (v.0.1.7) Added new steps to OTS execution to get results on Test reporting tools, Removed tmp filesystem tests from OTS. Tommi Toropainen
+            + 20 Apr 2010. (v.0.1.6) Changed filesystem partitions in configure file, Added Security file system test case. Tommi Toropainen
+            + 15 Mar 2010. (v.0.1.5) Changed mass storage cases to use 1,6GB files. Tommi Toropainen
+            + 1 Mar 2010. (0.1.4) added unmounting before formatting (do not format target or source by default) Tommi Toropainen 
+	  </description>
+	<step> min -ct dataflow_FS_Copy-File-eMMC-to-MMC </step>
+      </case>
+    </set>
+  </suite>
+  
+</testdefinition>

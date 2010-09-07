@@ -31,6 +31,9 @@
       <case name="misc-problems">
 	<step>xmllint --noout --schema /usr/share/test-definition/testdefinition-tm_terms.xsd /usr/share/test-definition-tests/data/misc_problems.xml</step>
       </case>
+      <case name="meego_template" description="Check that test-definition based on wiki.meego.com/TestCaseTemplate validates">
+	<step>xmllint --noout --schema /usr/share/test-definition/testdefinition-tm_terms.xsd /usr/share/test-definition-tests/data/meego_tmpl.xml</step>
+      </case>
     </set>
   </suite>
 </testdefinition>
