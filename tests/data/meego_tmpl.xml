@@ -6,7 +6,6 @@
 
       <case name="dataflow_FS_Copy-File-eMMC-to-MMC" 
 	    TC_Title="dataflow_FS_Copy-File-eMMC-to-MMC"
-	    TC_ID="dataflow_FS_Copy-File-eMMC-to-MMC"
 	    description="Tests for test definition parser"
 	    type="Functional"
 	    domain="Handheld"
