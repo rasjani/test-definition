@@ -1,90 +1,58 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
+APPNAME := test-definition
+builddir:
+	#mkdir -p builddir
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	# Add here commands to configure the package.
-
-	touch configure-stamp
-
+builddir/Makefile: builddir
+	#nada
 
 build: build-stamp
+	#nada
 
-build-stamp: configure-stamp 
-	dh_testdir
-
-	# Add here commands to compile the package.
-
+build-stamp: builddir/Makefile
+	dh_testdir	
 	touch $@
-
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
-
-	# Add here commands to clean up after the build process.
-	rm -rf debian/test-definition
-
-	dh_clean 
+	rm -f build-stamp
+	#rm -rf builddir
+	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
-	dh_installdirs
-	dh_install
+	dh_clean -k
+	#cd builddir && $(MAKE) INSTALL_ROOT=$(CURDIR)/debian/$(APPNAME) install
+	install -d $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
+	install -m 644 src/data/testdefinition-syntax.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
+	install -m 644 src/data/testdefinition-tm_terms.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
+	install -m 644 src/data/testdefinition-results.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
+	# Tests
+	install -d $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/
+	install -d $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/data/
+	install -m 644 src/tests/tests.xml $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/
+	install -m 644 src/data/* $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/data/
 
-	# Add here commands to install the package into debian/test-definition.
-	cp data/testdefinition-syntax.xsd debian/test-definition/usr/share/test-definition
-	cp data/testdefinition-tm_terms.xsd debian/test-definition/usr/share/test-definition
-	cp data/testdefinition-results.xsd debian/test-definition/usr/share/test-definition
+binary-arch:
+	#nada
 
-	groff -man -Tascii doc/test-definition.man > doc/test-definition.5
-	cp doc/test-definition.5 debian/test-definition/usr/share/man/man5
-
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-arch: build install
+binary-indep: install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs 
 	dh_installdocs
-#	dh_installexamples
-#	dh_install
-#	dh_installmenu
-#	dh_installdebconf	
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_python
-#	dh_installinit
-#	dh_installcron
-#	dh_installinfo
-#	dh_installman
+	dh_installexamples
+	dh_installman
 	dh_link
-#	dh_strip
+	dh_strip
 	dh_compress
-	dh_fixperms
-#	dh_perl
-#	dh_makeshlibs
+	#dh_fixperms
 	dh_installdeb
-	dh_shlibdeps
+	#dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
+
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure
