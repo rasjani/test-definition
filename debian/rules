@@ -28,11 +28,8 @@ install: build
 	install -m 644 src/data/testdefinition-syntax.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
 	install -m 644 src/data/testdefinition-tm_terms.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
 	install -m 644 src/data/testdefinition-results.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
-	# Tests
-	install -d $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/
-	install -d $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/data/
-	install -m 644 src/tests/tests.xml $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/
-	install -m 644 src/data/* $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)-tests/data/
+	install -d $(CURDIR)/debian/$(APPNAME)/usr/share/man/man5/
+	groff -man -Tascii src/doc/test-definition.man > $(CURDIR)/debian/$(APPNAME)/usr/share/man/man5/test-definition.5
 
 binary-arch:
 	#nada
@@ -48,6 +45,7 @@ binary-indep: install
 	dh_compress
 	#dh_fixperms
 	dh_installdeb
+	dh_install
 	#dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums

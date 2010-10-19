@@ -1,63 +1,63 @@
-test-definition (1.1.7-1) unstable; urgency=low
+test-definition (1.1.7) unstable; urgency=low
 
   * Allow automatic/manual selection on test step level (BMC#5717) by Timo Härkönen
- -- Sampo Saaristo <ext-sampo.2.saaristo@nokia.com>  Sep, 03 Jun 2010 14:47:43 +0300
+ -- Sampo Saaristo <ext-sampo.2.saaristo@nokia.com>  Tue, 03 Jun 2010 14:47:43 +0300
 
-test-definition (1.1.6-1) unstable; urgency=low
+test-definition (1.1.6) unstable; urgency=low
 
   * Added domain attribute to test result schema
 
  -- Sampo Saaristo <ext-sampo.2.saaristo@nokia.com>  Tue, 29 Jun 2010 15:23:37 +0300
 
-test-definition (1.1.5-1) unstable; urgency=low
+test-definition (1.1.5) unstable; urgency=low
 
   * Added delete_after attribute to file element
 
  -- Sampo Saaristo <ext-sampo.2.saaristo@nokia.com>  Mon, 28 Jun 2010 19:36:35 +0300
 
-test-definition (1.1.4-1) unstable; urgency=low
+test-definition (1.1.4) unstable; urgency=low
 
   * Added failure_info attribute to test case in results schema
 
  -- Sampo Saaristo <ext-sampo.2.saaristo@nokia.com>  Mon, 21 Jun 2010 14:26:04 +0300
 
-test-definition (1.1.3-1) unstable; urgency=low
+test-definition (1.1.3) unstable; urgency=low
 
   * Added attribute timeout for elements pre_steps and post_steps in XML Schemas
 
  -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Tue, 15 Jun 2010 15:12:11 +0300
 
-test-definition (1.1.2-1) unstable; urgency=low
+test-definition (1.1.2) unstable; urgency=low
 
   * License field in spec and dependencies updated
 
  -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Wed, 09 Jun 2010 09:29:27 +0300
 
-test-definition (1.1.1-1) unstable; urgency=low
+test-definition (1.1.1) unstable; urgency=low
 
   * Implemented: SWP#MTT-284 - Added XML Schema for results file of testrunner-lite
 
  -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Mon, 07 Jun 2010 14:22:09 +0300
 
-test-definition (1.1.0-1) unstable; urgency=low
+test-definition (1.1.0) unstable; urgency=low
 
   * Implemented: SWP#MTT-283 - Test package for test definition
 
  -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Fri, 28 May 2010 10:31:20 +0300
 
-test-definition (1.0.1-1) unstable; urgency=low
+test-definition (1.0.1) unstable; urgency=low
 
   * Changed architecture of binary package from any to all.
 
  -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Wed, 05 May 2010 10:05:08 +0300
 
-test-definition (1.0.0-1) unstable; urgency=low
+test-definition (1.0.0) unstable; urgency=low
 
   * Implemented MTT-208 and MTT-199.
 
  -- Riku Halonen <riku.halonen@nokia.com>  Wed, 17 Mar 2010 08:43:08 +0200
 
-test-definition (0.0.3-1) unstable; urgency=low
+test-definition (0.0.3) unstable; urgency=low
 
   * Man pages added.
 
@@ -69,7 +69,7 @@ test-definition (0.0.2) unstable; urgency=low
 
  -- Lahtinen Sami <ext-sami.t.lahtinen@nokia.com>  Tue, 02 Mar 2010 10:11:52 +0200
 
-test-definition (0.0.1-1) unstable; urgency=low
+test-definition (0.0.1) unstable; urgency=low
 
   * Initial version.
 

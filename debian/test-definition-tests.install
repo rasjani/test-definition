@@ -1,0 +1,2 @@
+src/tests/tests.xml usr/share/test-definition-tests/
+src/tests/data/* usr/share/test-definition-tests/data/
