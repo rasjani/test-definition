@@ -7,7 +7,7 @@
   Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 
   Contact: Riku Halonen <riku.halonen@nokia.com>
-  
+
   This package is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public License
   version 2.1 as published by the Free Software Foundation.
@@ -69,11 +69,13 @@
 
   <xs:attribute name="manual" default="false" type="xs:boolean" />
   <xs:attribute name="insignificant" default="false" type="xs:boolean" />
+  <xs:attribute name="hwid" type="xs:string" />
 </xs:attributeGroup>
 
 <xs:element name="testdefinition">
   <xs:complexType>
     <xs:sequence>
+      <xs:element ref="hwiddetect" minOccurs="0" maxOccurs="1" />
       <xs:element name="description" minOccurs="0" maxOccurs="1" />
       <xs:element ref="suite" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
@@ -168,6 +170,14 @@
         <xs:attribute name="expected_result" type="xs:unsignedShort" default="0" />
         <xs:attribute name="manual" default="false" type="xs:boolean" />
       </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="hwiddetect">
+  <xs:complexType>
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
     </xs:simpleContent>
   </xs:complexType>
 </xs:element>
