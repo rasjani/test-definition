@@ -1,3 +1,9 @@
+test-definition (1.1.8) unstable; urgency=low
+
+  * Attributes and elements for user defined hw detection (by Sami Lahtinen)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Mon, 01 Nov 2010 13:51:10 +0200
+
 test-definition (1.1.7) unstable; urgency=low
 
   * Allow automatic/manual selection on test step level (BMC#5717) by Timo Härkönen

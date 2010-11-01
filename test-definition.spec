@@ -1,5 +1,5 @@
 Name:		test-definition		
-Version:	1.1.7
+Version:	1.1.8
 Release:	1
 Summary:	Provides schemas for validating test definition XML
 

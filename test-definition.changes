@@ -1,3 +1,5 @@
+* Mon Nov 01 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.1.8
+- Attributes and elements for user defined hw detection (by Sami Lahtinen)
 * Fri Sep 03 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.7
 - Allow automatic/manual selection on test step level (BMC#5717) by Timo Härkönen
 * Tue Jun 29 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.6
