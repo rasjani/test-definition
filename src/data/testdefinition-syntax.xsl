@@ -5,7 +5,7 @@
  
   Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 
-  Contact: Riku Halonen <riku.halonen@nokia.com>
+  Contact: Vesa Poikajärvi <vesa.poikajarvi@digia.com>
 
   This package is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public License
@@ -23,11 +23,15 @@
  
 -->
 
-<!-- XSL transformation for tests matching testdefinition-syntax.xsd
-     schema. Shows the XML as XHTML using stylesheets from 
-     qa-reports.meego.com
+<!-- 
+   XSL transformation for tests matching testdefinition-syntax.xsd
+   schema. Shows the XML as XHTML using stylesheets from 
+   qa-reports.meego.com
+   
+   To use this in your XMLs, you'll need to link it by adding
+   the following row just after XML declaration:
+   <?xml-stylesheet type="text/xsl" href="URI-to-this-file.xsl"?>
   -->
-
 
 <!-- The default namespace is the magic to get XHTML output as needed -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
