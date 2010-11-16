@@ -114,10 +114,19 @@
 			select="@description"/>
       </xsl:call-template>
     </p>
-    <p>
-      <xsl:text>Total cases: </xsl:text>
-      <xsl:value-of select="count(//case)"/>
-    </p>
+    <table style="width : auto;">
+      <tr>
+	<td><xsl:text>Total cases: </xsl:text></td>
+	<td><xsl:value-of select="count(//case)"/></td>
+      </tr>
+      <tr>
+	<td colspan="2"><xsl:text>&#160;</xsl:text></td>
+      </tr>
+      <tr>
+	<td colspan="2"><xsl:text>Cases by domain:</xsl:text></td>
+      </tr>
+      <xsl:call-template name="cases_by_domain"/>
+    </table>
     <br/>
 
     <!-- Handle suites -->
@@ -260,7 +269,7 @@
       </td>
       <td>
 	<!-- Requirement, can be inherited -->
-	<xsl:call-template name="inheritedattribute">
+	<xsl:call-template name="inherited_attribute">
 	  <xsl:with-param name="casevalue"
 			  select="@requirement"/>
 	  <xsl:with-param name="setvalue"
@@ -273,7 +282,7 @@
       </td>
       <td>
 	<!-- Type, can be inherited -->
-	<xsl:call-template name="inheritedattribute">
+	<xsl:call-template name="inherited_attribute">
 	  <xsl:with-param name="casevalue"
 			  select="@type"/>
 	  <xsl:with-param name="setvalue"
@@ -286,7 +295,7 @@
       </td>
       <td>
 	<!-- Level, also inherited -->
-	<xsl:call-template name="inheritedattribute">
+	<xsl:call-template name="inherited_attribute">
 	  <xsl:with-param name="casevalue"
 			  select="@level"/>
 	  <xsl:with-param name="setvalue"
@@ -300,7 +309,7 @@
       <td>
 	<!-- Manual, inherited as well. We show "Yes" if the manual
 	     attribute is set to true, and nothing otherwise -->
-	<xsl:call-template name="inheritedattribute">
+	<xsl:call-template name="inherited_attribute">
 	  <xsl:with-param name="casevalue"
 			  select="@manual"/>
 	  <xsl:with-param name="setvalue"
@@ -368,7 +377,7 @@
        When calling, you can just pass the parameters by calling 
        @att, ../@att and ../../@att regardless of their actual existance
     -->
-  <xsl:template name="inheritedattribute">
+  <xsl:template name="inherited_attribute">
     <!-- The attribute value from <case> node -->
     <xsl:param name="casevalue"/>
     <!-- The attribute value from case's parent <set> node -->
@@ -385,7 +394,7 @@
       <!-- Case does not have it -->
       <xsl:when test="not($casevalue)">
 	<!-- Check from set/suite -->
-	<xsl:call-template name="inheritedset">
+	<xsl:call-template name="inherited_set">
 	  <xsl:with-param name="setvalue"
 			  select="$setvalue"/>
 	  <xsl:with-param name="suitevalue"
@@ -400,7 +409,7 @@
 	  <!-- And empty it is -->
 	  <xsl:when test="$casevalue=''">
 	    <!-- Check from set/suite -->
-	    <xsl:call-template name="inheritedset">
+	    <xsl:call-template name="inherited_set">
 	      <xsl:with-param name="setvalue"
 			      select="$setvalue"/>
 	      <xsl:with-param name="suitevalue"
@@ -411,8 +420,8 @@
 	  </xsl:when>
 	  <!-- Not empty, so show -->
 	  <xsl:otherwise>
-	    <!-- The booleanattribute template decides what to actually show -->
-	    <xsl:call-template name="booleanattribute">
+	    <!-- boolean_attribute template decides what to actually show -->
+	    <xsl:call-template name="boolean_attribute">
 	      <xsl:with-param name="attvalue"
 			      select="$casevalue"/>
 	      <xsl:with-param name="boolean"
@@ -424,13 +433,13 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Helper for the inheritedattribute to check set and suite levels.
+  <!-- Helper for the inherited_attribute to check set and suite levels.
        This checks the given setvalue and if that is something not to
-       be shown, it calls inheritedsuite template.
+       be shown, it calls inherited_suite template.
 
-       Params as in inheritedattribute but without casevalue
+       Params as in inherited_attribute but without casevalue
     -->
-  <xsl:template name="inheritedset">
+  <xsl:template name="inherited_set">
     <xsl:param name="setvalue"/>
     <xsl:param name="suitevalue"/>
     <xsl:param name="boolean"/>
@@ -439,7 +448,7 @@
       <!-- Set does not have it -->
       <xsl:when test="not($setvalue)">
 	<!-- Check suite -->
-	<xsl:call-template name="inheritedsuite">
+	<xsl:call-template name="inherited_suite">
 	  <xsl:with-param name="suitevalue"
 			  select="$suitevalue"/>
 	  <xsl:with-param name="boolean"
@@ -451,7 +460,7 @@
 	<xsl:choose>
 	  <xsl:when test="$setvalue=''">
 	    <!-- Check from suite -->
-	    <xsl:call-template name="inheritedsuite">
+	    <xsl:call-template name="inherited_suite">
 	      <xsl:with-param name="suitevalue"
 			      select="$suitevalue"/>
 	      <xsl:with-param name="boolean"
@@ -460,7 +469,7 @@
 	  </xsl:when>
 	  <xsl:otherwise>
 	    <!-- Show the value from set level -->
-	    <xsl:call-template name="booleanattribute">
+	    <xsl:call-template name="boolean_attribute">
 	      <xsl:with-param name="attvalue"
 			      select="$setvalue"/>
 	      <xsl:with-param name="boolean"
@@ -472,11 +481,11 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Helper for the inheritedattribute to check suite level. This is
-       again called from inheritedset and has the same parameters
+  <!-- Helper for the inherited_attribute to check suite level. This is
+       again called from inherited_set and has the same parameters
        except for setvalue.
     -->
-  <xsl:template name="inheritedsuite">
+  <xsl:template name="inherited_suite">
     <xsl:param name="suitevalue"/>
     <xsl:param name="boolean"/>
 
@@ -487,7 +496,7 @@
       </xsl:when>
       <!-- Show the value from suite level -->
       <xsl:otherwise>
-	<xsl:call-template name="booleanattribute">
+	<xsl:call-template name="boolean_attribute">
 	  <xsl:with-param name="attvalue"
 			  select="$suitevalue"/>
 	  <xsl:with-param name="boolean"
@@ -502,7 +511,7 @@
        If the boolean is set to "0", this will just output the given attribute
        value.
     -->
-  <xsl:template name="booleanattribute">
+  <xsl:template name="boolean_attribute">
     <xsl:param name="attvalue"/>
     <xsl:param name="boolean"/>
 
@@ -523,6 +532,40 @@
        e.g. a missing description -->
   <xsl:template name="notdefined">
     <xsl:text>&lt;not defined&gt;</xsl:text>
+  </xsl:template>
+
+  <xsl:key name="domains" match="suite" use="@domain"/>
+  <!-- Print case counts by domains as table rows. This is practically
+       useful for the case count table in the beginning of the page -->
+  <xsl:template name="cases_by_domain">
+    <xsl:for-each 
+       select="//suite[generate-id() = generate-id(key('domains',@domain)[1])]">
+      <xsl:variable name="current_domain">
+	<xsl:value-of select="@domain"/>
+      </xsl:variable>
+      <!-- The key contains also empty domains, skip those and count
+	   together with the ones that don't have domain at all -->
+      <xsl:if test="$current_domain!=''">
+	<tr>
+	  <td>
+	    <xsl:value-of select="$current_domain"/><xsl:text>:</xsl:text>
+	  </td>
+	  <td>
+	    <xsl:value-of 
+	       select="count(//suite[@domain=$current_domain]/set/case)"/>
+	  </td>
+	</tr>
+      </xsl:if>
+    </xsl:for-each>
+    
+    <!-- Get case counts from suites not having a domain or having an 
+	 empty one -->
+    <xsl:if test="count(//suite[not(@domain)]) &gt; '0' or count(//suite[@domain='']) &gt; '0'">
+      <tr>
+	<td><xsl:text>N/A:</xsl:text></td>
+	<td><xsl:value-of select="count(//suite[not(@domain)]/set/case) + count(//suite[@domain='']/set/case)"/></td>
+      </tr>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>
