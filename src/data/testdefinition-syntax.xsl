@@ -93,9 +93,17 @@
 	    <div class="page_content">
 	      <!-- Page content comes here -->
 	      <xsl:apply-templates />
-
-	      <h2><xsl:text>Domain coverage matrix</xsl:text></h2>
-	      <xsl:call-template name="feature_coverage_matrix"/>
+	      
+	      <!-- Show the matrix only if we have type and domain
+		   attributes. May not still be correct as there may
+		   be no cases that have both, but at least basic problems
+		   are solved -->
+	      <xsl:if 
+		 test="count(//*[@type!='']) &gt;0 and 
+		       count(//*[@domain!='']) &gt;0">
+		<h2><xsl:text>Domain coverage matrix</xsl:text></h2>
+		<xsl:call-template name="feature_coverage_matrix"/>
+	      </xsl:if>
 	    </div>
 	  </div>
 	  <br/>
