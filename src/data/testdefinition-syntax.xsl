@@ -113,7 +113,7 @@
 	      <xsl:if 
 		 test="count(//*[@type!='']) &gt;0 and 
 		       count(//*[@domain!='']) &gt;0">
-		<a id="matrix"/>
+		<a id="matrix"></a>
 		<h2><xsl:text>Feature coverage matrix</xsl:text></h2>
 		<xsl:call-template name="feature_coverage_matrix"/>
 	      </xsl:if>
@@ -157,7 +157,7 @@
     <br/>
     <br/>
     
-    <a id="cases"/>
+    <a id="cases"></a>
     <h1><xsl:text>Test cases</xsl:text></h1>
     <!-- Handle suites -->
     <xsl:for-each select="suite">
