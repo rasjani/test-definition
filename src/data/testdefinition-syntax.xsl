@@ -50,12 +50,15 @@
 
   <!-- The root template defining the main page structure -->
   <xsl:template match="/">
+    <!-- This stylesheet uses HTML tags and even attributes. To be super
+	 elegant one may want to change all of these to xml:elements,
+	 but one will then lose a lot in the readability -->
     <html>
       <head>
-	<meta http-equiv="Content-Type" 
-	      content="text/html; charset=UTF-8" />
-	<title>Test Plan</title>
-	<link href="http://qa-reports.meego.com/stylesheets/jqModal.css" 
+	<meta http-equiv="Content-Type"
+	      content="text/html; charset=UTF-8"/>
+	<title><xsl:text>Test Plan</xsl:text></title>
+	<link href="http://qa-reports.meego.com/stylesheets/jqModal.css"
 	      media="screen" 
 	      rel="stylesheet" 
 	      type="text/css" />
@@ -66,7 +69,7 @@
 	<link href="http://qa-reports.meego.com/stylesheets/screen.css" 
 	      media="screen" 
 	      rel="stylesheet" 
-	      type="text/css" />
+	      type="text/css" /> 
       </head>
       <body>
 	<a name="top"></a>
@@ -75,7 +78,7 @@
 	  <div id="header"
 	       style="padding-top : 30px; height : 70px;">
 	    <img style="float:right" 
-		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/>
+		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/> 
 	      <!-- When browsers support XSLT 2.0 an improvement idea for
 		   this would be to add the name of the file in question.
 		   That requires splitting of the URI which is currently
@@ -89,7 +92,10 @@
 	  <div id="page">
 	    <div class="page_content">
 	      <!-- Page content comes here -->
-	      <xsl:apply-templates select="testdefinition"/>
+	      <xsl:apply-templates />
+
+	      <h2><xsl:text>Domain coverage matrix</xsl:text></h2>
+	      <xsl:call-template name="feature_coverage_matrix"/>
 	    </div>
 	  </div>
 	  <br/>
@@ -119,7 +125,7 @@
 	<td><xsl:text>Total cases: </xsl:text></td>
 	<td><xsl:value-of select="count(//case)"/></td>
       </tr>
-      <tr>
+      <tr style="line-height : 1px;">
 	<td colspan="2"><xsl:text>&#160;</xsl:text></td>
       </tr>
       <tr>
@@ -131,6 +137,7 @@
 
     <!-- Handle suites -->
     <xsl:for-each select="suite">
+      <xsl:sort select="@name"/>
       <xsl:apply-templates select="."/>
       <br/>
       <br/>
@@ -173,6 +180,7 @@
 
     <!-- Handle the sets of this suite -->
     <xsl:for-each select="set">
+      <xsl:sort select="@name"/>
       <xsl:apply-templates select="."/>
     </xsl:for-each>
   </xsl:template>
@@ -227,6 +235,7 @@
 	  
 	  <!-- Handle the cases from this set -->
 	  <xsl:for-each select="case">
+	    <xsl:sort select="@name"/>
 	    <!-- Variable needed for coloring every other row -->
 	    <xsl:variable name="color">
 	      <xsl:choose>
@@ -252,7 +261,7 @@
   <!-- Process single test case. Produces a row to a table -->
   <xsl:template match="case">
     <xsl:param name="rowclass"/>
-
+    
     <xsl:element name="tr">
       <xsl:attribute name="class">
 	<xsl:value-of select="$rowclass"/>
@@ -534,12 +543,16 @@
     <xsl:text>&lt;not defined&gt;</xsl:text>
   </xsl:template>
 
+  <!-- The keys for looping over stuff -->
   <xsl:key name="domains" match="suite" use="@domain"/>
+  <xsl:key name="types" match="*" use="@type"/>
+
   <!-- Print case counts by domains as table rows. This is practically
        useful for the case count table in the beginning of the page -->
   <xsl:template name="cases_by_domain">
     <xsl:for-each 
-       select="//suite[generate-id() = generate-id(key('domains',@domain)[1])]">
+       select="//suite[generate-id()=generate-id(key('domains',@domain)[1])]">
+      <xsl:sort select="@domain"/>
       <xsl:variable name="current_domain">
 	<xsl:value-of select="@domain"/>
       </xsl:variable>
@@ -560,12 +573,159 @@
     
     <!-- Get case counts from suites not having a domain or having an 
 	 empty one -->
-    <xsl:if test="count(//suite[not(@domain)]) &gt; '0' or count(//suite[@domain='']) &gt; '0'">
+    <xsl:if test="count(//suite[not(@domain)]) &gt; '0' or 
+		  count(//suite[@domain='']) &gt; '0'">
       <tr>
 	<td><xsl:text>N/A:</xsl:text></td>
-	<td><xsl:value-of select="count(//suite[not(@domain)]/set/case) + count(//suite[@domain='']/set/case)"/></td>
+	<td><xsl:value-of 
+	       select="count(//suite[not(@domain)]/set/case) + 
+		       count(//suite[@domain='']/set/case)"/></td>
       </tr>
     </xsl:if>
+  </xsl:template>
+
+  <!-- Print the feature coverage matrix table (or actually now
+       it's the domain coverage matrix)
+    -->
+  <xsl:template name="feature_coverage_matrix">
+    <table style="width : auto;">
+      <!-- Print header -->
+      <thead>
+	<tr>
+	  <th><xsl:text>Domain/Type</xsl:text></th>
+	  <!-- We need the types for header level -->
+	  <xsl:for-each
+	     select="//*[generate-id()=generate-id(key('types',@type)[1])]">
+	    <!-- Just skip the empty types -->
+	    <xsl:if test="@type!=''">
+	      <th style="text-align : center;">
+		<xsl:value-of select="@type"/>
+	      </th>
+	    </xsl:if>
+	  </xsl:for-each>
+	  <th style="text-align : center;"><xsl:text>Total</xsl:text></th>
+	</tr>
+      </thead>
+      
+      <!-- Start going through the domains, and inside each go through
+	   the test types and count cases -->
+      <xsl:for-each 
+	 select="//suite[generate-id()=generate-id(key('domains',@domain)[1])]">
+	<xsl:variable name="current_domain">
+	  <xsl:value-of select="@domain"/>
+	</xsl:variable>
+
+	<!-- Skip empty domains -->
+        <xsl:if test="$current_domain!=''">
+	  <tr>
+	    <td><xsl:value-of select="$current_domain"/></td>
+	    <!-- Go through the types -->
+	    <xsl:for-each
+	       select="//*[generate-id() = generate-id(key('types',@type)[1])]">
+	      <xsl:variable name="current_type">
+		<xsl:value-of select="@type"/>
+	      </xsl:variable>
+	      
+	      <!-- Skip also empty types -->
+	      <xsl:if test="$current_type!=''">
+		<td style="text-align : center;">
+		  <!-- Now count the cases matching both type and domain.
+		       The big problem here is inheritance - the type may
+		       come from case, set or suite level.
+
+		       as TODO: figure out how to set the type for each case
+		       and then just count with single XPath query:
+		       /suite[@domain=$current_domain]
+		       /set/case[@type=$current_type]
+		       
+		       So now where counting:
+		       <cases with correct type> +
+		       <cases without type from sets with correct types> +
+		       <cases without type from sets without type from
+			suites that have correct type>
+			 -->
+		  <xsl:value-of
+		     select="
+		       count(//suite[@domain=$current_domain]
+		             /set/case[@type=$current_type])
+		       +
+		       count(//suite[@domain=$current_domain]
+		             /set[@type=$current_type]
+			     /case[not(@type) or @type=''])
+		       +
+		       count(//suite[@domain=$current_domain and
+		                     @type=$current_type]
+			     /set[not(@type) or @type='']
+			     /case[not(@type) or @type=''])
+			     "/>
+		</td>
+	      </xsl:if>
+	    </xsl:for-each>
+	    <!-- Row sum -->
+	    <td style="text-align : center; font-weight : bold;">
+	      <xsl:value-of 
+		 select="
+		       count(//suite[@domain=$current_domain]
+		             /set/case[@type!=''])
+		       +
+		       count(//suite[@domain=$current_domain]
+		             /set[@type!='']
+			     /case[not(@type) or @type=''])
+		       +
+		       count(//suite[@domain=$current_domain and
+		                     @type!='']
+			     /set[not(@type) or @type='']
+			     /case[not(@type) or @type=''])
+			     "/>
+	    </td>
+	  </tr>
+	</xsl:if>
+      </xsl:for-each>
+      <!-- Last row holds column totals -->
+      <tr>
+	<td><xsl:text>Total</xsl:text></td>
+	<xsl:for-each
+	   select="//*[generate-id() = generate-id(key('types',@type)[1])]">
+	  <xsl:variable name="current_type">
+	    <xsl:value-of select="@type"/>
+	  </xsl:variable>
+	      
+	  <!-- Skip also empty types -->
+	  <xsl:if test="$current_type!=''">
+	    <td style="text-align : center; font-weight : bold;">
+	      <xsl:value-of
+		 select="
+		       count(//suite/set/case[@type=$current_type])
+		       +
+		       count(//suite/set[@type=$current_type]
+			     /case[not(@type) or @type=''])
+		       +
+		       count(//suite[@type=$current_type]
+			     /set[not(@type) or @type='']
+			     /case[not(@type) or @type=''])
+			     "/>
+	    </td>
+	  </xsl:if>
+	</xsl:for-each>
+	<!-- Total of totals, but not the count of all cases
+	     since we skipped the empty features and types -->
+	<td style="text-align : center; font-weight : bold;">
+	  <xsl:value-of
+	     select="
+		       count(//suite[@domain!='']
+		             /set/case[@type!=''])
+		       +
+		       count(//suite[@domain!='']
+		             /set[@type!='']
+			     /case[not(@type) or @type=''])
+		       +
+		       count(//suite[@domain!='' and @type!='']
+			     /set[not(@type) or @type='']
+			     /case[not(@type) or @type=''])
+			     "/>
+	</td>
+      </tr>
+    </table>
   </xsl:template>
 
 </xsl:stylesheet>
