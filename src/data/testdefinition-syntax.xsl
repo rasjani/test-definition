@@ -213,71 +213,74 @@
   <!-- Handle a single test set. Creates a test_results classed div
        with test set information and a table of test cases -->
   <xsl:template match="set">
-    <div class="test_results">
-      <h2 id="test_results"><xsl:value-of select="@name"/></h2>      
+    <div style="padding-left : 30px; padding-right : 30px;">
+      <div class="test_results">
+	<h2 id="test_results"
+	    style="font-size : 1.1em;"><xsl:value-of select="@name"/></h2>
 
-      <div class="container">
-	<p style="margin-bottom : 5px;">
-	  <xsl:text>Description: </xsl:text>
-	  <xsl:call-template name="description">
-	    <xsl:with-param name="nodevalue"
-			    select="description"/>
-	    <xsl:with-param name="attrvalue"
-			    select="@description"/>
-	  </xsl:call-template>
-	</p>
-	<p>
-	  <xsl:text>Feature: </xsl:text>
-	  <xsl:choose>
-	    <!-- No feature, nothing to show -->
-	    <xsl:when test="not(@feature)">
-	      <xsl:call-template name="notdefined"/>
-	    </xsl:when>
-	    <!--  Feature attribute found but is emtpy -->
-	    <xsl:when test="@feature=''">
-	      <xsl:call-template name="notdefined"/>
-	    </xsl:when>
-	    <!-- All good, show it -->
-	    <xsl:otherwise>
-	      <xsl:value-of select="@feature"/>
-	    </xsl:otherwise>
-	  </xsl:choose>
-	</p>
-
-	<!-- Table for test cases -->
-	<table cellspacing="0" cellpadding="0" style="width : 100%;">
-	  <thead class="even">
-	    <tr>
-	      <th><xsl:text>Test Case</xsl:text></th>
-	      <th><xsl:text>Description</xsl:text></th>
-	      <th><xsl:text>Requirement</xsl:text></th>
-	      <th><xsl:text>Type</xsl:text></th>
-	      <th><xsl:text>Level</xsl:text></th>
-	      <th><xsl:text>Manual</xsl:text></th>
-	    </tr>
-	  </thead>
+	<div class="container">
+	  <p style="margin-bottom : 5px;">
+	    <xsl:text>Description: </xsl:text>
+	    <xsl:call-template name="description">
+	      <xsl:with-param name="nodevalue"
+			      select="description"/>
+	      <xsl:with-param name="attrvalue"
+			      select="@description"/>
+	    </xsl:call-template>
+	  </p>
+	  <p>
+	    <xsl:text>Feature: </xsl:text>
+	    <xsl:choose>
+	      <!-- No feature, nothing to show -->
+	      <xsl:when test="not(@feature)">
+		<xsl:call-template name="notdefined"/>
+	      </xsl:when>
+	      <!--  Feature attribute found but is emtpy -->
+	      <xsl:when test="@feature=''">
+		<xsl:call-template name="notdefined"/>
+	      </xsl:when>
+	      <!-- All good, show it -->
+	      <xsl:otherwise>
+		<xsl:value-of select="@feature"/>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </p>
 	  
-	  <!-- Handle the cases from this set -->
-	  <xsl:for-each select="case">
-	    <xsl:sort select="@name"/>
-	    <!-- Variable needed for coloring every other row -->
-	    <xsl:variable name="color">
-	      <xsl:choose>
-		<xsl:when test="position() mod 2 = 0">even</xsl:when>
-		<xsl:otherwise>odd</xsl:otherwise>
-	      </xsl:choose>
-	    </xsl:variable>
+	  <!-- Table for test cases -->
+	  <table cellspacing="0" cellpadding="0" style="width : 100%;">
+	    <thead class="even">
+	      <tr>
+		<th><xsl:text>Test Case</xsl:text></th>
+		<th><xsl:text>Description</xsl:text></th>
+		<th><xsl:text>Requirement</xsl:text></th>
+		<th><xsl:text>Type</xsl:text></th>
+		<th><xsl:text>Level</xsl:text></th>
+		<th><xsl:text>Manual</xsl:text></th>
+	      </tr>
+	    </thead>
 	    
-	    <!-- Apply templates, ie. run template "case" with
-		 the row CSS class as parameter -->
-	    <xsl:apply-templates select=".">
-	      <xsl:with-param name="rowclass"
-			      select="$color"/>
-	    </xsl:apply-templates>
-	  </xsl:for-each>
-
-	</table>
-
+	    <!-- Handle the cases from this set -->
+	    <xsl:for-each select="case">
+	      <xsl:sort select="@name"/>
+	      <!-- Variable needed for coloring every other row -->
+	      <xsl:variable name="color">
+		<xsl:choose>
+		  <xsl:when test="position() mod 2 = 0">even</xsl:when>
+		  <xsl:otherwise>odd</xsl:otherwise>
+		</xsl:choose>
+	      </xsl:variable>
+	      
+	      <!-- Apply templates, ie. run template "case" with
+		   the row CSS class as parameter -->
+	      <xsl:apply-templates select=".">
+		<xsl:with-param name="rowclass"
+				select="$color"/>
+	      </xsl:apply-templates>
+	    </xsl:for-each>
+	    
+	  </table>
+	  
+	</div>
       </div>
     </div>
   </xsl:template>
@@ -614,212 +617,217 @@
        parameters this is just the way it is now.
     -->
   <xsl:template name="feature_coverage_matrix">
-    <table style="width : auto;">
-      <!-- Print header -->
-      <thead>
-	<tr>
-	  <th><xsl:text>Domain/Type</xsl:text></th>
-	  <!-- We need the types for header level -->
-	  <xsl:for-each
-	     select="//*[generate-id()=generate-id(key('types',@type)[1])]">
-	    <!-- Just skip the empty types -->
-	    <xsl:if test="@type!=''">
-	      <th style="text-align : center;">
-		<xsl:value-of select="@type"/>
-	      </th>
-	    </xsl:if>
-	  </xsl:for-each>
-	  <th style="text-align : center;"><xsl:text>Total</xsl:text></th>
-	</tr>
-      </thead>
-      
-      <!-- Start going through the domains, and inside each go through
-	   the features and the test types and count cases -->
-      <xsl:for-each 
-	 select="//suite[generate-id()=generate-id(key('domains',@domain)[1])]">
-	<xsl:variable name="current_domain">
-	  <xsl:value-of select="@domain"/>
-	</xsl:variable>
-
-	<!-- Skip empty domains -->
-        <xsl:if test="$current_domain!=''">
-	  <tr class="even">
-	    <td style="font-weight : bold;">
-	      <xsl:value-of select="$current_domain"/>
-	    </td>
-	    <!-- Go through the types -->
+    <div style="padding-left : 30px; padding-right : 30px;">
+      <table style="width : auto;">
+	<!-- Print header -->
+	<thead>
+	  <tr>
+	    <th><xsl:text>Domain/Type</xsl:text></th>
+	    <!-- We need the types for header level -->
 	    <xsl:for-each
-	       select="//*[generate-id() = generate-id(key('types',@type)[1])]">
-	      <xsl:variable name="current_type">
-		<xsl:value-of select="@type"/>
-	      </xsl:variable>
-	      
-	      <!-- Skip also empty types -->
-	      <xsl:if test="$current_type!=''">
-		<td style="text-align : center; font-weight : bold;">
-		  <!-- Now count the cases matching both type and domain.
-		       The big problem here is inheritance - the type may
-		       come from case, set or suite level.
-
-		       as TODO: figure out how to set the type for each case
-		       and then just count with single XPath query:
-		       /suite[@domain=$current_domain]
-		       /set/case[@type=$current_type]
-		       
-		       So now where counting:
-		       <cases with correct type> +
-		       <cases without type from sets with correct types> +
-		       <cases without type from sets without type from
-			suites that have correct type>
-			 -->
-		  <xsl:value-of
-		     select="
-		       count(//suite[@domain=$current_domain]
-		             /set/case[@type=$current_type])
-		       +
-		       count(//suite[@domain=$current_domain]
-		             /set[@type=$current_type]
-			     /case[not(@type) or @type=''])
-		       +
-		       count(//suite[@domain=$current_domain and
-		                     @type=$current_type]
-			     /set[not(@type) or @type='']
-			     /case[not(@type) or @type=''])
-			     "/>
-		</td>
+	       select="//*[generate-id()=generate-id(key('types',@type)[1])]">
+	      <!-- Just skip the empty types -->
+	      <xsl:if test="@type!=''">
+		<th style="text-align : center;">
+		  <xsl:value-of select="@type"/>
+		</th>
 	      </xsl:if>
 	    </xsl:for-each>
-	    <!-- Row sum -->
-	    <td style="text-align : center; font-weight : bold;">
-	      <xsl:value-of 
-		 select="
-		       count(//suite[@domain=$current_domain]
-		             /set/case[@type!=''])
-		       +
-		       count(//suite[@domain=$current_domain]
-		             /set[@type!='']
-			     /case[not(@type) or @type=''])
-		       +
-		       count(//suite[@domain=$current_domain and
-		                     @type!='']
-			     /set[not(@type) or @type='']
-			     /case[not(@type) or @type=''])
-			     "/>
-	    </td>
+	    <th style="text-align : center;"><xsl:text>Total</xsl:text></th>
 	  </tr>
+	</thead>
+	
+	<!-- Start going through the domains, and inside each go through
+	     the features and the test types and count cases -->
+	<xsl:for-each 
+	   select="//suite[generate-id()=
+		   generate-id(key('domains',@domain)[1])]">
+	  <xsl:variable name="current_domain">
+	    <xsl:value-of select="@domain"/>
+	  </xsl:variable>
+	  
+	  <!-- Skip empty domains -->
+          <xsl:if test="$current_domain!=''">
+	    <tr class="even">
+	      <td style="font-weight : bold;">
+		<xsl:value-of select="$current_domain"/>
+	      </td>
+	      <!-- Go through the types -->
+	      <xsl:for-each
+		 select="//*[generate-id() = 
+			 generate-id(key('types',@type)[1])]">
+		<xsl:variable name="current_type">
+		  <xsl:value-of select="@type"/>
+		</xsl:variable>
+		
+		<!-- Skip also empty types -->
+		<xsl:if test="$current_type!=''">
+		  <td style="text-align : center; font-weight : bold;">
+		    <!-- Now count the cases matching both type and domain.
+			 The big problem here is inheritance - the type may
+			 come from case, set or suite level.
+			 
+			 as TODO: figure out how to set the type for each case
+			 and then just count with single XPath query:
+			 /suite[@domain=$current_domain]
+			 /set/case[@type=$current_type]
+			 
+			 So now where counting:
+			 cases with correct type +
+			 cases without type from sets with correct types +
+			 cases without type from sets without type from
+				    suites that have correct type
+		      -->
+		    <xsl:value-of
+		       select="
+			       count(//suite[@domain=$current_domain]
+		               /set/case[@type=$current_type])
+			       +
+			       count(//suite[@domain=$current_domain]
+		               /set[@type=$current_type]
+			       /case[not(@type) or @type=''])
+			       +
+			       count(//suite[@domain=$current_domain and
+		                     @type=$current_type]
+				     /set[not(@type) or @type='']
+				     /case[not(@type) or @type=''])
+				     "/>
+		  </td>
+		</xsl:if>
+	      </xsl:for-each>
 
-	  <!-- Features for this domain -->
-	  <xsl:for-each 
-	     select="//suite[@domain=$current_domain]/set[generate-id() =
-		     generate-id(key('features',@feature)[1])]">
-	    <xsl:variable name="current_feature">
-	      <xsl:value-of select="@feature"/>
-	    </xsl:variable>
-
-	    <!-- Skip empty features -->
-	    <xsl:if test="$current_feature!=''">
-	      <tr style="font-size : 0.8em">
-		<td><xsl:value-of select="$current_feature"/></td>
-
-		<!-- Go through the types -->
-		<xsl:for-each
-		   select="//*[generate-id() = 
-			   generate-id(key('types',@type)[1])]">
-		  <xsl:variable name="current_type">
-		    <xsl:value-of select="@type"/>
-		  </xsl:variable>
-	      
-		  <!-- Skip also empty types -->
-		  <xsl:if test="$current_type!=''">
-		    <td style="text-align : center;">
-		      <xsl:value-of
-			 select="
-  		           count(//suite[@domain=$current_domain]
-		             /set[@feature=$current_feature]
-			     /case[@type=$current_type])
+	      <!-- Row sum -->
+	      <td style="text-align : center; font-weight : bold;">
+		<xsl:value-of 
+		   select="
+			   count(//suite[@domain=$current_domain]
+		                 /set/case[@type!=''])
 			   +
 			   count(//suite[@domain=$current_domain]
-		             /set[@type=$current_type and
-			     @feature=$current_feature]
-			     /case[not(@type) or @type=''])
-		           +
+		                 /set[@type!='']
+				 /case[not(@type) or @type=''])
+		           + 
 			   count(//suite[@domain=$current_domain and
-		                     @type=$current_type]
-			     /set[(not(@type) or @type='') and
-			     @feature=$current_feature]
-			     /case[not(@type) or @type=''])
-			     "/>
-		    </td>
-		  </xsl:if>
-		</xsl:for-each>
-		<!-- And the row sum -->
-		<td style="text-align : center;">
-		  <xsl:value-of 
-		     select="
-		       count(//suite[@domain=$current_domain]
-		             /set[@feature=$current_feature]/case[@type!=''])
-		       +
-		       count(//suite[@domain=$current_domain]
-		             /set[@type!='' and @feature=$current_feature]
-			     /case[not(@type) or @type=''])
-		       +
-		       count(//suite[@domain=$current_domain and
 		                     @type!='']
-			     /set[(not(@type) or @type='') and
-			     @feature=$current_feature]
-			     /case[not(@type) or @type=''])
-			     "/>
-		</td>
-	      </tr>
-	    </xsl:if>
-	  </xsl:for-each>
-	</xsl:if>
-      </xsl:for-each>
+			         /set[not(@type) or @type='']
+				 /case[not(@type) or @type=''])
+				 "/>
+	      </td>
+	    </tr>
 
-      <!-- Last row holds column totals -->
-      <tr class="even">
-	<td style="font-weight : bold;"><xsl:text>Total</xsl:text></td>
-	<xsl:for-each
-	   select="//*[generate-id() = generate-id(key('types',@type)[1])]">
-	  <xsl:variable name="current_type">
-	    <xsl:value-of select="@type"/>
-	  </xsl:variable>
-	      
-	  <xsl:if test="$current_type!=''">
-	    <td style="text-align : center; font-weight : bold;">
-	      <xsl:value-of
-		 select="
-		       count(//suite/set/case[@type=$current_type])
-		       +
-		       count(//suite/set[@type=$current_type]
-			     /case[not(@type) or @type=''])
-		       +
-		       count(//suite[@type=$current_type]
-			     /set[not(@type) or @type='']
-			     /case[not(@type) or @type=''])
-			     "/>
-	    </td>
+	    <!-- Features for this domain -->
+	    <xsl:for-each 
+	       select="//suite[@domain=$current_domain]/set[generate-id() =
+		       generate-id(key('features',@feature)[1])]">
+	      <xsl:variable name="current_feature">
+		<xsl:value-of select="@feature"/>
+	      </xsl:variable>
+
+	      <!-- Skip empty features -->
+	      <xsl:if test="$current_feature!=''">
+		<tr style="font-size : 0.8em">
+		  <td><xsl:value-of select="$current_feature"/></td>
+		  
+		  <!-- Go through the types -->
+		  <xsl:for-each
+		     select="//*[generate-id() = 
+			     generate-id(key('types',@type)[1])]">
+		    <xsl:variable name="current_type">
+		      <xsl:value-of select="@type"/>
+		    </xsl:variable>
+		    
+		    <!-- Skip also empty types -->
+		    <xsl:if test="$current_type!=''">
+		      <td style="text-align : center;">
+			<xsl:value-of
+			   select="
+  				   count(//suite[@domain=$current_domain]
+				   /set[@feature=$current_feature]
+				   /case[@type=$current_type])
+				   +
+				   count(//suite[@domain=$current_domain]
+				   /set[@type=$current_type and
+				   @feature=$current_feature]
+				   /case[not(@type) or @type=''])
+				   +
+				   count(//suite[@domain=$current_domain and
+		                   @type=$current_type]
+				   /set[(not(@type) or @type='') and
+				   @feature=$current_feature]
+				   /case[not(@type) or @type=''])
+				   "/>
+		      </td>
+		    </xsl:if>
+		  </xsl:for-each>
+		  <!-- And the row sum -->
+		  <td style="text-align : center;">
+		    <xsl:value-of 
+		       select="
+			       count(//suite[@domain=$current_domain]
+		               /set[@feature=$current_feature]/case[@type!=''])
+			       +
+			       count(//suite[@domain=$current_domain]
+		               /set[@type!='' and @feature=$current_feature]
+			       /case[not(@type) or @type=''])
+			       +
+			       count(//suite[@domain=$current_domain and
+		               @type!='']
+			       /set[(not(@type) or @type='') and
+			       @feature=$current_feature]
+			       /case[not(@type) or @type=''])
+			       "/>
+		  </td>
+		</tr>
+	      </xsl:if>
+	    </xsl:for-each>
 	  </xsl:if>
 	</xsl:for-each>
-	<!-- Total of totals, but not the count of all cases
-	     since we skipped the empty features and types -->
-	<td style="text-align : center; font-weight : bold;">
-	  <xsl:value-of
-	     select="
+
+	<!-- Last row holds column totals -->
+	<tr class="even">
+	  <td style="font-weight : bold;"><xsl:text>Total</xsl:text></td>
+	  <xsl:for-each
+	     select="//*[generate-id() = generate-id(key('types',@type)[1])]">
+	    <xsl:variable name="current_type">
+	      <xsl:value-of select="@type"/>
+	    </xsl:variable>
+	    
+	    <xsl:if test="$current_type!=''">
+	      <td style="text-align : center; font-weight : bold;">
+		<xsl:value-of
+		   select="
+			   count(//suite/set/case[@type=$current_type])
+			   +
+			   count(//suite/set[@type=$current_type]
+			   /case[not(@type) or @type=''])
+			   +
+			   count(//suite[@type=$current_type]
+			   /set[not(@type) or @type='']
+			   /case[not(@type) or @type=''])
+			   "/>
+	      </td>
+	    </xsl:if>
+	  </xsl:for-each>
+	  <!-- Total of totals, but not the count of all cases
+	       since we skipped the empty features and types -->
+	  <td style="text-align : center; font-weight : bold;">
+	    <xsl:value-of
+	       select="
 		       count(//suite[@domain!='']
-		             /set/case[@type!=''])
+		       /set/case[@type!=''])
 		       +
 		       count(//suite[@domain!='']
-		             /set[@type!='']
-			     /case[not(@type) or @type=''])
+		       /set[@type!='']
+		       /case[not(@type) or @type=''])
 		       +
 		       count(//suite[@domain!='' and @type!='']
-			     /set[not(@type) or @type='']
-			     /case[not(@type) or @type=''])
-			     "/>
-	</td>
-      </tr>
-    </table>
+		       /set[not(@type) or @type='']
+		       /case[not(@type) or @type=''])
+		       "/>
+	  </td>
+	</tr>
+      </table>
+    </div>
   </xsl:template>
 
 </xsl:stylesheet>
