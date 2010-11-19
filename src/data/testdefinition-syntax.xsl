@@ -48,6 +48,9 @@
 	      doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 	      encoding="utf-8"/>
 
+  <xsl:variable name="notdefined">
+    <xsl:text>&lt;Not defined&gt;</xsl:text>
+  </xsl:variable>
   <!-- The root template defining the main page structure -->
   <xsl:template match="/">
     <!-- This stylesheet uses HTML tags and even attributes. To be super
@@ -78,7 +81,7 @@
 	  <div id="header"
 	       style="padding-top : 30px; height : 70px;">
 	    <img style="float:right" 
-		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/> 
+		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/>
 	    <!-- When browsers support XSLT 2.0 an improvement idea for
 		 this would be to add the name of the file in question.
 		 That requires splitting of the URI which is currently
@@ -189,11 +192,11 @@
       <xsl:choose>
 	<!-- No domain attribute, nothing to show -->
 	<xsl:when test="not(@domain)">
-	  <xsl:call-template name="notdefined"/>
+	  <xsl:copy-of select="$notdefined"/>
 	</xsl:when>
 	<!-- Has domain but it's empty -->
 	<xsl:when test="@domain=''">
-	  <xsl:call-template name="notdefined"/>
+	  <xsl:copy-of select="$notdefined"/>
 	</xsl:when>
 	<!-- All good, show the value -->
 	<xsl:otherwise>
@@ -233,11 +236,11 @@
 	    <xsl:choose>
 	      <!-- No feature, nothing to show -->
 	      <xsl:when test="not(@feature)">
-		<xsl:call-template name="notdefined"/>
+		<xsl:copy-of select="$notdefined"/>
 	      </xsl:when>
 	      <!--  Feature attribute found but is emtpy -->
 	      <xsl:when test="@feature=''">
-		<xsl:call-template name="notdefined"/>
+		<xsl:copy-of select="$notdefined"/>
 	      </xsl:when>
 	      <!-- All good, show it -->
 	      <xsl:otherwise>
@@ -305,56 +308,22 @@
       </td>
       <td>
 	<!-- Requirement, can be inherited -->
-	<xsl:call-template name="inherited_attribute">
-	  <xsl:with-param name="casevalue"
-			  select="@requirement"/>
-	  <xsl:with-param name="setvalue"
-			  select="../@requirement"/>
-	  <xsl:with-param name="suitevalue"
-			  select="../../@requirement"/>
-	  <xsl:with-param name="boolean"
-			  select="0"/>
-	</xsl:call-template>
+	<xsl:value-of select="(ancestor-or-self::*/@requirement)[last()]"/>
       </td>
       <td>
 	<!-- Type, can be inherited -->
-	<xsl:call-template name="inherited_attribute">
-	  <xsl:with-param name="casevalue"
-			  select="@type"/>
-	  <xsl:with-param name="setvalue"
-			  select="../@type"/>
-	  <xsl:with-param name="suitevalue"
-			  select="../../@type"/>
-	  <xsl:with-param name="boolean"
-			  select="0"/>
-	</xsl:call-template>
+	<xsl:value-of select="(ancestor-or-self::*/@type)[last()]"/>
       </td>
       <td>
 	<!-- Level, also inherited -->
-	<xsl:call-template name="inherited_attribute">
-	  <xsl:with-param name="casevalue"
-			  select="@level"/>
-	  <xsl:with-param name="setvalue"
-			  select="../@level"/>
-	  <xsl:with-param name="suitevalue"
-			  select="../../@level"/>
-	  <xsl:with-param name="boolean"
-			  select="0"/>
-	</xsl:call-template>
+	<xsl:value-of select="(ancestor-or-self::*/@level)[last()]"/>
       </td>
       <td>
 	<!-- Manual, inherited as well. We show "Yes" if the manual
 	     attribute is set to true, and nothing otherwise -->
-	<xsl:call-template name="inherited_attribute">
-	  <xsl:with-param name="casevalue"
-			  select="@manual"/>
-	  <xsl:with-param name="setvalue"
-			  select="../@manual"/>
-	  <xsl:with-param name="suitevalue"
-			  select="../../@manual"/>
-	  <xsl:with-param name="boolean"
-			  select="1"/>
-	</xsl:call-template>
+	<xsl:if test="(ancestor-or-self::*/@manual)[last()] = 'true'">
+	  <xsl:text>Yes</xsl:text>
+	</xsl:if>
       </td>
     </xsl:element>
   </xsl:template>
@@ -378,7 +347,7 @@
 	<xsl:choose>
 	  <!-- No text inside -->
 	  <xsl:when test="$nodevalue[not(text())]">
-	    <xsl:call-template name="notdefined"/>
+	    <xsl:copy-of select="$notdefined"/>
 	  </xsl:when>
 	  <!-- Had text, show it -->
 	  <xsl:otherwise>
@@ -391,11 +360,11 @@
 	<xsl:choose>
 	  <!-- Attribute not there at all -->
 	  <xsl:when test="not($attrvalue)">
-	    <xsl:call-template name="notdefined"/>
+	    <xsl:copy-of select="$notdefined"/>
 	  </xsl:when>
 	  <!-- Empty value in it -->
 	  <xsl:when test="$attrvalue=''">
-	    <xsl:call-template name="notdefined"/>
+	    <xsl:copy-of select="$notdefined"/>
 	  </xsl:when>
 	  <!-- All good, show the value -->
 	  <xsl:otherwise>
@@ -404,170 +373,6 @@
 	</xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
-
-  <!-- Template for test case attributes that may inherit values
-       from their parents. Used to shown most of the test case
-       values in the case listing.
-
-       When calling, you can just pass the parameters by calling 
-       @att, ../@att and ../../@att regardless of their actual existance
-    -->
-  <xsl:template name="inherited_attribute">
-    <!-- The attribute value from <case> node -->
-    <xsl:param name="casevalue"/>
-    <!-- The attribute value from case's parent <set> node -->
-    <xsl:param name="setvalue"/>
-    <!-- And the same but from <suite> level -->
-    <xsl:param name="suitevalue"/>
-    <!-- Set to "1" if the attribute is a boolean field and 
-	 if you don't want to show true/false in the listing. If
-	 set to 1, this template will put the word "Yes" in the
-	 output when the value of that attribute equals "true" -->
-    <xsl:param name="boolean"/>
-
-    <xsl:choose>
-      <!-- Case does not have it -->
-      <xsl:when test="not($casevalue)">
-	<!-- Check from set/suite -->
-	<xsl:call-template name="inherited_set">
-	  <xsl:with-param name="setvalue"
-			  select="$setvalue"/>
-	  <xsl:with-param name="suitevalue"
-			  select="$suitevalue"/>
-	  <xsl:with-param name="boolean"
-			  select="$boolean"/>
-	</xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-	<!-- Case has it but it may be empty -->
-	<xsl:choose>
-	  <!-- And empty it is -->
-	  <xsl:when test="$casevalue=''">
-	    <!-- Check from set/suite -->
-	    <xsl:call-template name="inherited_set">
-	      <xsl:with-param name="setvalue"
-			      select="$setvalue"/>
-	      <xsl:with-param name="suitevalue"
-			      select="$suitevalue"/>
-	      <xsl:with-param name="boolean"
-			      select="$boolean"/>
-	    </xsl:call-template>
-	  </xsl:when>
-	  <!-- Not empty, so show -->
-	  <xsl:otherwise>
-	    <!-- boolean_attribute template decides what to actually show -->
-	    <xsl:call-template name="boolean_attribute">
-	      <xsl:with-param name="attvalue"
-			      select="$casevalue"/>
-	      <xsl:with-param name="boolean"
-			      select="$boolean"/>
-	    </xsl:call-template>
-	  </xsl:otherwise>
-	</xsl:choose>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Helper for the inherited_attribute to check set and suite levels.
-       This checks the given setvalue and if that is something not to
-       be shown, it calls inherited_suite template.
-
-       Params as in inherited_attribute but without casevalue
-    -->
-  <xsl:template name="inherited_set">
-    <xsl:param name="setvalue"/>
-    <xsl:param name="suitevalue"/>
-    <xsl:param name="boolean"/>
-
-    <xsl:choose>
-      <!-- Set does not have it -->
-      <xsl:when test="not($setvalue)">
-	<!-- Check suite -->
-	<xsl:call-template name="inherited_suite">
-	  <xsl:with-param name="suitevalue"
-			  select="$suitevalue"/>
-	  <xsl:with-param name="boolean"
-			  select="$boolean"/>
-	</xsl:call-template>
-      </xsl:when>
-      <!-- Set has it but it may be empty -->
-      <xsl:otherwise>
-	<xsl:choose>
-	  <xsl:when test="$setvalue=''">
-	    <!-- Check from suite -->
-	    <xsl:call-template name="inherited_suite">
-	      <xsl:with-param name="suitevalue"
-			      select="$suitevalue"/>
-	      <xsl:with-param name="boolean"
-			      select="$boolean"/>
-	    </xsl:call-template>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <!-- Show the value from set level -->
-	    <xsl:call-template name="boolean_attribute">
-	      <xsl:with-param name="attvalue"
-			      select="$setvalue"/>
-	      <xsl:with-param name="boolean"
-			      select="$boolean"/>
-	    </xsl:call-template>
-	  </xsl:otherwise>
-	</xsl:choose>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Helper for the inherited_attribute to check suite level. This is
-       again called from inherited_set and has the same parameters
-       except for setvalue.
-    -->
-  <xsl:template name="inherited_suite">
-    <xsl:param name="suitevalue"/>
-    <xsl:param name="boolean"/>
-
-    <xsl:choose>
-      <!-- Suite does not have it -->
-      <xsl:when test="not($suitevalue)">
-	<!-- Do nothing --> 
-      </xsl:when>
-      <!-- Show the value from suite level -->
-      <xsl:otherwise>
-	<xsl:call-template name="boolean_attribute">
-	  <xsl:with-param name="attvalue"
-			  select="$suitevalue"/>
-	  <xsl:with-param name="boolean"
-			  select="$boolean"/>
-	</xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- Helper for inherited attributes. If boolean is set to "1" this checks
-       the attribute value, and if it's true then prints out the word "Yes".
-       If the boolean is set to "0", this will just output the given attribute
-       value.
-    -->
-  <xsl:template name="boolean_attribute">
-    <xsl:param name="attvalue"/>
-    <xsl:param name="boolean"/>
-
-    <!-- For booleans we show Yes if value is true,
-	 otherwise we show the node value -->
-    <xsl:if test="$boolean='1'">
-      <xsl:if test="$attvalue='true'">
-	<xsl:text>Yes</xsl:text>
-      </xsl:if>
-    </xsl:if>
-    <xsl:if test="$boolean='0'">
-      <xsl:value-of select="$attvalue"/>
-    </xsl:if>
-  </xsl:template>
-    
-
-  <!-- What to show in case of something considered as not defined,
-       e.g. a missing description -->
-  <xsl:template name="notdefined">
-    <xsl:text>&lt;not defined&gt;</xsl:text>
   </xsl:template>
 
   <!-- The keys for looping over stuff -->
@@ -678,6 +483,7 @@
 			 cases without type from sets without type from
 				    suites that have correct type
 		      -->
+
 		    <xsl:value-of
 		       select="
 			       count(//suite[@domain=$current_domain]
