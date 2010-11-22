@@ -1,5 +1,5 @@
 Name:		test-definition		
-Version:	1.1.8
+Version:	1.1.9
 Release:	1
 Summary:	Provides schemas for validating test definition XML
 
@@ -39,8 +39,9 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/test-definition
 mkdir -p $RPM_BUILD_ROOT/usr/share/man/man5
 cp src/data/testdefinition-syntax.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
 cp src/data/testdefinition-tm_terms.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
-cp src/data/testdefinition-results.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
 
+cp src/data/testdefinition-results.xsd $RPM_BUILD_ROOT/usr/share/test-definition/
+cp src/data/testdefinition-syntax.xsl $RPM_BUILD_ROOT/usr/share/test-definition/
 groff -man -Tascii src/doc/test-definition.man > src/doc/test-definition.5
 cp src/doc/test-definition.5 $RPM_BUILD_ROOT/usr/share/man/man5
 
