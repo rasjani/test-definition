@@ -107,6 +107,7 @@
           </xs:sequence>
           <xs:attributeGroup ref="general_attributes"/>
           <xs:attribute name="subfeature"/>
+          <xs:attribute name="bug_number"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="environments" minOccurs="0" maxOccurs="1" />
