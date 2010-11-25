@@ -116,6 +116,7 @@
       <xs:attribute name="subfeature"/>
       <xs:attribute name="comment"/>
       <xs:attribute name="failure_info" />
+      <xs:attribute name="bugzilla_id" type="xs:positiveInteger"/>
     </xs:complexType>
   </xs:element>
 

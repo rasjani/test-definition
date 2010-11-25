@@ -132,13 +132,7 @@
           </xs:sequence>
           <xs:attributeGroup ref="general_attributes"/>
           <xs:attribute name="subfeature"/>
-          <xs:attribute name="bug_number">
-	    <xs:simpleType>
-	      <xs:restriction base="xs:string">
-		<xs:pattern value="[A-Z]{1,4}#\d{1,8}"/>
-	      </xs:restriction>
-	    </xs:simpleType>
-	  </xs:attribute>
+          <xs:attribute name="bugzilla_id" type="xs:positiveInteger"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="environments" minOccurs="0" maxOccurs="1" />
