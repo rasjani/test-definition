@@ -1,6 +1,6 @@
 test-definition (1.2.0) unstable; urgency=low
 
-  * Added bug_number attribute to test case (BMC#10359)
+  * Added bugzilla_id attribute to test case (BMC#10359)
 
  -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Thu, 25 Nov 2010 10:41:32 +0200
 
