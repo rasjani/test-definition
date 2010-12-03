@@ -46,6 +46,9 @@
     <xs:attribute name="manual" default="false" type="xs:boolean" />
 
     <xs:attribute name="insignificant" default="false" type="xs:boolean" />
+
+    <xs:attribute name="hwid"/>
+
   </xs:attributeGroup>
 
   <xs:element name="testresults">
@@ -82,10 +85,29 @@
 
   <xs:element name="set">
     <xs:complexType>
-      <xs:sequence>
-	<xs:element ref="case" minOccurs="0" maxOccurs="unbounded" />
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	<xs:choice>
+	  <xs:element name="pre_steps" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+		<xs:element ref="step" maxOccurs="unbounded" />
+              </xs:sequence>
+	      <xs:attribute name="timeout" type="xs:positiveInteger"/>
+            </xs:complexType>
+	  </xs:element>
+	  <xs:element name="post_steps" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+		<xs:element ref="step" maxOccurs="unbounded" />
+              </xs:sequence>
+	      <xs:attribute name="timeout" type="xs:positiveInteger"/>
+            </xs:complexType>
+	  </xs:element>
+	  <xs:sequence>
+	    <xs:element ref="case" minOccurs="0" maxOccurs="unbounded" />
+	  </xs:sequence>
+	</xs:choice>
       </xs:sequence>
-
       <xs:attributeGroup ref="general_attributes"/>
       <xs:attribute name="feature"/>
       <xs:attribute name="environment" />
@@ -130,7 +152,7 @@
 	<xs:element name="stdout" minOccurs="0" maxOccurs="1" />
 	<xs:element name="stderr" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
-
+      <xs:attribute name="manual" type="xs:boolean" />
       <xs:attribute name="command" use="required" />
       <xs:attribute name="result" use="required">
 	<xs:simpleType>
