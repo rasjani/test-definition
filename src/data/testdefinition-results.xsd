@@ -55,6 +55,7 @@
     <xs:complexType>
       <xs:sequence>
 	<xs:element ref="suite" minOccurs="1" maxOccurs="unbounded" />
+	<xs:element ref="hwiddetect" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="version" use="required" />
       <xs:attribute name="environment" use="required" />
@@ -166,5 +167,13 @@
       <xs:attribute name="failure_info" />
     </xs:complexType>
   </xs:element>
+
+<xs:element name="hwiddetect">
+  <xs:complexType>
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:element>
 
 </xs:schema>
