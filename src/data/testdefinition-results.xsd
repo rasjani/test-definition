@@ -37,15 +37,15 @@
 
     <xs:attribute name="requirement"/>
 
-    <xs:attribute name="timeout" default="90" type="xs:positiveInteger"/>
+    <xs:attribute name="timeout" type="xs:positiveInteger" use="required"/>
 
     <xs:attribute name="type" default="unknown"/>
 
     <xs:attribute name="level" default="unknown"/>
 
-    <xs:attribute name="manual" default="false" type="xs:boolean" />
+    <xs:attribute name="manual" type="xs:boolean" use="required" />
 
-    <xs:attribute name="insignificant" default="false" type="xs:boolean" />
+    <xs:attribute name="insignificant" type="xs:boolean" use="required"/>
 
     <xs:attribute name="hwid"/>
 
@@ -53,9 +53,12 @@
 
   <xs:element name="testresults">
     <xs:complexType>
-      <xs:sequence>
-	<xs:element ref="suite" minOccurs="1" maxOccurs="unbounded" />
-	<xs:element ref="hwiddetect" minOccurs="0" maxOccurs="1" />
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	<xs:choice>
+	  <xs:element ref="suite" minOccurs="1" maxOccurs="unbounded" />
+	  <xs:element ref="hwiddetect" minOccurs="0" maxOccurs="1" />
+	  <xs:element name="description" minOccurs="0" maxOccurs="1" />
+	</xs:choice>
       </xs:sequence>
       <xs:attribute name="version" use="required" />
       <xs:attribute name="environment" use="required" />
@@ -72,7 +75,10 @@
   <xs:element name="suite">
     <xs:complexType>
       <xs:sequence>
-	<xs:element ref="set" minOccurs="0" maxOccurs="unbounded" />
+	<xs:choice minOccurs="0" maxOccurs="unbounded">
+	  <xs:element ref="set" minOccurs="0" maxOccurs="unbounded" />
+	  <xs:element name="description" minOccurs="0" maxOccurs="1" />
+	</xs:choice>
       </xs:sequence>
       <xs:attributeGroup ref="general_attributes"/>
       <xs:attribute name="domain" />
@@ -93,7 +99,7 @@
               <xs:sequence>
 		<xs:element ref="step" maxOccurs="unbounded" />
               </xs:sequence>
-	      <xs:attribute name="timeout" type="xs:positiveInteger"/>
+	      <xs:attribute name="timeout" type="xs:positiveInteger" use="required"/>
             </xs:complexType>
 	  </xs:element>
 	  <xs:element name="post_steps" minOccurs="0" maxOccurs="1">
@@ -101,12 +107,14 @@
               <xs:sequence>
 		<xs:element ref="step" maxOccurs="unbounded" />
               </xs:sequence>
-	      <xs:attribute name="timeout" type="xs:positiveInteger"/>
+	      <xs:attribute name="timeout" type="xs:positiveInteger" use="required"/>
             </xs:complexType>
 	  </xs:element>
 	  <xs:sequence>
 	    <xs:element ref="case" minOccurs="0" maxOccurs="unbounded" />
 	  </xs:sequence>
+	  <xs:element name="description" minOccurs="0" maxOccurs="1" />
+	  <xs:element ref="get" minOccurs="0" maxOccurs="1"/>
 	</xs:choice>
       </xs:sequence>
       <xs:attributeGroup ref="general_attributes"/>
@@ -150,8 +158,8 @@
 	<xs:element name="return_code" minOccurs="1" maxOccurs="1" />
 	<xs:element name="start" minOccurs="1" maxOccurs="1"/>
 	<xs:element name="end" minOccurs="1" maxOccurs="1" />
-	<xs:element name="stdout" minOccurs="0" maxOccurs="1" />
-	<xs:element name="stderr" minOccurs="0" maxOccurs="1" />
+	<xs:element name="stdout" minOccurs="1" maxOccurs="1" />
+	<xs:element name="stderr" minOccurs="1" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="manual" type="xs:boolean" />
       <xs:attribute name="command" use="required" />
@@ -173,6 +181,23 @@
     <xs:simpleContent>
       <xs:extension base="xs:string" />
     </xs:simpleContent>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="get">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="file" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:simpleContent>
+	    <xs:extension base="xs:string">
+	      <xs:attribute name="delete_after" type="xs:boolean" 
+			    use="required"/>
+	    </xs:extension>
+	  </xs:simpleContent>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
   </xs:complexType>
 </xs:element>
 
