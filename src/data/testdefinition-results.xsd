@@ -37,15 +37,15 @@
 
     <xs:attribute name="requirement"/>
 
-    <xs:attribute name="timeout" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="timeout" type="xs:positiveInteger"/>
 
     <xs:attribute name="type" default="unknown"/>
 
     <xs:attribute name="level" default="unknown"/>
 
-    <xs:attribute name="manual" type="xs:boolean" use="required" />
+    <xs:attribute name="manual" type="xs:boolean" />
 
-    <xs:attribute name="insignificant" type="xs:boolean" use="required"/>
+    <xs:attribute name="insignificant" type="xs:boolean" />
 
     <xs:attribute name="hwid"/>
 
@@ -99,7 +99,7 @@
               <xs:sequence>
 		<xs:element ref="step" maxOccurs="unbounded" />
               </xs:sequence>
-	      <xs:attribute name="timeout" type="xs:positiveInteger" use="required"/>
+	      <xs:attribute name="timeout" type="xs:positiveInteger"/>
             </xs:complexType>
 	  </xs:element>
 	  <xs:element name="post_steps" minOccurs="0" maxOccurs="1">
@@ -107,7 +107,7 @@
               <xs:sequence>
 		<xs:element ref="step" maxOccurs="unbounded" />
               </xs:sequence>
-	      <xs:attribute name="timeout" type="xs:positiveInteger" use="required"/>
+	      <xs:attribute name="timeout" type="xs:positiveInteger"/>
             </xs:complexType>
 	  </xs:element>
 	  <xs:sequence>
@@ -158,8 +158,8 @@
 	<xs:element name="return_code" minOccurs="1" maxOccurs="1" />
 	<xs:element name="start" minOccurs="1" maxOccurs="1"/>
 	<xs:element name="end" minOccurs="1" maxOccurs="1" />
-	<xs:element name="stdout" minOccurs="1" maxOccurs="1" />
-	<xs:element name="stderr" minOccurs="1" maxOccurs="1" />
+	<xs:element name="stdout" minOccurs="0" maxOccurs="1" />
+	<xs:element name="stderr" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="manual" type="xs:boolean" />
       <xs:attribute name="command" use="required" />
