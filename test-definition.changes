@@ -1,3 +1,5 @@
+* Fri Dec 10 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.1
+- Result schema updated to accept the same attributes as test definition (BMC#10862)
 * Thu Nov 25 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.0
 - Added bugzilla_id attribute for case (BMC#10359) 
 * Mon Nov 22 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.1.9

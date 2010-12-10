@@ -1,3 +1,9 @@
+test-definition (1.2.1) unstable; urgency=low
+
+  * Result schema updated to accept the same attributes as test definition (BMC#10862)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Fri, 10 Dec 2010 11:25:47 +0200
+
 test-definition (1.2.0) unstable; urgency=low
 
   * Added bugzilla_id attribute to test case (BMC#10359)
