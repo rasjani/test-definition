@@ -134,6 +134,7 @@
 	  <!-- Override the stylesheets #header a bit -->
 	  <div id="header" style="padding-top : 30px; height : 70px;">
 	    <img class="logoimage"
+		 alt="MeeGo"
 		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/>
 	    <!-- When browsers support XSLT 2.0 an improvement idea for
 		 this would be to add the name of the file in question.
