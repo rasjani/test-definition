@@ -53,6 +53,41 @@
     <xsl:text>&lt;Not defined&gt;</xsl:text>
   </xsl:variable>
 
+  <!-- HTML warning -->
+  <xsl:variable name="html_warning">
+    <xsl:element name="div">
+      <xsl:attribute name="class">
+	<xsl:text>error_msg_wrap</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="style">
+	<xsl:text>margin-bottom : 15px;</xsl:text>
+      </xsl:attribute>
+      <xsl:element name="div">
+	<xsl:attribute name="class">
+	  <xsl:text>error_msg</xsl:text>
+	</xsl:attribute>
+	<xsl:element name="p">
+	  <xsl:text>HTML descriptions found</xsl:text>
+	</xsl:element>
+	<xsl:element name="p">
+	  <xsl:text>Using HTML inside XML is frowned upon. It will not be
+	    rendered due to possible problems in the output. If the schema
+	    is not suitable for your descriptions, try </xsl:text>
+	  <xsl:element name="a">
+	    <xsl:attribute name="href">
+	      <xsl:text>http://bugs.meego.com/enter_bug.cgi?product=Development Tools</xsl:text>
+	    </xsl:attribute>
+	    <xsl:attribute name="title">
+	      <xsl:text>MeeGo Bugzilla</xsl:text>
+	    </xsl:attribute>
+	    <xsl:text>filing</xsl:text>
+	  </xsl:element>
+	  <xsl:text> a feature request.</xsl:text>
+	</xsl:element>
+      </xsl:element>
+    </xsl:element>
+  </xsl:variable>
+
   <!-- The keys for looping over stuff -->
   <xsl:key name="domains" match="suite" use="@domain"/>
   <xsl:key name="types" match="*" use="@type"/>
@@ -134,6 +169,7 @@
 	  <!-- Override the stylesheets #header a bit -->
 	  <div id="header" style="padding-top : 30px; height : 70px;">
 	    <img class="logoimage"
+		 alt="MeeGo"
 		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/>
 	    <!-- When browsers support XSLT 2.0 an improvement idea for
 		 this would be to add the name of the file in question.
@@ -159,6 +195,7 @@
 	  
 	  <div id="page">
 	    <div class="page_content">
+	      <xsl:call-template name="html_description_warning"/>
 	      <!-- Page content comes here -->
 	      <xsl:apply-templates />
 	      
@@ -462,6 +499,19 @@
 	       select="count(//suite[not(@domain)]/set/case) + 
 		       count(//suite[@domain='']/set/case)"/></td>
       </tr>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- Show a warning for files containing HTML in description elements -->
+  <xsl:template name="html_description_warning">
+    <!-- XSLT 1.0 does not have regexp support so check if there's
+	 <br or <p in the content of the description element and if so,
+	 display a warning -->
+    <xsl:if 
+       test="count(//description[contains(text(), '&lt;br')]) 
+	     or count(//description[contains(text(), '&lt;p')])
+	     ">
+      <xsl:copy-of select="$html_warning"/>
     </xsl:if>
   </xsl:template>
 
