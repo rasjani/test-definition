@@ -124,7 +124,7 @@
 	      width : auto;
 	    }
 
-	    p.description {
+	    p.smaller_margin {
 	      margin-bottom : 5px;
 	    }
 
@@ -164,7 +164,6 @@
 	</xsl:element>
       </head>
       <body>
-	<a name="top"></a>
 	<div id="wrapper">
 	  <!-- Override the stylesheets #header a bit -->
 	  <div id="header" style="padding-top : 30px; height : 70px;">
@@ -226,7 +225,7 @@
        and calls suite templates -->
   <xsl:template match="/testdefinition">
     <p>
-      <xsl:text>Description: </xsl:text>
+      <strong><xsl:text>Description: </xsl:text></strong>
       <xsl:call-template name="description">
 	<xsl:with-param name="nodevalue"
 			select="description"/>
@@ -267,18 +266,8 @@
   <xsl:template match="suite">
     <h2><xsl:value-of select="@name"/></h2>
 
-    <!-- Suite description -->
-    <p class="description">
-      <xsl:text>Description: </xsl:text>
-      <xsl:call-template name="description">
-	<xsl:with-param name="nodevalue"
-			select="description"/>
-	<xsl:with-param name="attrvalue"
-			select="@description"/>
-      </xsl:call-template>
-    </p>
-    <p>
-      <xsl:text>Domain: </xsl:text>
+    <p class="smaller_margin">
+      <strong><xsl:text>Domain: </xsl:text></strong>
       <xsl:choose>
 	<!-- No domain attribute, nothing to show -->
 	<xsl:when test="not(@domain)">
@@ -293,6 +282,16 @@
 	  <xsl:value-of select="@domain"/>
 	</xsl:otherwise>
       </xsl:choose>
+    </p>
+    <!-- Suite description -->
+    <p>
+      <strong><xsl:text>Description: </xsl:text></strong>
+      <xsl:call-template name="description">
+	<xsl:with-param name="nodevalue"
+			select="description"/>
+	<xsl:with-param name="attrvalue"
+			select="@description"/>
+      </xsl:call-template>
     </p>
 
     <!-- Handle the sets of this suite -->
@@ -312,17 +311,8 @@
 	    style="font-size : 1.1em;"><xsl:value-of select="@name"/></h2>
 
 	<div class="container">
-	  <p class="description">
-	    <xsl:text>Description: </xsl:text>
-	    <xsl:call-template name="description">
-	      <xsl:with-param name="nodevalue"
-			      select="description"/>
-	      <xsl:with-param name="attrvalue"
-			      select="@description"/>
-	    </xsl:call-template>
-	  </p>
-	  <p>
-	    <xsl:text>Feature: </xsl:text>
+	  <p class="smaller_margin">
+	    <strong><xsl:text>Feature: </xsl:text></strong>
 	    <xsl:choose>
 	      <!-- No feature, nothing to show -->
 	      <xsl:when test="not(@feature)">
@@ -337,6 +327,15 @@
 		<xsl:value-of select="@feature"/>
 	      </xsl:otherwise>
 	    </xsl:choose>
+	  </p>
+	  <p>
+	    <strong><xsl:text>Description: </xsl:text></strong>
+	    <xsl:call-template name="description">
+	      <xsl:with-param name="nodevalue"
+			      select="description"/>
+	      <xsl:with-param name="attrvalue"
+			      select="@description"/>
+	    </xsl:call-template>
 	  </p>
 	  
 	  <!-- Table for test cases -->
@@ -441,7 +440,9 @@
 	  </xsl:when>
 	  <!-- Had text, show it -->
 	  <xsl:otherwise>
-	    <xsl:value-of select="$nodevalue"/>
+	    <xsl:call-template name="description-trim-and-newline">
+	      <xsl:with-param name="string" select="$nodevalue"/>
+	    </xsl:call-template>
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
@@ -458,9 +459,50 @@
 	  </xsl:when>
 	  <!-- All good, show the value -->
 	  <xsl:otherwise>
-	    <xsl:value-of select="$attrvalue"/>
+	    <xsl:call-template name="description-trim-and-newline">
+	      <xsl:with-param name="string" select="$attrvalue"/>
+	    </xsl:call-template>
 	  </xsl:otherwise>
 	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Strip leading newlines and finally call newlines_to_br -->
+  <xsl:template name="description-trim-and-newline">
+    <xsl:param name="string"/>
+    
+    <xsl:if test="string-length($string) &gt; 1">
+      <xsl:choose>
+	<xsl:when test="substring($string, 1, 1)='&#10;'">
+	  <xsl:call-template name="description-trim-and-newline">
+	    <xsl:with-param name="string" select="substring($string, 2)"/>
+	  </xsl:call-template>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:call-template name="newlines_to_br">
+	    <xsl:with-param name="string" select="$string"/>
+	  </xsl:call-template>
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- Convert newlines to <br/> from given string -->
+  <xsl:template name="newlines_to_br">
+    <xsl:param name="string"/>
+
+    <xsl:choose>
+      <xsl:when test="contains($string, '&#10;')">
+	<xsl:value-of select="substring-before($string, '&#10;')"/>
+	<br/>
+	<xsl:call-template name="newlines_to_br">
+	  <xsl:with-param name="string"
+			  select="substring-after($string, '&#10;')"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$string"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
