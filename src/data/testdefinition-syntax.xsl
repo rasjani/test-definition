@@ -64,25 +64,25 @@
       </xsl:attribute>
       <xsl:element name="div">
 	<xsl:attribute name="class">
-	  <xsl:text>error_msg</xsl:text>
+          <xsl:text>error_msg</xsl:text>
 	</xsl:attribute>
 	<xsl:element name="p">
-	  <xsl:text>HTML descriptions found</xsl:text>
+          <xsl:text>HTML descriptions found</xsl:text>
 	</xsl:element>
 	<xsl:element name="p">
-	  <xsl:text>Using HTML inside XML is frowned upon. It will not be
-	    rendered due to possible problems in the output. If the schema
-	    is not suitable for your descriptions, try </xsl:text>
-	  <xsl:element name="a">
-	    <xsl:attribute name="href">
-	      <xsl:text>http://bugs.meego.com/enter_bug.cgi?product=Development Tools</xsl:text>
-	    </xsl:attribute>
-	    <xsl:attribute name="title">
+          <xsl:text>Using HTML inside XML is frowned upon. It will not be
+            rendered due to possible problems in the output. If the schema
+            is not suitable for your descriptions, try </xsl:text>
+          <xsl:element name="a">
+            <xsl:attribute name="href">
+              <xsl:text>http://bugs.meego.com/enter_bug.cgi?product=Development Tools</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="title">
 	      <xsl:text>MeeGo Bugzilla</xsl:text>
-	    </xsl:attribute>
-	    <xsl:text>filing</xsl:text>
-	  </xsl:element>
-	  <xsl:text> a feature request.</xsl:text>
+            </xsl:attribute>
+            <xsl:text>filing</xsl:text>
+          </xsl:element>
+          <xsl:text> a feature request.</xsl:text>
 	</xsl:element>
       </xsl:element>
     </xsl:element>
