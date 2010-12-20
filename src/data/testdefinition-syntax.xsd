@@ -33,15 +33,13 @@
     </xs:simpleType>
   </xs:attribute>
   <xs:attribute name="description"/>
-
   <xs:attribute name="requirement"/>
-
   <xs:attribute name="timeout" default="90" type="xs:positiveInteger"/>
-
   <xs:attribute name="type" default="unknown"/>
-
   <xs:attribute name="level" default="unknown"/>
-
+  <xs:attribute name="domain" default="unknown"/>
+  <xs:attribute name="feature"/>
+  <xs:attribute name="component" type="xs:string" />
   <xs:attribute name="manual" default="false" type="xs:boolean" />
   <xs:attribute name="insignificant" default="false" type="xs:boolean" />
   <xs:attribute name="hwid" type="xs:string" />
@@ -69,7 +67,6 @@
       <xs:element ref="set" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attributeGroup ref="general_attributes"/>
-    <xs:attribute name="domain"/>  <!-- is this needed? -->
   </xs:complexType>
   <xs:unique name="uniqueSetName">
     <xs:selector xpath=".//set"/>
@@ -108,6 +105,8 @@
           <xs:attributeGroup ref="general_attributes"/>
           <xs:attribute name="subfeature"/>
           <xs:attribute name="bugzilla_id" type="xs:positiveInteger"/>
+	  <xs:attribute name="TC_ID"/>
+	  <xs:attribute name="state"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="environments" minOccurs="0" maxOccurs="1" />
@@ -129,7 +128,6 @@
       </xs:choice>
     </xs:sequence>
 
-    <xs:attribute name="feature"/>
     <xs:attributeGroup ref="general_attributes"/>
   </xs:complexType>
     <xs:unique name="uniqueCaseName">
