@@ -141,6 +141,10 @@
 	      padding-right : 30px;
 	    }
 
+	    td {
+	      vertical-align : top;
+	    }
+
 	    tr.separator {
 	      line-height : 1px;
 	    }
