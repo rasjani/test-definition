@@ -494,12 +494,54 @@
 
     <xsl:choose>
       <xsl:when test="contains($string, '&#10;')">
-	<xsl:value-of select="substring-before($string, '&#10;')"/>
+	<xsl:call-template name="keyword_highlight">
+	  <xsl:with-param name="string"
+			  select="normalize-space(
+				  substring-before($string, '&#10;')
+				  )"/>
+	</xsl:call-template>
 	<br/>
 	<xsl:call-template name="newlines_to_br">
 	  <xsl:with-param name="string"
 			  select="substring-after($string, '&#10;')"/>
 	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:call-template name="keyword_highlight">
+	  <xsl:with-param name="string"
+			  select="normalize-space($string)"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- No lower-case support in XSLT 1.0 -->
+  <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'"/>
+  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+
+  <!-- Highlight certain keywords from description templates -->
+  <xsl:template name="keyword_highlight">
+    <xsl:param name="string"/>
+    
+    <xsl:variable name="lcase">
+      <xsl:value-of select="translate($string, $uppercase, $lowercase)"/>
+    </xsl:variable>
+
+    <xsl:choose>
+      <!-- If the string starts with a keyword we know (including colon),
+	   highlight the keyword. -->
+      <xsl:when test="
+		      starts-with($lcase, 'purpose:') or
+		      starts-with($lcase, 'method:') or
+		      starts-with($lcase, 'references:') or
+		      starts-with($lcase, 'pre/post-conditions:') or
+		      starts-with($lcase, 'run instructions:') or
+		      starts-with($lcase, 'pass/fail criteria:') or
+		      starts-with($lcase, 'test environment:') or
+		      starts-with($lcase, 'required test data:') or
+		      starts-with($lcase, 'change history:')
+		      ">
+	<strong><xsl:value-of select="substring-before($string, ':')"/><xsl:text>:</xsl:text></strong><xsl:value-of select="substring-after($string, ':')"/>
       </xsl:when>
       <xsl:otherwise>
 	<xsl:value-of select="$string"/>
