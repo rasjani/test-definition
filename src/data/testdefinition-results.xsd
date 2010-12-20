@@ -32,23 +32,17 @@
 	<xs:restriction base="xs:anyURI"/>
       </xs:simpleType>
     </xs:attribute>
-
     <xs:attribute name="description"/>
-
     <xs:attribute name="requirement"/>
-
     <xs:attribute name="timeout" type="xs:positiveInteger"/>
-
     <xs:attribute name="type" default="unknown"/>
-
     <xs:attribute name="level" default="unknown"/>
-
+    <xs:attribute name="domain" />
+    <xs:attribute name="feature"/>
+    <xs:attribute name="component" type="xs:string" />
     <xs:attribute name="manual" type="xs:boolean" />
-
     <xs:attribute name="insignificant" type="xs:boolean" />
-
     <xs:attribute name="hwid"/>
-
   </xs:attributeGroup>
 
   <xs:element name="testresults">
@@ -81,7 +75,6 @@
 	</xs:choice>
       </xs:sequence>
       <xs:attributeGroup ref="general_attributes"/>
-      <xs:attribute name="domain" />
     </xs:complexType>
 
     <xs:unique name="uniqueSetName">
@@ -118,7 +111,6 @@
 	</xs:choice>
       </xs:sequence>
       <xs:attributeGroup ref="general_attributes"/>
-      <xs:attribute name="feature"/>
       <xs:attribute name="environment" />
     </xs:complexType>
 
@@ -148,6 +140,8 @@
       <xs:attribute name="comment"/>
       <xs:attribute name="failure_info" />
       <xs:attribute name="bugzilla_id" type="xs:positiveInteger"/>
+      <xs:attribute name="TC_ID"/>
+      <xs:attribute name="state"/>
     </xs:complexType>
   </xs:element>
 
