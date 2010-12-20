@@ -64,25 +64,25 @@
       </xsl:attribute>
       <xsl:element name="div">
 	<xsl:attribute name="class">
-	  <xsl:text>error_msg</xsl:text>
+          <xsl:text>error_msg</xsl:text>
 	</xsl:attribute>
 	<xsl:element name="p">
-	  <xsl:text>HTML descriptions found</xsl:text>
+          <xsl:text>HTML descriptions found</xsl:text>
 	</xsl:element>
 	<xsl:element name="p">
-	  <xsl:text>Using HTML inside XML is frowned upon. It will not be
-	    rendered due to possible problems in the output. If the schema
-	    is not suitable for your descriptions, try </xsl:text>
-	  <xsl:element name="a">
-	    <xsl:attribute name="href">
-	      <xsl:text>http://bugs.meego.com/enter_bug.cgi?product=Development Tools</xsl:text>
-	    </xsl:attribute>
-	    <xsl:attribute name="title">
+          <xsl:text>Using HTML inside XML is frowned upon. It will not be
+            rendered due to possible problems in the output. If the schema
+            is not suitable for your descriptions, try </xsl:text>
+          <xsl:element name="a">
+            <xsl:attribute name="href">
+              <xsl:text>http://bugs.meego.com/enter_bug.cgi?product=Development Tools</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="title">
 	      <xsl:text>MeeGo Bugzilla</xsl:text>
-	    </xsl:attribute>
-	    <xsl:text>filing</xsl:text>
-	  </xsl:element>
-	  <xsl:text> a feature request.</xsl:text>
+            </xsl:attribute>
+            <xsl:text>filing</xsl:text>
+          </xsl:element>
+          <xsl:text> a feature request.</xsl:text>
 	</xsl:element>
       </xsl:element>
     </xsl:element>
@@ -124,7 +124,7 @@
 	      width : auto;
 	    }
 
-	    p.description {
+	    p.smaller_margin {
 	      margin-bottom : 5px;
 	    }
 
@@ -164,7 +164,6 @@
 	</xsl:element>
       </head>
       <body>
-	<a name="top"></a>
 	<div id="wrapper">
 	  <!-- Override the stylesheets #header a bit -->
 	  <div id="header" style="padding-top : 30px; height : 70px;">
@@ -226,7 +225,7 @@
        and calls suite templates -->
   <xsl:template match="/testdefinition">
     <p>
-      <xsl:text>Description: </xsl:text>
+      <strong><xsl:text>Description: </xsl:text></strong>
       <xsl:call-template name="description">
 	<xsl:with-param name="nodevalue"
 			select="description"/>
@@ -267,18 +266,8 @@
   <xsl:template match="suite">
     <h2><xsl:value-of select="@name"/></h2>
 
-    <!-- Suite description -->
-    <p class="description">
-      <xsl:text>Description: </xsl:text>
-      <xsl:call-template name="description">
-	<xsl:with-param name="nodevalue"
-			select="description"/>
-	<xsl:with-param name="attrvalue"
-			select="@description"/>
-      </xsl:call-template>
-    </p>
-    <p>
-      <xsl:text>Domain: </xsl:text>
+    <p class="smaller_margin">
+      <strong><xsl:text>Domain: </xsl:text></strong>
       <xsl:choose>
 	<!-- No domain attribute, nothing to show -->
 	<xsl:when test="not(@domain)">
@@ -293,6 +282,16 @@
 	  <xsl:value-of select="@domain"/>
 	</xsl:otherwise>
       </xsl:choose>
+    </p>
+    <!-- Suite description -->
+    <p>
+      <strong><xsl:text>Description: </xsl:text></strong>
+      <xsl:call-template name="description">
+	<xsl:with-param name="nodevalue"
+			select="description"/>
+	<xsl:with-param name="attrvalue"
+			select="@description"/>
+      </xsl:call-template>
     </p>
 
     <!-- Handle the sets of this suite -->
@@ -312,17 +311,8 @@
 	    style="font-size : 1.1em;"><xsl:value-of select="@name"/></h2>
 
 	<div class="container">
-	  <p class="description">
-	    <xsl:text>Description: </xsl:text>
-	    <xsl:call-template name="description">
-	      <xsl:with-param name="nodevalue"
-			      select="description"/>
-	      <xsl:with-param name="attrvalue"
-			      select="@description"/>
-	    </xsl:call-template>
-	  </p>
-	  <p>
-	    <xsl:text>Feature: </xsl:text>
+	  <p class="smaller_margin">
+	    <strong><xsl:text>Feature: </xsl:text></strong>
 	    <xsl:choose>
 	      <!-- No feature, nothing to show -->
 	      <xsl:when test="not(@feature)">
@@ -337,6 +327,15 @@
 		<xsl:value-of select="@feature"/>
 	      </xsl:otherwise>
 	    </xsl:choose>
+	  </p>
+	  <p>
+	    <strong><xsl:text>Description: </xsl:text></strong>
+	    <xsl:call-template name="description">
+	      <xsl:with-param name="nodevalue"
+			      select="description"/>
+	      <xsl:with-param name="attrvalue"
+			      select="@description"/>
+	    </xsl:call-template>
 	  </p>
 	  
 	  <!-- Table for test cases -->
@@ -441,7 +440,9 @@
 	  </xsl:when>
 	  <!-- Had text, show it -->
 	  <xsl:otherwise>
-	    <xsl:value-of select="$nodevalue"/>
+	    <xsl:call-template name="description-trim-and-newline">
+	      <xsl:with-param name="string" select="$nodevalue"/>
+	    </xsl:call-template>
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
@@ -458,9 +459,92 @@
 	  </xsl:when>
 	  <!-- All good, show the value -->
 	  <xsl:otherwise>
-	    <xsl:value-of select="$attrvalue"/>
+	    <xsl:call-template name="description-trim-and-newline">
+	      <xsl:with-param name="string" select="$attrvalue"/>
+	    </xsl:call-template>
 	  </xsl:otherwise>
 	</xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Strip leading newlines and finally call newlines_to_br -->
+  <xsl:template name="description-trim-and-newline">
+    <xsl:param name="string"/>
+    
+    <xsl:if test="string-length($string) &gt; 1">
+      <xsl:choose>
+	<xsl:when test="substring($string, 1, 1)='&#10;'">
+	  <xsl:call-template name="description-trim-and-newline">
+	    <xsl:with-param name="string" select="substring($string, 2)"/>
+	  </xsl:call-template>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:call-template name="newlines_to_br">
+	    <xsl:with-param name="string" select="$string"/>
+	  </xsl:call-template>
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- Convert newlines to <br/> from given string -->
+  <xsl:template name="newlines_to_br">
+    <xsl:param name="string"/>
+
+    <xsl:choose>
+      <xsl:when test="contains($string, '&#10;')">
+	<xsl:call-template name="keyword_highlight">
+	  <xsl:with-param name="string"
+			  select="normalize-space(
+				  substring-before($string, '&#10;')
+				  )"/>
+	</xsl:call-template>
+	<br/>
+	<xsl:call-template name="newlines_to_br">
+	  <xsl:with-param name="string"
+			  select="substring-after($string, '&#10;')"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:call-template name="keyword_highlight">
+	  <xsl:with-param name="string"
+			  select="normalize-space($string)"/>
+	</xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- No lower-case support in XSLT 1.0 -->
+  <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'"/>
+  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+
+  <!-- Highlight certain keywords from description templates -->
+  <xsl:template name="keyword_highlight">
+    <xsl:param name="string"/>
+    
+    <xsl:variable name="lcase">
+      <xsl:value-of select="translate($string, $uppercase, $lowercase)"/>
+    </xsl:variable>
+
+    <xsl:choose>
+      <!-- If the string starts with a keyword we know (including colon),
+	   highlight the keyword. -->
+      <xsl:when test="
+		      starts-with($lcase, 'purpose:') or
+		      starts-with($lcase, 'method:') or
+		      starts-with($lcase, 'references:') or
+		      starts-with($lcase, 'pre/post-conditions:') or
+		      starts-with($lcase, 'run instructions:') or
+		      starts-with($lcase, 'pass/fail criteria:') or
+		      starts-with($lcase, 'test environment:') or
+		      starts-with($lcase, 'required test data:') or
+		      starts-with($lcase, 'change history:')
+		      ">
+	<strong><xsl:value-of select="substring-before($string, ':')"/><xsl:text>:</xsl:text></strong><xsl:value-of select="substring-after($string, ':')"/>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="$string"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
