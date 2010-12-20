@@ -416,51 +416,37 @@
 	    </thead>
 	    
 	    <!-- Handle the cases from this set -->
-	    <!-- The coloring of every other row breaks if we try to filter
-		 cases inside one for-each section, thus there are two 
-		 if's here -->
-	    <xsl:if test="not($planned_cases_mode)">
-	      <xsl:for-each select="case[
-				    not(@state) or
-				    (@state != 'Design' and @state != 'design')
-				    ]">
-		<xsl:sort select="@name"/>
-		<!-- Variable needed for coloring every other row -->
-		<xsl:variable name="color">
-		  <xsl:choose>
-		    <xsl:when test="position() mod 2 = 0">
-		      <xsl:text>even</xsl:text></xsl:when>
-		    <xsl:otherwise><xsl:text>odd</xsl:text></xsl:otherwise>
-		  </xsl:choose>
-		</xsl:variable>
-		
-		<!-- Apply templates, ie. run template "case" with
-		     the row CSS class as parameter -->
-		<xsl:apply-templates select=".">
-		  <xsl:with-param name="rowclass"
-				  select="$color"/>
-		</xsl:apply-templates>
-	      </xsl:for-each>
-	    </xsl:if>
-	    <xsl:if test="$planned_cases_mode">
-	      <xsl:for-each select="case[
-				    @state != 'Design' or @state != 'design'
-				    ]">
-		<xsl:sort select="@name"/>
-		<xsl:variable name="color">
-		  <xsl:choose>
-		    <xsl:when test="position() mod 2 = 0">
-		      <xsl:text>even</xsl:text>
-		    </xsl:when>
-		    <xsl:otherwise><xsl:text>odd</xsl:text></xsl:otherwise>
-		  </xsl:choose>
-		</xsl:variable>
-		<xsl:apply-templates select=".">
-		  <xsl:with-param name="rowclass"
-				  select="$color"/>
-		</xsl:apply-templates>
-	      </xsl:for-each>	      
-	    </xsl:if>
+
+	    <!-- When not in planned cases mode, get cases that don't have
+		 state or the state is not Design|design.
+
+		 When in planned cases mode, get cases that have state
+		 Design|design -->
+	    <xsl:for-each select="case[
+				  (not($planned_cases_mode) and
+				   (not(@state) or
+				   (@state != 'Design' and @state != 'design')))
+				  or
+				  ($planned_cases_mode and
+				   (@state = 'Design' or @state = 'design'))
+				  ]">
+	      <xsl:sort select="@name"/>
+	      <!-- Variable needed for coloring every other row -->
+	      <xsl:variable name="color">
+		<xsl:choose>
+		  <xsl:when test="position() mod 2 = 0">
+		    <xsl:text>even</xsl:text></xsl:when>
+		  <xsl:otherwise><xsl:text>odd</xsl:text></xsl:otherwise>
+		</xsl:choose>
+	      </xsl:variable>
+
+	      <!-- Apply templates, ie. run template "case" with
+		   the row CSS class as parameter -->
+	      <xsl:apply-templates select=".">
+		<xsl:with-param name="rowclass"
+				select="$color"/>
+	      </xsl:apply-templates>
+	    </xsl:for-each>
 	  </table>
 	</div>
       </div>
