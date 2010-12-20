@@ -88,16 +88,27 @@
     </xsl:element>
   </xsl:variable>
 
-  <!-- The keys for looping over stuff -->
+  <!-- The keys for looping over attributes when creating the matrix -->
   <xsl:key name="domains" match="suite" use="@domain"/>
   <xsl:key name="types" match="*" use="@type"/>
   <xsl:key name="features" match="set" use="@feature"/>
 
+  <!-- Some tests needed in more than one location -->
+  <!-- Do we have other than planned cases? -->
+  <xsl:variable 
+     name="has_cases"
+     select="count(//case[@state='Design' or @state='design'])!=count(//case)"/>
+  <!-- Do we have planned cases? -->
+  <xsl:variable 
+     name="has_planned_cases"
+     select="count(//case[@state='Design' or @state='design']) &gt; 0"/>
+  <!-- Should we show the feature coverage matrix? -->
+  <xsl:variable
+     name="show_matrix"
+     select="count(//*[@type!='']) &gt; 0 and count(//*[@domain!='']) &gt; 0"/>
+  
   <!-- The root template defining the main page structure -->
   <xsl:template match="/">
-    <!-- This stylesheet uses HTML tags and even attributes. To be super
-	 elegant one may want to change all of these to xml:elements,
-	 but one will then lose a lot in the readability -->
     <html>
       <head>
 	<meta http-equiv="Content-Type"
@@ -174,22 +185,24 @@
 	    <img class="logoimage"
 		 alt="MeeGo"
 		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/>
-	    <!-- When browsers support XSLT 2.0 an improvement idea for
-		 this would be to add the name of the file in question.
-		 That requires splitting of the URI which is currently
-		 not supported (some workaround could be implemented 
-		 as well though). Same goes for the page title -->
 	    <h1>
 	      <xsl:text>Test plan</xsl:text>
 	    </h1>
+	    <!-- Top "navigation" links -->
 	    <p>
-	      <a href="#cases" class="navilink">
-		<xsl:text>Test cases &gt;</xsl:text>
-	      </a>
-	      <xsl:if 
-		 test="count(//*[@type!='']) &gt;0 and 
-		       count(//*[@domain!='']) &gt;0">
-		<a href="#matrix" class="navilink">
+	      <xsl:if test="$has_cases">
+		<a href="#cases" title="Test cases" class="navilink">
+		  <xsl:text>Test cases &gt;</xsl:text>
+		</a>
+	      </xsl:if>
+	      <xsl:if test="$has_planned_cases">
+		<a href="#planned_cases" title="Planned cases" class="navilink">
+		  <xsl:text>Planned cases &gt;</xsl:text>
+		</a>
+	      </xsl:if>
+	      <xsl:if test="$show_matrix"> 
+		<a href="#matrix" 
+		   title="Feature coverage matrix" class="navilink">
 		  <xsl:text>Feature coverage matrix &gt;</xsl:text>
 		</a>
 	      </xsl:if>
@@ -199,16 +212,10 @@
 	  <div id="page">
 	    <div class="page_content">
 	      <xsl:call-template name="html_description_warning"/>
-	      <!-- Page content comes here -->
-	      <xsl:apply-templates />
+	      <!-- Page content (the default scenario) comes here -->
+	      <xsl:apply-templates /> 
 	      
-	      <!-- Show the matrix only if we have type and domain
-		   attributes. May not still be correct as there may
-		   be no cases that have both, but at least basic problems
-		   are solved -->
-	      <xsl:if 
-		 test="count(//*[@type!='']) &gt;0 and 
-		       count(//*[@domain!='']) &gt;0">
+	      <xsl:if test="$show_matrix">
 		<a id="matrix"></a>
 		<h2><xsl:text>Feature coverage matrix</xsl:text></h2>
 		<xsl:call-template name="feature_coverage_matrix"/>
@@ -237,6 +244,7 @@
 			select="@description"/>
       </xsl:call-template>
     </p>
+
     <table class="basictable">
       <tr>
 	<td><xsl:text>Total cases: </xsl:text></td>
@@ -253,21 +261,56 @@
     <br/>
     <br/>
     
-    <a id="cases"></a>
-    <h1><xsl:text>Test cases</xsl:text></h1>
-    <!-- Handle suites -->
-    <xsl:for-each select="suite">
-      <xsl:sort select="@name"/>
-      <xsl:apply-templates select="."/>
-      <br/>
-      <br/>
-      <br/>
-    </xsl:for-each>
+    <xsl:if test="$has_cases">
+      <a id="cases"></a>
+      <h1><xsl:text>Test cases</xsl:text></h1>
+
+      <!-- Handle suites -->
+      <xsl:for-each select="suite">
+	<xsl:sort select="@name"/>
+	<!-- If suite has only planned cases, skip it -->
+	<xsl:if test="count(set/case[@state='Design' or @state='design'])
+		      != count(set/case)">
+	  <xsl:apply-templates select=".">
+	    <xsl:with-param name="planned_cases_mode" select="0"/>
+	  </xsl:apply-templates>
+	</xsl:if>
+	<br/>
+	<br/>
+	<br/>
+      </xsl:for-each>
+    </xsl:if>
+
+    <xsl:if test="$has_planned_cases">
+      <a id="planned_cases"></a>
+      <h1><xsl:text>Planned cases</xsl:text></h1>
+
+      <!-- Handle suites -->
+      <xsl:for-each select="suite">
+	<xsl:sort select="@name"/>
+	
+	<!-- If suite has no planned cases, skip it -->
+	<xsl:if test="count(set/case[@state='Design' or @state='design'])
+		      &gt; 0">
+	  <xsl:apply-templates select=".">
+	    <xsl:with-param name="planned_cases_mode" select="1"/>
+	  </xsl:apply-templates>
+	</xsl:if>
+	<br/>
+	<br/>
+	<br/>
+      </xsl:for-each>
+    </xsl:if>
 
   </xsl:template>
 
   <!-- Process a single suite, its sets and their cases -->
   <xsl:template match="suite">
+    <!-- Set to 0 to show other than planned cases, and to 1 to show only 
+	 planned cases. Passed on to set and case as well. If set to 0,
+	 sets containing only planned cases are skipped and vice versa -->
+    <xsl:param name="planned_cases_mode"/>
+
     <h2><xsl:value-of select="@name"/></h2>
 
     <p class="smaller_margin">
@@ -301,7 +344,22 @@
     <!-- Handle the sets of this suite -->
     <xsl:for-each select="set">
       <xsl:sort select="@name"/>
-      <xsl:apply-templates select="."/>
+      <!-- When not in planned cases mode: if the count of planned cases is
+	   not equal to count of all cases, process the set.
+	   
+	   When in planned cases mode: if the count of planned cases is more
+	   than zero, process the set -->
+      <xsl:if test="(not($planned_cases_mode) and
+  		     count(case[@state='Design' or @state='design']) 
+		     != count(case)) 
+		    or
+		    ($planned_cases_mode and
+  		     count(case[@state='Design' or @state='design']) &gt; 0)">
+	  <xsl:apply-templates select=".">
+	    <xsl:with-param name="planned_cases_mode" 
+			    select="$planned_cases_mode"/>
+	  </xsl:apply-templates>
+	</xsl:if>
     </xsl:for-each>
   </xsl:template>
 
@@ -309,6 +367,8 @@
   <!-- Handle a single test set. Creates a test_results classed div
        with test set information and a table of test cases -->
   <xsl:template match="set">
+    <xsl:param name="planned_cases_mode"/>
+
     <div class="sectioncontainer">
       <div class="test_results">
 	<h2 id="test_results"
@@ -358,20 +418,34 @@
 	    <!-- Handle the cases from this set -->
 	    <xsl:for-each select="case">
 	      <xsl:sort select="@name"/>
-	      <!-- Variable needed for coloring every other row -->
-	      <xsl:variable name="color">
-		<xsl:choose>
-		  <xsl:when test="position() mod 2 = 0">even</xsl:when>
-		  <xsl:otherwise>odd</xsl:otherwise>
-		</xsl:choose>
-	      </xsl:variable>
 	      
-	      <!-- Apply templates, ie. run template "case" with
-		   the row CSS class as parameter -->
-	      <xsl:apply-templates select=".">
-		<xsl:with-param name="rowclass"
-				select="$color"/>
-	      </xsl:apply-templates>
+	      <!-- When not in planned cases mode: if the case has no
+		   state or state is not planned, process the case.
+
+		   When in planned cases mode: process only cases that have
+		   state defined as planned case. -->
+	      <xsl:if test="(not($planned_cases_mode) and 
+			     (not(@state) or 
+			      (@state!='Design' and @state!='design')))
+			    or
+			    ($planned_cases_mode and
+			     (@state='Design' or @state='design'))
+			    ">
+		<!-- Variable needed for coloring every other row -->
+		<xsl:variable name="color">
+		  <xsl:choose>
+		    <xsl:when test="position() mod 2 = 0">even</xsl:when>
+		    <xsl:otherwise>odd</xsl:otherwise>
+		  </xsl:choose>
+		</xsl:variable>
+		
+		<!-- Apply templates, ie. run template "case" with
+		     the row CSS class as parameter -->
+		<xsl:apply-templates select=".">
+		  <xsl:with-param name="rowclass"
+				  select="$color"/>
+		</xsl:apply-templates>
+	      </xsl:if>
 	    </xsl:for-each>
 	    
 	  </table>
@@ -472,7 +546,8 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Strip leading newlines and finally call newlines_to_br -->
+  <!-- Strip leading newlines and call newlines_to_br which then calls
+       keyword_highligh -->
   <xsl:template name="description-trim-and-newline">
     <xsl:param name="string"/>
     
