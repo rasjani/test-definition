@@ -136,7 +136,7 @@
 	    }
 
 	    p.smaller_margin {
-	      margin-bottom : 5px;
+	      margin-top : 0px;
 	    }
 
 	    img.logoimage {
@@ -314,24 +314,6 @@
     <h2><xsl:value-of select="@name"/></h2>
 
     <p class="smaller_margin">
-      <strong><xsl:text>Domain: </xsl:text></strong>
-      <xsl:choose>
-	<!-- No domain attribute, nothing to show -->
-	<xsl:when test="not(@domain)">
-	  <xsl:copy-of select="$notdefined"/>
-	</xsl:when>
-	<!-- Has domain but it's empty -->
-	<xsl:when test="@domain=''">
-	  <xsl:copy-of select="$notdefined"/>
-	</xsl:when>
-	<!-- All good, show the value -->
-	<xsl:otherwise>
-	  <xsl:value-of select="@domain"/>
-	</xsl:otherwise>
-      </xsl:choose>
-    </p>
-    <!-- Suite description -->
-    <p>
       <strong><xsl:text>Description: </xsl:text></strong>
       <xsl:call-template name="description">
 	<xsl:with-param name="nodevalue"
@@ -376,23 +358,6 @@
 
 	<div class="container">
 	  <p class="smaller_margin">
-	    <strong><xsl:text>Feature: </xsl:text></strong>
-	    <xsl:choose>
-	      <!-- No feature, nothing to show -->
-	      <xsl:when test="not(@feature)">
-		<xsl:copy-of select="$notdefined"/>
-	      </xsl:when>
-	      <!--  Feature attribute found but is emtpy -->
-	      <xsl:when test="@feature=''">
-		<xsl:copy-of select="$notdefined"/>
-	      </xsl:when>
-	      <!-- All good, show it -->
-	      <xsl:otherwise>
-		<xsl:value-of select="@feature"/>
-	      </xsl:otherwise>
-	    </xsl:choose>
-	  </p>
-	  <p>
 	    <strong><xsl:text>Description: </xsl:text></strong>
 	    <xsl:call-template name="description">
 	      <xsl:with-param name="nodevalue"
@@ -408,10 +373,7 @@
 	      <tr>
 		<th><xsl:text>Test Case</xsl:text></th>
 		<th><xsl:text>Description</xsl:text></th>
-		<th><xsl:text>Requirement</xsl:text></th>
-		<th><xsl:text>Type</xsl:text></th>
-		<th><xsl:text>Level</xsl:text></th>
-		<th><xsl:text>Manual</xsl:text></th>
+		<th><xsl:text>Attributes</xsl:text></th>
 	      </tr>
 	    </thead>
 	    
@@ -472,23 +434,48 @@
 	</xsl:call-template>
       </td>
       <td>
-	<!-- Requirement, can be inherited -->
-	<xsl:value-of select="(ancestor-or-self::*/@requirement)[last()]"/>
-      </td>
-      <td>
-	<!-- Type, can be inherited -->
-	<xsl:value-of select="(ancestor-or-self::*/@type)[last()]"/>
-      </td>
-      <td>
-	<!-- Level, also inherited -->
-	<xsl:value-of select="(ancestor-or-self::*/@level)[last()]"/>
-      </td>
-      <td>
-	<!-- Manual, inherited as well. We show "Yes" if the manual
-	     attribute is set to true, and nothing otherwise -->
-	<xsl:if test="(ancestor-or-self::*/@manual)[last()] = 'true'">
-	  <xsl:text>Yes</xsl:text>
-	</xsl:if>
+	<!-- Table inside a table for the attributes. Not using rowspan
+	     for name and description since this way is simpler to use -->
+	<table>
+	  <tr>
+	    <td><xsl:text>Type:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@type)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Domain:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@domain)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Feature:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@feature)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Execution&#160;type:</xsl:text></td>
+	    <td>
+	      <xsl:choose>
+		<xsl:when test="(ancestor-or-self::*/@manual)[last()] = 'true'">
+		  <xsl:text>Manual</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:text>Auto</xsl:text>
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Component:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@component)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Level:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@level)[last()]"/></td>
+	  </tr>
+	</table>
       </td>
     </xsl:element>
   </xsl:template>
