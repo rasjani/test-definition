@@ -1,3 +1,12 @@
+test-definition (1.2.2) unstable; urgency=low
+
+  * Test case description field formatting improved in XSLT (BMC#11344)
+  * XSLT support for wiki.meego.com/TestCaseTemplate alignment (BMC#11551)
+  * Planned test cases (state=Design) listed separately in XSLT (BMC#11478)
+  * Schemas support wiki.meego.com/TestCaseTemplate alignment (BMC#11474)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Tue, 21 Dec 2010 11:56:18 +0200
+
 test-definition (1.2.1) unstable; urgency=low
 
   * Result schema updated to accept the same attributes as test definition (BMC#10862)

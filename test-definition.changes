@@ -1,3 +1,8 @@
+* Tue Dec 21 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.2
+- Test case description field formatting improved in XSLT (BMC#11344)
+- XSLT support for wiki.meego.com/TestCaseTemplate alignment (BMC#11551)
+- Planned test cases (state=Design) listed separately in XSLT (BMC#11478)
+- Schemas support wiki.meego.com/TestCaseTemplate alignment (BMC#11474)
 * Fri Dec 10 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.1
 - Result schema updated to accept the same attributes as test definition (BMC#10862)
 * Thu Nov 25 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.0
