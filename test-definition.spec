@@ -15,7 +15,7 @@ BuildRoot:	mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %package tests
 Summary: Acceptance tests for schemas in package test-definition
-Requires: test-definition, eat
+Requires: test-definition
 
 %description
 Provides two validation schemas; testdefinition-syntax.xsd for validating XML schematics and
