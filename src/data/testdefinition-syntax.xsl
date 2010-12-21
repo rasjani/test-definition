@@ -88,16 +88,27 @@
     </xsl:element>
   </xsl:variable>
 
-  <!-- The keys for looping over stuff -->
+  <!-- The keys for looping over attributes when creating the matrix -->
   <xsl:key name="domains" match="suite" use="@domain"/>
   <xsl:key name="types" match="*" use="@type"/>
   <xsl:key name="features" match="set" use="@feature"/>
 
+  <!-- Some tests needed in more than one location -->
+  <!-- Do we have other than planned cases? -->
+  <xsl:variable 
+     name="has_cases"
+     select="count(//case[@state='Design' or @state='design'])!=count(//case)"/>
+  <!-- Do we have planned cases? -->
+  <xsl:variable 
+     name="has_planned_cases"
+     select="count(//case[@state='Design' or @state='design']) &gt; 0"/>
+  <!-- Should we show the feature coverage matrix? -->
+  <xsl:variable
+     name="show_matrix"
+     select="count(//*[@type!='']) &gt; 0 and count(//*[@domain!='']) &gt; 0"/>
+  
   <!-- The root template defining the main page structure -->
   <xsl:template match="/">
-    <!-- This stylesheet uses HTML tags and even attributes. To be super
-	 elegant one may want to change all of these to xml:elements,
-	 but one will then lose a lot in the readability -->
     <html>
       <head>
 	<meta http-equiv="Content-Type"
@@ -125,7 +136,7 @@
 	    }
 
 	    p.smaller_margin {
-	      margin-bottom : 5px;
+	      margin-top : 0px;
 	    }
 
 	    img.logoimage {
@@ -139,6 +150,10 @@
 	    div.sectioncontainer {
 	      padding-left : 30px; 
 	      padding-right : 30px;
+	    }
+
+	    td {
+	      vertical-align : top;
 	    }
 
 	    tr.separator {
@@ -170,22 +185,24 @@
 	    <img class="logoimage"
 		 alt="MeeGo"
 		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/>
-	    <!-- When browsers support XSLT 2.0 an improvement idea for
-		 this would be to add the name of the file in question.
-		 That requires splitting of the URI which is currently
-		 not supported (some workaround could be implemented 
-		 as well though). Same goes for the page title -->
 	    <h1>
 	      <xsl:text>Test plan</xsl:text>
 	    </h1>
+	    <!-- Top "navigation" links -->
 	    <p>
-	      <a href="#cases" class="navilink">
-		<xsl:text>Test cases &gt;</xsl:text>
-	      </a>
-	      <xsl:if 
-		 test="count(//*[@type!='']) &gt;0 and 
-		       count(//*[@domain!='']) &gt;0">
-		<a href="#matrix" class="navilink">
+	      <xsl:if test="$has_cases">
+		<a href="#cases" title="Test cases" class="navilink">
+		  <xsl:text>Test cases &gt;</xsl:text>
+		</a>
+	      </xsl:if>
+	      <xsl:if test="$has_planned_cases">
+		<a href="#planned_cases" title="Planned cases" class="navilink">
+		  <xsl:text>Planned cases &gt;</xsl:text>
+		</a>
+	      </xsl:if>
+	      <xsl:if test="$show_matrix"> 
+		<a href="#matrix" 
+		   title="Feature coverage matrix" class="navilink">
 		  <xsl:text>Feature coverage matrix &gt;</xsl:text>
 		</a>
 	      </xsl:if>
@@ -195,16 +212,10 @@
 	  <div id="page">
 	    <div class="page_content">
 	      <xsl:call-template name="html_description_warning"/>
-	      <!-- Page content comes here -->
-	      <xsl:apply-templates />
+	      <!-- Page content (the default scenario) comes here -->
+	      <xsl:apply-templates /> 
 	      
-	      <!-- Show the matrix only if we have type and domain
-		   attributes. May not still be correct as there may
-		   be no cases that have both, but at least basic problems
-		   are solved -->
-	      <xsl:if 
-		 test="count(//*[@type!='']) &gt;0 and 
-		       count(//*[@domain!='']) &gt;0">
+	      <xsl:if test="$show_matrix">
 		<a id="matrix"></a>
 		<h2><xsl:text>Feature coverage matrix</xsl:text></h2>
 		<xsl:call-template name="feature_coverage_matrix"/>
@@ -233,6 +244,7 @@
 			select="@description"/>
       </xsl:call-template>
     </p>
+
     <table class="basictable">
       <tr>
 	<td><xsl:text>Total cases: </xsl:text></td>
@@ -249,42 +261,59 @@
     <br/>
     <br/>
     
-    <a id="cases"></a>
-    <h1><xsl:text>Test cases</xsl:text></h1>
-    <!-- Handle suites -->
-    <xsl:for-each select="suite">
-      <xsl:sort select="@name"/>
-      <xsl:apply-templates select="."/>
-      <br/>
-      <br/>
-      <br/>
-    </xsl:for-each>
+    <xsl:if test="$has_cases">
+      <a id="cases"></a>
+      <h1><xsl:text>Test cases</xsl:text></h1>
+
+      <!-- Handle suites -->
+      <xsl:for-each select="suite">
+	<xsl:sort select="@name"/>
+	<!-- If suite has only planned cases, skip it -->
+	<xsl:if test="count(set/case[@state='Design' or @state='design'])
+		      != count(set/case)">
+	  <xsl:apply-templates select=".">
+	    <xsl:with-param name="planned_cases_mode" select="0"/>
+	  </xsl:apply-templates>
+	</xsl:if>
+	<br/>
+	<br/>
+	<br/>
+      </xsl:for-each>
+    </xsl:if>
+
+    <xsl:if test="$has_planned_cases">
+      <a id="planned_cases"></a>
+      <h1><xsl:text>Planned cases</xsl:text></h1>
+
+      <!-- Handle suites -->
+      <xsl:for-each select="suite">
+	<xsl:sort select="@name"/>
+	
+	<!-- If suite has no planned cases, skip it -->
+	<xsl:if test="count(set/case[@state='Design' or @state='design'])
+		      &gt; 0">
+	  <xsl:apply-templates select=".">
+	    <xsl:with-param name="planned_cases_mode" select="1"/>
+	  </xsl:apply-templates>
+	</xsl:if>
+	<br/>
+	<br/>
+	<br/>
+      </xsl:for-each>
+    </xsl:if>
 
   </xsl:template>
 
   <!-- Process a single suite, its sets and their cases -->
   <xsl:template match="suite">
+    <!-- Set to 0 to show other than planned cases, and to 1 to show only 
+	 planned cases. Passed on to set and case as well. If set to 0,
+	 sets containing only planned cases are skipped and vice versa -->
+    <xsl:param name="planned_cases_mode"/>
+
     <h2><xsl:value-of select="@name"/></h2>
 
     <p class="smaller_margin">
-      <strong><xsl:text>Domain: </xsl:text></strong>
-      <xsl:choose>
-	<!-- No domain attribute, nothing to show -->
-	<xsl:when test="not(@domain)">
-	  <xsl:copy-of select="$notdefined"/>
-	</xsl:when>
-	<!-- Has domain but it's empty -->
-	<xsl:when test="@domain=''">
-	  <xsl:copy-of select="$notdefined"/>
-	</xsl:when>
-	<!-- All good, show the value -->
-	<xsl:otherwise>
-	  <xsl:value-of select="@domain"/>
-	</xsl:otherwise>
-      </xsl:choose>
-    </p>
-    <!-- Suite description -->
-    <p>
       <strong><xsl:text>Description: </xsl:text></strong>
       <xsl:call-template name="description">
 	<xsl:with-param name="nodevalue"
@@ -297,7 +326,22 @@
     <!-- Handle the sets of this suite -->
     <xsl:for-each select="set">
       <xsl:sort select="@name"/>
-      <xsl:apply-templates select="."/>
+      <!-- When not in planned cases mode: if the count of planned cases is
+	   not equal to count of all cases, process the set.
+	   
+	   When in planned cases mode: if the count of planned cases is more
+	   than zero, process the set -->
+      <xsl:if test="(not($planned_cases_mode) and
+  		     count(case[@state='Design' or @state='design']) 
+		     != count(case)) 
+		    or
+		    ($planned_cases_mode and
+  		     count(case[@state='Design' or @state='design']) &gt; 0)">
+	  <xsl:apply-templates select=".">
+	    <xsl:with-param name="planned_cases_mode" 
+			    select="$planned_cases_mode"/>
+	  </xsl:apply-templates>
+	</xsl:if>
     </xsl:for-each>
   </xsl:template>
 
@@ -305,6 +349,8 @@
   <!-- Handle a single test set. Creates a test_results classed div
        with test set information and a table of test cases -->
   <xsl:template match="set">
+    <xsl:param name="planned_cases_mode"/>
+
     <div class="sectioncontainer">
       <div class="test_results">
 	<h2 id="test_results"
@@ -312,23 +358,6 @@
 
 	<div class="container">
 	  <p class="smaller_margin">
-	    <strong><xsl:text>Feature: </xsl:text></strong>
-	    <xsl:choose>
-	      <!-- No feature, nothing to show -->
-	      <xsl:when test="not(@feature)">
-		<xsl:copy-of select="$notdefined"/>
-	      </xsl:when>
-	      <!--  Feature attribute found but is emtpy -->
-	      <xsl:when test="@feature=''">
-		<xsl:copy-of select="$notdefined"/>
-	      </xsl:when>
-	      <!-- All good, show it -->
-	      <xsl:otherwise>
-		<xsl:value-of select="@feature"/>
-	      </xsl:otherwise>
-	    </xsl:choose>
-	  </p>
-	  <p>
 	    <strong><xsl:text>Description: </xsl:text></strong>
 	    <xsl:call-template name="description">
 	      <xsl:with-param name="nodevalue"
@@ -344,24 +373,35 @@
 	      <tr>
 		<th><xsl:text>Test Case</xsl:text></th>
 		<th><xsl:text>Description</xsl:text></th>
-		<th><xsl:text>Requirement</xsl:text></th>
-		<th><xsl:text>Type</xsl:text></th>
-		<th><xsl:text>Level</xsl:text></th>
-		<th><xsl:text>Manual</xsl:text></th>
+		<th><xsl:text>Attributes</xsl:text></th>
 	      </tr>
 	    </thead>
 	    
 	    <!-- Handle the cases from this set -->
-	    <xsl:for-each select="case">
+
+	    <!-- When not in planned cases mode, get cases that don't have
+		 state or the state is not Design|design.
+
+		 When in planned cases mode, get cases that have state
+		 Design|design -->
+	    <xsl:for-each select="case[
+				  (not($planned_cases_mode) and
+				   (not(@state) or
+				   (@state != 'Design' and @state != 'design')))
+				  or
+				  ($planned_cases_mode and
+				   (@state = 'Design' or @state = 'design'))
+				  ]">
 	      <xsl:sort select="@name"/>
 	      <!-- Variable needed for coloring every other row -->
 	      <xsl:variable name="color">
 		<xsl:choose>
-		  <xsl:when test="position() mod 2 = 0">even</xsl:when>
-		  <xsl:otherwise>odd</xsl:otherwise>
+		  <xsl:when test="position() mod 2 = 0">
+		    <xsl:text>even</xsl:text></xsl:when>
+		  <xsl:otherwise><xsl:text>odd</xsl:text></xsl:otherwise>
 		</xsl:choose>
 	      </xsl:variable>
-	      
+
 	      <!-- Apply templates, ie. run template "case" with
 		   the row CSS class as parameter -->
 	      <xsl:apply-templates select=".">
@@ -369,9 +409,7 @@
 				select="$color"/>
 	      </xsl:apply-templates>
 	    </xsl:for-each>
-	    
 	  </table>
-	  
 	</div>
       </div>
     </div>
@@ -396,23 +434,48 @@
 	</xsl:call-template>
       </td>
       <td>
-	<!-- Requirement, can be inherited -->
-	<xsl:value-of select="(ancestor-or-self::*/@requirement)[last()]"/>
-      </td>
-      <td>
-	<!-- Type, can be inherited -->
-	<xsl:value-of select="(ancestor-or-self::*/@type)[last()]"/>
-      </td>
-      <td>
-	<!-- Level, also inherited -->
-	<xsl:value-of select="(ancestor-or-self::*/@level)[last()]"/>
-      </td>
-      <td>
-	<!-- Manual, inherited as well. We show "Yes" if the manual
-	     attribute is set to true, and nothing otherwise -->
-	<xsl:if test="(ancestor-or-self::*/@manual)[last()] = 'true'">
-	  <xsl:text>Yes</xsl:text>
-	</xsl:if>
+	<!-- Table inside a table for the attributes. Not using rowspan
+	     for name and description since this way is simpler to use -->
+	<table>
+	  <tr>
+	    <td><xsl:text>Type:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@type)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Domain:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@domain)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Feature:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@feature)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Execution&#160;type:</xsl:text></td>
+	    <td>
+	      <xsl:choose>
+		<xsl:when test="(ancestor-or-self::*/@manual)[last()] = 'true'">
+		  <xsl:text>Manual</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:text>Auto</xsl:text>
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Component:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@component)[last()]"/></td>
+	  </tr>
+	  <tr>
+	    <td><xsl:text>Level:</xsl:text></td>
+	    <td><xsl:value-of 
+		   select="(ancestor-or-self::*/@level)[last()]"/></td>
+	  </tr>
+	</table>
       </td>
     </xsl:element>
   </xsl:template>
@@ -468,7 +531,8 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Strip leading newlines and finally call newlines_to_br -->
+  <!-- Strip leading newlines and call newlines_to_br which then calls
+       keyword_highligh -->
   <xsl:template name="description-trim-and-newline">
     <xsl:param name="string"/>
     
