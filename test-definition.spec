@@ -20,7 +20,6 @@ Requires: test-definition
 %description
 Provides two validation schemas; testdefinition-syntax.xsd for validating XML schematics and
 more strict testdefinition-tm_terms.xsd for validating schematics + certain mandatory attributes.
-See: https://projects.maemo.org/docs/testing/xml-definition.html.
 
 %description tests
 Acceptance tests for schemas in package test-definition
