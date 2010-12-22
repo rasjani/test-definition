@@ -155,6 +155,10 @@
 	      vertical-align : top;
 	    }
 
+	    td.noborder {
+	      border : none;
+	    }
+
 	    tr.separator {
 	      line-height : 1px;
 	    }
@@ -438,22 +442,22 @@
 	<table>
 	  <tr>
 	    <td><xsl:text>Type:</xsl:text></td>
-	    <td><xsl:value-of 
+	    <td class="noborder"><xsl:value-of 
 		   select="(ancestor-or-self::*/@type)[last()]"/></td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Domain:</xsl:text></td>
-	    <td><xsl:value-of 
+	    <td class="noborder"><xsl:value-of 
 		   select="(ancestor-or-self::*/@domain)[last()]"/></td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Feature:</xsl:text></td>
-	    <td><xsl:value-of 
+	    <td class="noborder"><xsl:value-of 
 		   select="(ancestor-or-self::*/@feature)[last()]"/></td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Execution&#160;type:</xsl:text></td>
-	    <td>
+	    <td class="noborder">
 	      <xsl:choose>
 		<xsl:when test="(ancestor-or-self::*/@manual)[last()] = 'true'">
 		  <xsl:text>Manual</xsl:text>
@@ -466,12 +470,12 @@
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Component:</xsl:text></td>
-	    <td><xsl:value-of 
+	    <td class="noborder"><xsl:value-of 
 		   select="(ancestor-or-self::*/@component)[last()]"/></td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Level:</xsl:text></td>
-	    <td><xsl:value-of 
+	    <td class="noborder"><xsl:value-of 
 		   select="(ancestor-or-self::*/@level)[last()]"/></td>
 	  </tr>
 	</table>
