@@ -89,9 +89,8 @@
   </xsl:variable>
 
   <!-- The keys for looping over attributes when creating the matrix -->
-  <xsl:key name="domains" match="suite" use="@domain"/>
-  <xsl:key name="types" match="*" use="@type"/>
-  <xsl:key name="features" match="set" use="@feature"/>
+  <xsl:key name="domains" match="*" use="@domain"/>
+  <xsl:key name="features" match="*" use="@feature"/>
 
   <!-- Some tests needed in more than one location -->
   <!-- Do we have other than planned cases? -->
@@ -617,7 +616,7 @@
        useful for the case count table in the beginning of the page -->
   <xsl:template name="cases_by_domain">
     <xsl:for-each 
-       select="//suite[generate-id()=generate-id(key('domains',@domain)[1])]">
+       select="//*[generate-id()=generate-id(key('domains',@domain)[1])]">
       <xsl:sort select="@domain"/>
       <xsl:variable name="current_domain">
 	<xsl:value-of select="@domain"/>
@@ -631,7 +630,10 @@
 	  </td>
 	  <td>
 	    <xsl:value-of 
-	       select="count(//suite[@domain=$current_domain]/set/case)"/>
+	       select="count(
+		       //suite/set/case
+		       [(ancestor-or-self::*/@domain)[last()]=
+		       $current_domain])"/>
 	  </td>
 	</tr>
       </xsl:if>
@@ -639,13 +641,23 @@
     
     <!-- Get case counts from suites not having a domain or having an 
 	 empty one -->
-    <xsl:if test="count(//suite[not(@domain)]) &gt; '0' or 
-		  count(//suite[@domain='']) &gt; '0'">
+    <xsl:if test="count(
+		  //case[(ancestor-or-self::*/@domain)[last()]='']
+		  ) &gt; 0
+		  or
+		  count(
+		  //case[not((ancestor-or-self::*/@domain)[last()])]
+		  ) &gt; 0">
       <tr>
 	<td><xsl:text>N/A:</xsl:text></td>
 	<td><xsl:value-of 
-	       select="count(//suite[not(@domain)]/set/case) + 
-		       count(//suite[@domain='']/set/case)"/></td>
+	       select="count(
+		       //case[(ancestor-or-self::*/@domain)[last()]='']
+		       )
+		       +
+		       count(
+		       //case[not((ancestor-or-self::*/@domain)[last()])]
+		       )"/></td>
       </tr>
     </xsl:if>
   </xsl:template>
@@ -673,14 +685,15 @@
 	<!-- Print header -->
 	<thead>
 	  <tr>
-	    <th><xsl:text>Domain/Type</xsl:text></th>
-	    <!-- We need the types for header level -->
-	    <xsl:for-each
-	       select="//*[generate-id()=generate-id(key('types',@type)[1])]">
-	      <!-- Just skip the empty types -->
-	      <xsl:if test="@type!=''">
+	    <th><xsl:text>Feature/Domain</xsl:text></th>
+	    <!-- Headers are now domains -->
+	    <xsl:for-each 
+	       select="//*[generate-id()=
+		       generate-id(key('domains',@domain)[1])]">
+	      <!-- Just skip the empty features -->
+	      <xsl:if test="@domain!=''">
 		<th class="matrixtype">
-		  <xsl:value-of select="@type"/>
+		  <xsl:value-of select="@domain"/>
 		</th>
 	      </xsl:if>
 	    </xsl:for-each>
@@ -688,116 +701,92 @@
 	  </tr>
 	</thead>
 	
-	<!-- Start going through the domains, and inside each go through
-	     the features and the test types and count cases -->
+	<!-- Start going through the features, and inside each go through
+	     the domains and count cases -->
 	<xsl:for-each 
-	   select="//suite[generate-id()=
-		   generate-id(key('domains',@domain)[1])]">
-	  <xsl:variable name="current_domain">
-	    <xsl:value-of select="@domain"/>
+	   select="//*[generate-id()=
+		   generate-id(key('features',@feature)[1])]">
+	  <xsl:variable name="current_feature">
+	    <xsl:value-of select="@feature"/>
 	  </xsl:variable>
 	  
-	  <!-- Skip empty domains -->
-          <xsl:if test="$current_domain!=''">
-	    <tr class="even">
-	      <td class="domaintitle">
-		<xsl:value-of select="$current_domain"/>
-	      </td>
-	      <!-- Go through the types -->
-	      <xsl:for-each
-		 select="//*[generate-id() = 
-			 generate-id(key('types',@type)[1])]">
-		<xsl:variable name="current_type">
-		  <xsl:value-of select="@type"/>
-		</xsl:variable>
-		
-		<!-- Skip also empty types -->
-		<xsl:if test="$current_type!=''">
-		  <td class="matrixnumberbold">
-		    <xsl:value-of
-		       select="count(
-			       //suite[@domain=$current_domain]
-			       /set/case
-			       [(ancestor-or-self::*/@type)[last()]=
-			       $current_type])"/>
-		  </td>
-		</xsl:if>
-	      </xsl:for-each>
-
-	      <!-- Row sum -->
-	      <td class="matrixnumberbold">
-		<!-- Cases from current domain that have a type -->
-		<xsl:value-of
-		   select="count(
-			   //suite[@domain=$current_domain]
-			   /set/case
-			   [(ancestor-or-self::*/@type)[last()]!=''])"/>
-	      </td>
-	    </tr>
-
-	    <!-- Features for this domain -->
-	    <xsl:for-each 
-	       select="//suite[@domain=$current_domain]/set[generate-id() =
-		       generate-id(key('features',@feature)[1])]">
-	      <xsl:variable name="current_feature">
-		<xsl:value-of select="@feature"/>
-	      </xsl:variable>
-
-	      <!-- Skip empty features -->
-	      <xsl:if test="$current_feature!=''">
-		<tr class="feature">
-		  <td><xsl:value-of select="$current_feature"/></td>
+	  <!-- Skip empty features -->
+          <xsl:if test="$current_feature!=''">
+	    <!-- Check that cases with this feature and non-empty 
+		 domain exist -->
+	    <xsl:if test="count(//case
+			  [
+			  (ancestor-or-self::*/@feature)[last()]=
+			  $current_feature 
+			  and
+			  (ancestor-or-self::*/@domain)[last()]!=''
+			  ])">
+	      <tr class="even">
+		<td class="domaintitle">
+		  <xsl:value-of select="$current_feature"/>
+		</td>
+		<!-- Go through the domains -->
+		<xsl:for-each
+		   select="//*[generate-id() = 
+			   generate-id(key('domains',@domain)[1])]">
+		  <xsl:variable name="current_domain">
+		    <xsl:value-of select="@domain"/>
+		  </xsl:variable>
 		  
-		  <!-- Go through the types -->
-		  <xsl:for-each
-		     select="//*[generate-id() = 
-			     generate-id(key('types',@type)[1])]">
-		    <xsl:variable name="current_type">
-		      <xsl:value-of select="@type"/>
-		    </xsl:variable>
-		    
-		    <!-- Skip also empty types -->
-		    <xsl:if test="$current_type!=''">
-		      <td class="matrixnumber">
-			<xsl:value-of
-			   select="count(
-				   //suite[@domain=$current_domain]
-				   /set[@feature=$current_feature]/case
-				   [(ancestor-or-self::*/@type)[last()]=
-				   $current_type])"/>
-		      </td>
-		    </xsl:if>
-		  </xsl:for-each>
-		  <!-- And the row sum -->
-		  <td class="matrixnumber">
-		    <!-- Domain/feature match + some type -->
-		    <xsl:value-of
-		       select="count(
-			       //suite[@domain=$current_domain]
-			       /set[@feature=$current_feature]/case
-			       [(ancestor-or-self::*/@type)[last()]!=''])"/>
-		  </td>
-		</tr>
-	      </xsl:if>
-	    </xsl:for-each>
+		  <!-- Skip also empty domains -->
+		  <xsl:if test="$current_domain!=''">
+		    <td class="matrixnumberbold">
+		      <xsl:value-of
+			 select="count(
+				 //case
+				 [
+				 (ancestor-or-self::*/@feature)[last()]=
+				 $current_feature 
+				 and
+				 (ancestor-or-self::*/@domain)[last()]=
+				 $current_domain
+				 ])"/>
+		    </td>
+		  </xsl:if>
+		</xsl:for-each>
+		
+		<!-- Row sum -->
+		<td class="matrixnumberbold">
+		  <!-- Cases from current feature that have a domain -->
+		  <xsl:value-of
+		     select="count(
+			     //case
+			     [
+			     (ancestor-or-self::*/@domain)[last()]!=''
+			     and
+			     (ancestor-or-self::*/@feature)[last()]=
+			     $current_feature
+			     ])"/>
+		</td>
+	      </tr>
+	    </xsl:if>
 	  </xsl:if>
 	</xsl:for-each>
-
+	
 	<!-- Last row holds column totals -->
 	<tr class="even">
 	  <td class="domaintitle"><xsl:text>Total</xsl:text></td>
 	  <xsl:for-each
-	     select="//*[generate-id() = generate-id(key('types',@type)[1])]">
-	    <xsl:variable name="current_type">
-	      <xsl:value-of select="@type"/>
+	     select="//*[generate-id()=generate-id(key('domains',@domain)[1])]">
+	    <xsl:variable name="current_domain">
+	      <xsl:value-of select="@domain"/>
 	    </xsl:variable>
 	    
-	    <xsl:if test="$current_type!=''">
+	    <xsl:if test="$current_domain!=''">
 	      <td class="matrixnumberbold">
 		<xsl:value-of
 		   select="count(
-			   //case[(ancestor-or-self::*/@type)[last()]=
-			   $current_type])"/>
+			   //case[
+			   (ancestor-or-self::*/@domain)[last()]=
+			   $current_domain
+			   and
+			   (ancestor-or-self::*/@feature)[last()]!=''
+			   ])"/>
 	      </td>
 	    </xsl:if>
 	  </xsl:for-each>
@@ -805,8 +794,12 @@
 	       since we skipped the empty features and types -->
 	  <td class="matrixnumberbold">
 	    <xsl:value-of
-	       select="count(//suite[@domain!='']/set/case
-		       [(ancestor-or-self::*/@type)[last()]!=''])"/>
+	       select="count(//case
+		       [
+		       (ancestor-or-self::*/@domain)[last()]!=''
+		       and
+		       (ancestor-or-self::*/@feature)[last()]!=''
+		       ])"/>
 	  </td>
 	</tr>
       </table>
