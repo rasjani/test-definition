@@ -176,16 +176,47 @@
   <!-- Start the processing. This template shows the main level information
        and calls suite templates -->
   <xsl:template match="/testresults">
+    <h2 id="environment">Test Environment</h2>
+    <ul>
+      <li>
+	<xsl:text>Hardware: </xsl:text>
+	<xsl:choose>
+	  <xsl:when test="@hwproduct!=''">
+	    <xsl:value-of select="@hwproduct"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:text>N/A</xsl:text>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </li>
+      <li>
+	<xsl:text>Environment: </xsl:text>
+	<xsl:choose>
+	  <xsl:when test="@environment!=''">
+	    <xsl:value-of select="@environment"/>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:text>N/A</xsl:text>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </li>
+    </ul>
+
     <div class="section emphasized_section">
       <h2 id="test_results"><xsl:text>Test Results</xsl:text></h2>
       <div class="container">
 	<xsl:call-template name="result_summary"/>
 	
 	<xsl:call-template name="results_by_feature"/>
+
       </div>
     </div>
+
+    <xsl:call-template name="detailed_results"/>
+
   </xsl:template>
-  
+
+  <!-- Summary of test results -->
   <xsl:template name="result_summary">
     <h3 class="first"><xsl:text>Result Summary</xsl:text></h3>
     <div class="wrap">
@@ -311,7 +342,7 @@
 	<xsl:variable name="current_feature">
 	  <xsl:value-of select="@feature"/>
 	</xsl:variable>
-	<!-- Skip empty features -->
+	<!-- Skip empty features TODO handle those as well -->
 	<xsl:if test="$current_feature!=''">
 	  <xsl:variable 
 	     name="feat_total"
@@ -396,6 +427,132 @@
 	</xsl:if>
       </xsl:for-each>
       <!-- Featureless cases -->
+    </table>
+  </xsl:template>
+
+  <!-- Detailed result listing -->
+  <xsl:template name="detailed_results">
+    <h2 id="detailed_results">Detailed Test Results</h2>
+    
+    <table id="detailed_results">
+      <thead>
+	<tr>
+	  <th id="th_test_case"><xsl:text>Test case</xsl:text></th>
+	  <th id="th_result"><xsl:text>Result</xsl:text></th>
+	  <th id="th_notes">
+	    <div style="position:relative;">
+	      <xsl:text>Notes </xsl:text>
+	      <span class="sort">
+		<a href="#" 
+		   id="see_only_failed_button" 
+		   class="sort_btn active">
+		  <xsl:text>See only failed</xsl:text>
+		</a>
+		<a href="#" 
+		   id="see_all_button" 
+		   class="sort_btn">
+		  <xsl:text>See all</xsl:text>
+		</a>
+	      </span>
+	    </div>
+	  </th>
+        </tr>
+      </thead>
+      
+      <!-- By feature here as well -->
+      <xsl:for-each 
+	 select="//*[generate-id()=
+		 generate-id(key('features',@feature)[1])]">
+	<xsl:variable name="current_feature">
+	  <xsl:value-of select="@feature"/>
+	</xsl:variable>
+	<!-- Skip empty features TODO handle those as well -->
+	<xsl:if test="$current_feature!=''">
+	  <tbody>
+	    <tr class="feature_name" id="test-set-TODO">
+	      <td colspan="3">
+		<xsl:value-of select="$current_feature"/>
+		<a href="#" class="see_all_toggle">
+		  <xsl:text>+ see passing tests</xsl:text>
+		</a>
+	      </td>
+	    </tr>
+	  </tbody>
+	  
+	  <xsl:for-each 
+	     select="//case[
+		     (ancestor-or-self::*/@feature)[last()]=$current_feature
+		     ]">
+	    <xsl:element name="tr">
+	      <xsl:attribute name="id">
+		<xsl:text>TODO</xsl:text>
+	      </xsl:attribute>
+	      <xsl:attribute name="class">
+		<xsl:text>testcase </xsl:text>
+		<xsl:choose>
+		  <xsl:when test="@result='PASS'">
+		    <xsl:text>result_pass</xsl:text>
+		  </xsl:when>
+		  <xsl:when test="@result='FAIL'">
+		    <xsl:text>result_fail</xsl:text>
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <xsl:text>result_na</xsl:text>
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </xsl:attribute>
+	      <xsl:attribute name="style">
+		<xsl:if test="@result='PASS'">
+		  <xsl:text>display : none;</xsl:text>
+		</xsl:if>
+	      </xsl:attribute>
+	      <td class="testcase_name">
+		<xsl:value-of select="@name"/>
+	      </td>
+	      <xsl:element name="td">
+		<xsl:attribute name="class">
+		  <xsl:text>testcase_result </xsl:text>
+		  <xsl:choose>
+		    <xsl:when test="@result='PASS'">
+		      <xsl:text>pass</xsl:text>
+		    </xsl:when>
+		    <xsl:when test="@result='FAIL'">
+		      <xsl:text>fail</xsl:text>
+		    </xsl:when>
+		    <xsl:otherwise>
+		      <xsl:text>na</xsl:text>
+		    </xsl:otherwise>
+		  </xsl:choose>
+		</xsl:attribute>
+		<span class="content">
+		  <xsl:value-of select="@result"/>
+		</span>
+	      </xsl:element>
+	      <td class="testcase_notes">
+		<div class="content">
+		  <xsl:if test="@bugzilla_id!=''">
+		    <xsl:element name="a">
+		      <xsl:attribute name="class">
+			<xsl:text>
+			  bugzilla fetch bugzilla bugzilla_status 
+			  bugzilla_append
+			</xsl:text>
+		      </xsl:attribute>
+		      <xsl:attribute name="href">
+			<xsl:text>http://bugs.meego.com/show_bug.cgi?id=</xsl:text>
+			<xsl:value-of select="@bugzilla_id"/>
+		      </xsl:attribute>
+		      <xsl:value-of select="@bugzilla_id"/>
+		      <br/>
+		    </xsl:element>
+		  </xsl:if>
+		  <xsl:value-of select="@comment"/>
+		</div>
+	      </td>
+	    </xsl:element>
+	  </xsl:for-each>
+	</xsl:if>
+      </xsl:for-each>
     </table>
   </xsl:template>
   
