@@ -104,8 +104,13 @@
   <!-- Should we show the feature coverage matrix? -->
   <xsl:variable
      name="show_matrix"
-     select="count(//*[@type!='']) &gt; 0 and count(//*[@domain!='']) &gt; 0"/>
-  
+     select="count(
+	     //case[
+	     (ancestor-or-self::*/@domain)[last()]!=''
+	     and
+	     (ancestor-or-self::*/@feature)[last()]!=''
+	     ]) &gt; 0"/>
+	       
   <!-- The root template defining the main page structure -->
   <xsl:template match="/">
     <html>
