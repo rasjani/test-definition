@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-  This file is part of test-definition
- 
-  Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+   This file is part of test-definition
+   
+   Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 
-  Contact: Vesa Poikajärvi <vesa.poikajarvi@digia.com>
+   Contact: Vesa Poikajärvi <vesa.poikajarvi@digia.com>
 
-  This package is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public License
-  version 2.1 as published by the Free Software Foundation.
- 
-  This package is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  Lesser General Public License for more details.
- 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  02110-1301 USA
- 
--->
+   This package is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   version 2.1 as published by the Free Software Foundation.
+   
+   This package is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+   02110-1301 USA
+   
+  -->
 
 <!-- 
    XSL transformation for results matching testdefinition-result.xsd
@@ -31,7 +31,7 @@
    To use this in your XMLs, you'll need to link it by adding
    the following row just after XML declaration:
    <?xml-stylesheet type="text/xsl" href="URI-to-this-file.xsl"?>
-  -->
+   -->
 
 <!-- The default namespace is the magic to get XHTML output as needed -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -59,8 +59,6 @@
   <xsl:variable name="exec_cases"
 		select="$passed_cases + $failed_cases"/>
 
-  <xsl:key name="features" match="*" use="@feature"/>
-
   <!-- The root template defining the main page structure -->
   <xsl:template match="/">
     <html>
@@ -86,47 +84,47 @@
 	  </xsl:attribute>
 	  <xsl:text>
 	    table.basictable {
-	      width : auto;
+	    width : auto;
 	    }
 
 	    p.smaller_margin {
-	      margin-top : 0px;
+	    margin-top : 0px;
 	    }
 
 	    img.logoimage {
-	      float : right;
+	    float : right;
 	    }
 
 	    a.navilink {
-	      padding-right : 30px;
+	    padding-right : 30px;
 	    }
 
 	    div.sectioncontainer {
-	      padding-left : 30px; 
-	      padding-right : 30px;
+	    padding-left : 30px; 
+	    padding-right : 30px;
 	    }
 
 	    td {
-	      vertical-align : top;
+	    vertical-align : top;
 	    }
 
 	    tr.separator {
-	      line-height : 1px;
+	    line-height : 1px;
 	    }
 
 	    th.matrixtype,
 	    td.matrixnumber,
 	    td.matrixnumberbold {
-	      text-align : center;
+	    text-align : center;
 	    }
 	    
 	    td.domaintitle,
 	    td.matrixnumberbold {
-	      font-weight : bold;
+	    font-weight : bold;
 	    }
 
 	    tr.feature {
-	      font-size : 0.8em
+	    font-size : 0.8em
 	    }
 
 	  </xsl:text>
@@ -147,9 +145,9 @@
 	      <a href="#test_results" title="Result Summary" class="navilink">
 		<xsl:text>Result Summary &gt;</xsl:text>
 	      </a>
-	      <a href="#test_features" title="Test Results by Feature" 
+	      <a href="#test_set" title="Test Results by Test Set" 
 		 class="navilink">
-		<xsl:text>Test Results by Feature &gt;</xsl:text>
+		<xsl:text>Test Results by Test Set &gt;</xsl:text>
 	      </a>
 	      <a href="#detailed_results" title="Detailed Test Results" 
 		 class="navilink">
@@ -166,7 +164,7 @@
 	  <br/>
 	  <br/>
 	  <div id="footer">
-	
+	    
 	  </div>
 	</div>
       </body>
@@ -207,7 +205,7 @@
       <div class="container">
 	<xsl:call-template name="result_summary"/>
 	
-	<xsl:call-template name="results_by_feature"/>
+	<xsl:call-template name="results_by_set"/>
 
       </div>
     </div>
@@ -320,113 +318,77 @@
     </div>
   </xsl:template>
 
-  <!-- Create the test results by feature section -->
-  <xsl:template name="results_by_feature">
-    <h3 id="test_features"><xsl:text>Test Results by Feature</xsl:text></h3>
+  <!-- Create the test results by test set section -->
+  <xsl:template name="results_by_set">
+    <h3 id="test_set"><xsl:text>Test Results by Test Set</xsl:text></h3>
 
     <table id="test_results">
       <thead class="even">
-      <tr>
-        <th class="th_feature">Feature</th>
-        <th class="th_total">Total</th>
-        <th class="th_passed">Passed</th>
-        <th class="th_failed">Failed</th>
-        <th class="th_not_testable">Not testable</th>
-        <th class="th_graph">&#160;</th>
-       </tr>
+	<tr>
+          <th class="th_feature">Test Set</th>
+          <th class="th_total">Total</th>
+          <th class="th_passed">Passed</th>
+          <th class="th_failed">Failed</th>
+          <th class="th_not_testable">Not testable</th>
+          <th class="th_graph">&#160;</th>
+	</tr>
       </thead>
 
-      <xsl:for-each 
-	 select="//*[generate-id()=
-		 generate-id(key('features',@feature)[1])]">
-	<xsl:variable name="current_feature">
-	  <xsl:value-of select="@feature"/>
-	</xsl:variable>
-	<!-- Skip empty features TODO handle those as well -->
-	<xsl:if test="$current_feature!=''">
-	  <xsl:variable 
-	     name="feat_total"
-	     select="count(
-		     //case[
-		     (ancestor-or-self::*/@feature)[last()]=$current_feature
-		     ])"/>
-	  <xsl:variable 
-	     name="feat_pass"
-	     select="count(
-		     //case[
-		     (ancestor-or-self::*/@feature)[last()]=$current_feature
-		     and
-		     @result='PASS'
-		     ])"/>
-	  <xsl:variable 
-	     name="feat_fail"
-	     select="count(
-		     //case[
-		     (ancestor-or-self::*/@feature)[last()]=$current_feature
-		     and
-		     @result='FAIL'
-		     ])"/>
-	  <xsl:variable 
-	     name="feat_na"
-	     select="count(
-		     //case[
-		     (ancestor-or-self::*/@feature)[last()]=$current_feature
-		     and
-		     @result='N/A'
-		     ])"/>
-	  
-	  <tr class="feature_record even" 
-	      id="feature-TODO">
-    	    <td>
-              <a href="#test-set-TODO">
-		<xsl:value-of select="$current_feature"/>
-              </a>
-	    </td>
-	    <td class="total">
-	      <xsl:value-of select="$feat_total"/>
-	    </td>
-	    <td class="pass">
-	      <xsl:value-of select="$feat_pass"/>
-	    </td>
-	    <td class="fail">
-	      <xsl:value-of select="$feat_fail"/>
-	    </td>
-	    <td class="na">
-	      <xsl:value-of select="$feat_na"/>
-	    </td>
-	    <td>
-	      <div class="bhs_wrap">
-		<xsl:element name="img">
-		  <xsl:attribute name="class">
-		    <xsl:text>bhs</xsl:text>
-		  </xsl:attribute>
-		  <xsl:attribute name="alt">
-		    <xsl:text>Graph</xsl:text>
-		  </xsl:attribute>
-		  <xsl:attribute name="src">
-		    <xsl:text>http://chart.apis.google.com/chart?</xsl:text>
-		    <xsl:text>cht=bhs:nda</xsl:text>
-		    <xsl:text>&amp;chs=386x14</xsl:text>
-		    <xsl:text>&amp;chco=73a20c,ec4343,CACACA</xsl:text>
-		    <xsl:text>&amp;chd=t:</xsl:text>
-		    <xsl:value-of select="$feat_pass"/>
-		    <xsl:text>|</xsl:text>
-		    <xsl:value-of select="$feat_fail"/>
-		    <xsl:text>|</xsl:text>
-		    <xsl:value-of select="$feat_na"/>
-		    <xsl:text>&amp;chds=0,</xsl:text>
-		    <xsl:value-of select="$feat_total"/>
-		    <xsl:text>&amp;chma=0,0,0,0</xsl:text>
-		    <xsl:text>&amp;chf=bg,s,ffffff00</xsl:text>
-		    <xsl:text>&amp;chbh=14,0,0</xsl:text>
-		  </xsl:attribute>
-		</xsl:element>
-	      </div>
-	    </td>
-	  </tr>
-	</xsl:if>
+      <xsl:for-each select="//set">
+	<xsl:variable name="set_total" select="count(case)"/>
+	<xsl:variable name="set_pass" select="count(case[@result='PASS'])"/>
+	<xsl:variable name="set_fail" select="count(case[@result='FAIL'])"/>
+	<xsl:variable name="set_na" select="count(case[@result='N/A'])"/>
+	<tr class="feature_record even" 
+	    id="test-set-TODO">
+    	  <td>
+            <a href="#test-set-TODO">
+	      <xsl:value-of select="@name"/>
+            </a>
+	  </td>
+	  <td class="total">
+	    <xsl:value-of select="$set_total"/>
+	  </td>
+	  <td class="pass">
+	    <xsl:value-of select="$set_pass"/>
+	  </td>
+	  <td class="fail">
+	    <xsl:value-of select="$set_fail"/>
+	  </td>
+	  <td class="na">
+	    <xsl:value-of select="$set_na"/>
+	  </td>
+	  <td>
+	    <div class="bhs_wrap">
+	      <xsl:element name="img">
+		<xsl:attribute name="class">
+		  <xsl:text>bhs</xsl:text>
+		</xsl:attribute>
+		<xsl:attribute name="alt">
+		  <xsl:text>Graph</xsl:text>
+		</xsl:attribute>
+		<xsl:attribute name="src">
+		  <xsl:text>http://chart.apis.google.com/chart?</xsl:text>
+		  <xsl:text>cht=bhs:nda</xsl:text>
+		  <xsl:text>&amp;chs=386x14</xsl:text>
+		  <xsl:text>&amp;chco=73a20c,ec4343,CACACA</xsl:text>
+		  <xsl:text>&amp;chd=t:</xsl:text>
+		  <xsl:value-of select="$set_pass"/>
+		  <xsl:text>|</xsl:text>
+		  <xsl:value-of select="$set_fail"/>
+		  <xsl:text>|</xsl:text>
+		  <xsl:value-of select="$set_na"/>
+		  <xsl:text>&amp;chds=0,</xsl:text>
+		  <xsl:value-of select="$set_total"/>
+		  <xsl:text>&amp;chma=0,0,0,0</xsl:text>
+		  <xsl:text>&amp;chf=bg,s,ffffff00</xsl:text>
+		  <xsl:text>&amp;chbh=14,0,0</xsl:text>
+		</xsl:attribute>
+	      </xsl:element>
+	    </div>
+	  </td>
+	</tr>
       </xsl:for-each>
-      <!-- Featureless cases -->
     </table>
   </xsl:template>
 
@@ -459,99 +421,87 @@
         </tr>
       </thead>
       
-      <!-- By feature here as well -->
-      <xsl:for-each 
-	 select="//*[generate-id()=
-		 generate-id(key('features',@feature)[1])]">
-	<xsl:variable name="current_feature">
-	  <xsl:value-of select="@feature"/>
-	</xsl:variable>
-	<!-- Skip empty features TODO handle those as well -->
-	<xsl:if test="$current_feature!=''">
-	  <tbody>
-	    <tr class="feature_name" id="test-set-TODO">
-	      <td colspan="3">
-		<xsl:value-of select="$current_feature"/>
-		<a href="#" class="see_all_toggle">
-		  <xsl:text>+ see passing tests</xsl:text>
-		</a>
-	      </td>
-	    </tr>
-	  </tbody>
+      <xsl:for-each select="//set">
+	<tbody>
+	  <tr class="feature_name" id="test-set-TODO">
+	    <td colspan="3">
+	      <xsl:value-of select="@name"/>
+	      <a href="#" class="see_all_toggle">
+		<xsl:text>+ see passing tests</xsl:text>
+	      </a>
+	    </td>
+	  </tr>
+	</tbody>
 	  
-	  <xsl:for-each 
-	     select="//case[
-		     (ancestor-or-self::*/@feature)[last()]=$current_feature
-		     ]">
-	    <xsl:element name="tr">
-	      <xsl:attribute name="id">
-		<xsl:text>TODO</xsl:text>
-	      </xsl:attribute>
+	<xsl:for-each select="case"> 
+	  <xsl:element name="tr">
+	    <xsl:attribute name="id">
+	      <xsl:text>TODO</xsl:text>
+	    </xsl:attribute>
+	    <xsl:attribute name="class">
+	      <xsl:text>testcase </xsl:text>
+	      <xsl:choose>
+		<xsl:when test="@result='PASS'">
+		  <xsl:text>result_pass</xsl:text>
+		</xsl:when>
+		<xsl:when test="@result='FAIL'">
+		  <xsl:text>result_fail</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:text>result_na</xsl:text>
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:attribute>
+	    <xsl:attribute name="style">
+	      <xsl:if test="@result='PASS'">
+		<xsl:text>display : none;</xsl:text>
+	      </xsl:if>
+	    </xsl:attribute>
+	    <td class="testcase_name">
+	      <xsl:value-of select="@name"/>
+	    </td>
+	    <xsl:element name="td">
 	      <xsl:attribute name="class">
-		<xsl:text>testcase </xsl:text>
+		<xsl:text>testcase_result </xsl:text>
 		<xsl:choose>
 		  <xsl:when test="@result='PASS'">
-		    <xsl:text>result_pass</xsl:text>
+		    <xsl:text>pass</xsl:text>
 		  </xsl:when>
 		  <xsl:when test="@result='FAIL'">
-		    <xsl:text>result_fail</xsl:text>
+		    <xsl:text>fail</xsl:text>
 		  </xsl:when>
 		  <xsl:otherwise>
-		    <xsl:text>result_na</xsl:text>
+		    <xsl:text>na</xsl:text>
 		  </xsl:otherwise>
 		</xsl:choose>
 	      </xsl:attribute>
-	      <xsl:attribute name="style">
-		<xsl:if test="@result='PASS'">
-		  <xsl:text>display : none;</xsl:text>
-		</xsl:if>
-	      </xsl:attribute>
-	      <td class="testcase_name">
-		<xsl:value-of select="@name"/>
-	      </td>
-	      <xsl:element name="td">
-		<xsl:attribute name="class">
-		  <xsl:text>testcase_result </xsl:text>
-		  <xsl:choose>
-		    <xsl:when test="@result='PASS'">
-		      <xsl:text>pass</xsl:text>
-		    </xsl:when>
-		    <xsl:when test="@result='FAIL'">
-		      <xsl:text>fail</xsl:text>
-		    </xsl:when>
-		    <xsl:otherwise>
-		      <xsl:text>na</xsl:text>
-		    </xsl:otherwise>
-		  </xsl:choose>
-		</xsl:attribute>
-		<span class="content">
-		  <xsl:value-of select="@result"/>
-		</span>
-	      </xsl:element>
-	      <td class="testcase_notes">
-		<div class="content">
-		  <xsl:if test="@bugzilla_id!=''">
-		    <xsl:element name="a">
-		      <xsl:attribute name="class">
-			<xsl:text>
-			  bugzilla fetch bugzilla bugzilla_status 
-			  bugzilla_append
-			</xsl:text>
-		      </xsl:attribute>
-		      <xsl:attribute name="href">
-			<xsl:text>http://bugs.meego.com/show_bug.cgi?id=</xsl:text>
-			<xsl:value-of select="@bugzilla_id"/>
-		      </xsl:attribute>
-		      <xsl:value-of select="@bugzilla_id"/>
-		      <br/>
-		    </xsl:element>
-		  </xsl:if>
-		  <xsl:value-of select="@comment"/>
-		</div>
-	      </td>
+	      <span class="content">
+		<xsl:value-of select="@result"/>
+	      </span>
 	    </xsl:element>
-	  </xsl:for-each>
-	</xsl:if>
+	    <td class="testcase_notes">
+	      <div class="content">
+		<xsl:if test="@bugzilla_id!=''">
+		  <xsl:element name="a">
+		    <xsl:attribute name="class">
+		      <xsl:text>
+			bugzilla fetch bugzilla bugzilla_status 
+			bugzilla_append
+		      </xsl:text>
+		    </xsl:attribute>
+		    <xsl:attribute name="href">
+		      <xsl:text>http://bugs.meego.com/show_bug.cgi?id=</xsl:text>
+		      <xsl:value-of select="@bugzilla_id"/>
+		    </xsl:attribute>
+		    <xsl:value-of select="@bugzilla_id"/>
+		    <br/>
+		  </xsl:element>
+		</xsl:if>
+		<xsl:value-of select="@comment"/>
+	      </div>
+	    </td>
+	  </xsl:element>
+	</xsl:for-each>
       </xsl:for-each>
     </table>
   </xsl:template>
