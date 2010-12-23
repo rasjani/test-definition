@@ -109,27 +109,56 @@
 	    line-height : 1px;
 	    }
 
-	    th.matrixtype,
-	    td.matrixnumber,
-	    td.matrixnumberbold {
-	    text-align : center;
-	    }
-	    
-	    td.domaintitle,
-	    td.matrixnumberbold {
-	    font-weight : bold;
+	    table.steptable {
+	    border : none;
+	    width : auto;
 	    }
 
-	    tr.feature {
-	    font-size : 0.8em
+	    table.steptable td, th {
+	    border : none;
 	    }
 
+	    table.steptable th {
+	    padding-left : 25px;
+	    }
+
+	    table.steptable td {
+	    font-size : 0.9em;
+	    }
+
+	    table.steptable td.title
+	    {
+	    padding-left : 50px;
+	    }
+
+	    table.steptable td.monospace
+	    {
+	    font-family : 'Courier New', monospace;
+	    }
 	  </xsl:text>
 	</style>
 	<!-- Notice: JS with XSLT has many restrictions since the  DOM tree
 	     is not constructed yet when browser reads JS code -->
 	<script language="javascript" type="text/javascript">
 	  <xsl:text disable-output-escaping="yes">
+	  function showHideSteps(tcid)
+	  {
+	  var steptable = document.getElementById(tcid);
+	  if (steptable)
+	  {
+	    if (steptable.style.display == 'none')
+	    {
+	      steptable.style.display = '';
+	    }
+	    else
+	    {
+	      steptable.style.display = 'none';
+	    }
+	  }
+	  
+	  return false;
+	  }
+
 	  function showHideAll(showall)
 	  {
 	  var all_button = document.getElementById('see_all_button');
@@ -156,11 +185,18 @@
 	      if (node.className.match('result_pass'))
 	      {
 	        if (showall)
-	        {
-	          node.style.display = '';
+ 	        {
+	          // Open only the testcase result_pass, not steps
+	          if (node.className.match('testcase result_pass'))
+	          {
+	            node.style.display = '';
+	          }
 	        }
 	        else
 	        {
+	          // When hiding, hide all result_pass rows so that also
+	          // steps are hidden from passed cases if they happen
+	          // to be visible
 	          node.style.display = 'none';
 	        }
 	      }
@@ -495,15 +531,18 @@
 	</tbody>
 	<tbody>
 	  <xsl:for-each select="case"> 
+	    <xsl:variable name="tc_id"
+			  select="concat(
+				  translate(../../@name, ' ', '_'),
+				  '_',
+				  translate(../@name, ' ', '_'),
+				  '_',
+				  translate(@name, ' ', '_'))"/>
+
 	    <xsl:element name="tr">
 	      <xsl:attribute name="id">
 	      <xsl:text>test-case-</xsl:text>
-	      <xsl:value-of select="concat(
-				    translate(../../@name, ' ', '_'),
-				    '_',
-				    translate(../@name, ' ', '_'),
-				    '_',
-				    translate(@name, ' ', '_'))"/>
+	      <xsl:value-of select="$tc_id"/>
 	      </xsl:attribute>
 	      <xsl:attribute name="class">
 		<xsl:text>testcase </xsl:text>
@@ -525,7 +564,21 @@
 		</xsl:if>
 	      </xsl:attribute>
 	      <td class="testcase_name">
-		<xsl:value-of select="@name"/>
+		<xsl:element name="a">
+		  <xsl:attribute name="href">
+		    <xsl:text>#</xsl:text>
+		  </xsl:attribute>
+		  <xsl:attribute name="title">
+		    <xsl:text>Show Steps</xsl:text>
+		  </xsl:attribute>
+		  <xsl:attribute name="onclick">
+		    <xsl:text>javascript:return showHideSteps('</xsl:text>
+		    <xsl:text>test-case-steps-</xsl:text>
+		    <xsl:value-of select="$tc_id"/>
+		    <xsl:text>');</xsl:text>
+		  </xsl:attribute>
+		  <xsl:value-of select="@name"/>
+		</xsl:element>
 	      </td>
 	      <xsl:element name="td">
 		<xsl:attribute name="class">
@@ -560,6 +613,87 @@
 		  </xsl:if>
 		  <xsl:value-of select="@comment"/>
 		</div>
+	      </td>
+	    </xsl:element>
+	    <xsl:element name="tr">
+	      <xsl:attribute name="style">
+		<xsl:text>display : none;</xsl:text>
+	      </xsl:attribute>
+	      <xsl:attribute name="id">
+		<xsl:text>test-case-steps-</xsl:text>
+		<xsl:value-of select="$tc_id"/>
+	      </xsl:attribute>
+	      <xsl:attribute name="class">
+		<xsl:if test="@result='PASS'">
+		  <xsl:text>result_pass</xsl:text>
+		</xsl:if>
+	      </xsl:attribute>
+	      
+	      <td colspan="4">
+		<table class="steptable">
+		  <xsl:for-each select="step">
+		    <tr>
+		      <th colspan="2">
+			<xsl:text>Step | </xsl:text>
+			<xsl:element name="span">
+			  <xsl:attribute name="class">
+			    <xsl:text>testcase_result </xsl:text>
+			    <xsl:choose>
+			      <xsl:when test="@result='PASS'">
+				<xsl:text>pass</xsl:text>
+			      </xsl:when>
+			      <xsl:when test="@result='FAIL'">
+				<xsl:text>fail</xsl:text>
+			      </xsl:when>
+			      <xsl:otherwise>
+				<xsl:text>na</xsl:text>
+			      </xsl:otherwise>
+			    </xsl:choose>
+			  </xsl:attribute>
+			  <xsl:value-of select="@result"/>
+			</xsl:element>
+		      </th>
+		    </tr>
+		    <tr>
+		      <td class="title">
+			<xsl:text>Command:</xsl:text>
+		      </td>
+		      <td class="monospace">
+			<xsl:value-of select="@command"/>
+		      </td>
+		    </tr>
+		    <tr>
+		      <td class="title">
+			<xsl:text>Expected Result:</xsl:text>
+		      </td>
+		      <td><xsl:value-of select="expected_result"/></td>
+		    </tr>
+		    <tr>
+		      <td class="title">
+			<xsl:text>Return Code:</xsl:text>
+		      </td>
+		      <td class="monospace">
+			<xsl:value-of select="return_code"/>
+		      </td>
+		    </tr>
+		    <tr>
+		      <td class="title">
+			<xsl:text>stdout:</xsl:text>
+		      </td>
+		      <td class="monospace">
+			<xsl:value-of select="stdout"/>
+		      </td>
+		    </tr>
+		    <tr>
+		      <td class="title">
+			<xsl:text>stderr:</xsl:text>
+		      </td>
+		      <td class="monospace">
+			<xsl:value-of select="stderr"/>
+		      </td>
+		    </tr>
+		  </xsl:for-each>
+		</table>
 	      </td>
 	    </xsl:element>
 	  </xsl:for-each>
