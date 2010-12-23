@@ -333,11 +333,9 @@
 		  <!-- Bar width and spacing -->
 		  <xsl:text>&amp;chbh=90,30,30</xsl:text>
 		  <!-- Visible axes -->
-		  <xsl:text>&amp;chxt=x,y</xsl:text>
-		  <!-- X axis labels -->
-		  <xsl:text>&amp;chl=Current</xsl:text>
+		  <xsl:text>&amp;chxt=y</xsl:text>
 		  <!-- Axis range: axis, start val, end val, step -->
-		  <xsl:text>&amp;chxr=1,0,</xsl:text>
+		  <xsl:text>&amp;chxr=0,0,</xsl:text>
 		  <xsl:value-of select="round($total_cases * 1.1)"/>
 		</xsl:attribute>
 		<xsl:attribute name="alt">
@@ -409,6 +407,7 @@
           <th class="th_failed">Failed</th>
           <th class="th_not_testable">Not testable</th>
           <th class="th_graph">&#160;</th>
+	  <th class="th_notes">&#160;</th>
 	</tr>
       </thead>
 
@@ -475,6 +474,7 @@
 	      </xsl:element>
 	    </div>
 	  </td>
+	  <td>&#160;</td>
 	</tr>
       </xsl:for-each>
     </table>
