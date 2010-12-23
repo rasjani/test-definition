@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-  This file is part of test-definition
- 
-  Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+   This file is part of test-definition
+   
+   Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 
-  Contact: Vesa Poikajärvi <vesa.poikajarvi@digia.com>
+   Contact: Vesa Poikajärvi <vesa.poikajarvi@digia.com>
 
-  This package is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public License
-  version 2.1 as published by the Free Software Foundation.
- 
-  This package is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  Lesser General Public License for more details.
- 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  02110-1301 USA
- 
--->
+   This package is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   version 2.1 as published by the Free Software Foundation.
+   
+   This package is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+   02110-1301 USA
+   
+  -->
 
 <!-- 
    XSL transformation for tests matching testdefinition-syntax.xsd
@@ -31,7 +31,7 @@
    To use this in your XMLs, you'll need to link it by adding
    the following row just after XML declaration:
    <?xml-stylesheet type="text/xsl" href="URI-to-this-file.xsl"?>
-  -->
+   -->
 
 <!-- The default namespace is the magic to get XHTML output as needed -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -51,6 +51,11 @@
   <!-- The <Not defined> string -->
   <xsl:variable name="notdefined">
     <xsl:text>&lt;Not defined&gt;</xsl:text>
+  </xsl:variable>
+
+  <xsl:variable name="report_bug">
+    <xsl:text>http://bugs.meego.com/enter_bug.cgi?product=</xsl:text>
+    <xsl:text>MeeGo Quality Assurance</xsl:text>
   </xsl:variable>
 
   <!-- HTML warning -->
@@ -75,7 +80,7 @@
             is not suitable for your descriptions, try </xsl:text>
           <xsl:element name="a">
             <xsl:attribute name="href">
-              <xsl:text>http://bugs.meego.com/enter_bug.cgi?product=Development Tools</xsl:text>
+              <xsl:value-of select="$report_bug"/>
             </xsl:attribute>
             <xsl:attribute name="title">
 	      <xsl:text>MeeGo Bugzilla</xsl:text>
@@ -90,7 +95,7 @@
 
   <!-- The keys for looping over attributes when creating the matrix -->
   <xsl:key name="domains" match="*" use="@domain"/>
-  <xsl:key name="features" match="*" use="@feature"/>
+  <xsl:key name="components" match="*" use="@component"/>
 
   <!-- Some tests needed in more than one location -->
   <!-- Do we have other than planned cases? -->
@@ -101,16 +106,16 @@
   <xsl:variable 
      name="has_planned_cases"
      select="count(//case[@state='Design' or @state='design']) &gt; 0"/>
-  <!-- Should we show the feature coverage matrix? -->
+  <!-- Should we show the matrix? -->
   <xsl:variable
      name="show_matrix"
      select="count(
 	     //case[
 	     (ancestor-or-self::*/@domain)[last()]!=''
 	     and
-	     (ancestor-or-self::*/@feature)[last()]!=''
+	     (ancestor-or-self::*/@component)[last()]!=''
 	     ]) &gt; 0"/>
-	       
+  
   <!-- The root template defining the main page structure -->
   <xsl:template match="/">
     <html>
@@ -136,53 +141,42 @@
 	  </xsl:attribute>
 	  <xsl:text>
 	    table.basictable {
-	      width : auto;
+	    width : auto;
 	    }
 
 	    p.smaller_margin {
-	      margin-top : 0px;
+	    margin-top : 0px;
 	    }
 
 	    img.logoimage {
-	      float : right;
+	    float : right;
 	    }
 
 	    a.navilink {
-	      padding-right : 30px;
+	    padding-right : 30px;
 	    }
 
 	    div.sectioncontainer {
-	      padding-left : 30px; 
-	      padding-right : 30px;
+	    padding-left : 30px; 
+	    padding-right : 30px;
 	    }
 
 	    td {
-	      vertical-align : top;
+	    vertical-align : top;
 	    }
 
 	    td.noborder {
-	      border : none;
+	    border : none;
 	    }
 
 	    tr.separator {
-	      line-height : 1px;
+	    line-height : 1px;
 	    }
 
-	    th.matrixtype,
-	    td.matrixnumber,
-	    td.matrixnumberbold {
-	      text-align : center;
+	    td.center
+	    {
+	    text-align : center;
 	    }
-	    
-	    td.domaintitle,
-	    td.matrixnumberbold {
-	      font-weight : bold;
-	    }
-
-	    tr.feature {
-	      font-size : 0.8em
-	    }
-
 	  </xsl:text>
 	</xsl:element>
       </head>
@@ -210,8 +204,8 @@
 	      </xsl:if>
 	      <xsl:if test="$show_matrix"> 
 		<a href="#matrix" 
-		   title="Feature coverage matrix" class="navilink">
-		  <xsl:text>Feature coverage matrix &gt;</xsl:text>
+		   title="Component vertical matrix" class="navilink">
+		  <xsl:text>Component vertical matrix &gt;</xsl:text>
 		</a>
 	      </xsl:if>
 	    </p>	    
@@ -225,15 +219,15 @@
 	      
 	      <xsl:if test="$show_matrix">
 		<a id="matrix"></a>
-		<h2><xsl:text>Feature coverage matrix</xsl:text></h2>
-		<xsl:call-template name="feature_coverage_matrix"/>
+		<h2><xsl:text>Component vertical matrix</xsl:text></h2>
+		<xsl:call-template name="component_vertical_matrix"/>
 	      </xsl:if>
 	    </div>
 	  </div>
 	  <br/>
 	  <br/>
 	  <div id="footer">
-	
+	    
 	  </div>
 	</div>
       </body>
@@ -340,16 +334,16 @@
 	   When in planned cases mode: if the count of planned cases is more
 	   than zero, process the set -->
       <xsl:if test="(not($planned_cases_mode) and
-  		     count(case[@state='Design' or @state='design']) 
-		     != count(case)) 
+  		    count(case[@state='Design' or @state='design']) 
+		    != count(case)) 
 		    or
 		    ($planned_cases_mode and
-  		     count(case[@state='Design' or @state='design']) &gt; 0)">
-	  <xsl:apply-templates select=".">
-	    <xsl:with-param name="planned_cases_mode" 
-			    select="$planned_cases_mode"/>
-	  </xsl:apply-templates>
-	</xsl:if>
+  		    count(case[@state='Design' or @state='design']) &gt; 0)">
+	<xsl:apply-templates select=".">
+	  <xsl:with-param name="planned_cases_mode" 
+			  select="$planned_cases_mode"/>
+	</xsl:apply-templates>
+      </xsl:if>
     </xsl:for-each>
   </xsl:template>
 
@@ -394,11 +388,11 @@
 		 Design|design -->
 	    <xsl:for-each select="case[
 				  (not($planned_cases_mode) and
-				   (not(@state) or
-				   (@state != 'Design' and @state != 'design')))
+				  (not(@state) or
+				  (@state != 'Design' and @state != 'design')))
 				  or
 				  ($planned_cases_mode and
-				   (@state = 'Design' or @state = 'design'))
+				  (@state = 'Design' or @state = 'design'))
 				  ]">
 	      <xsl:sort select="@name"/>
 	      <!-- Variable needed for coloring every other row -->
@@ -448,17 +442,21 @@
 	  <tr>
 	    <td><xsl:text>Type:</xsl:text></td>
 	    <td class="noborder"><xsl:value-of 
-		   select="(ancestor-or-self::*/@type)[last()]"/></td>
+				    select="(ancestor-or-self::*/@type)[last()]"/></td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Domain:</xsl:text></td>
-	    <td class="noborder"><xsl:value-of 
-		   select="(ancestor-or-self::*/@domain)[last()]"/></td>
+	    <td class="noborder">
+	      <xsl:value-of 
+		 select="(ancestor-or-self::*/@domain)[last()]"/>
+	    </td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Feature:</xsl:text></td>
-	    <td class="noborder"><xsl:value-of 
-		   select="(ancestor-or-self::*/@feature)[last()]"/></td>
+	    <td class="noborder">
+	      <xsl:value-of 
+		 select="(ancestor-or-self::*/@feature)[last()]"/>
+	    </td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Execution&#160;type:</xsl:text></td>
@@ -475,13 +473,17 @@
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Component:</xsl:text></td>
-	    <td class="noborder"><xsl:value-of 
-		   select="(ancestor-or-self::*/@component)[last()]"/></td>
+	    <td class="noborder">
+	      <xsl:value-of 
+		 select="(ancestor-or-self::*/@component)[last()]"/>
+	    </td>
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Level:</xsl:text></td>
-	    <td class="noborder"><xsl:value-of 
-		   select="(ancestor-or-self::*/@level)[last()]"/></td>
+	    <td class="noborder">
+	      <xsl:value-of 
+		 select="(ancestor-or-self::*/@level)[last()]"/>
+	    </td>
 	  </tr>
 	</table>
       </td>
@@ -675,64 +677,61 @@
   <xsl:template name="html_description_warning">
     <!-- XSLT 1.0 does not have regexp support so check if there's
 	 <br or <p in the content of the description element and if so,
-	 display a warning -->
-    <xsl:if 
-       test="count(//description[contains(text(), '&lt;br')]) 
-	     or count(//description[contains(text(), '&lt;p')])
-	     ">
-      <xsl:copy-of select="$html_warning"/>
-    </xsl:if>
+		   display a warning -->
+	     <xsl:if 
+		test="count(//description[contains(text(), '&lt;br')]) 
+		      or count(//description[contains(text(), '&lt;p')])
+		      ">
+	       <xsl:copy-of select="$html_warning"/>
+	     </xsl:if>
   </xsl:template>
 
-  <!-- Print the feature coverage matrix table. This is quite long 
-       template but not being able to send full nodes as template
-       parameters this is just the way it is now.
-    -->
-  <xsl:template name="feature_coverage_matrix">
+  <!-- Print the component vertical matrix -->
+  <xsl:template name="component_vertical_matrix">
     <div class="sectioncontainer">
       <table class="basictable">
 	<!-- Print header -->
 	<thead>
 	  <tr>
-	    <th><xsl:text>Feature/Domain</xsl:text></th>
-	    <!-- Headers are now domains -->
+	    <th><xsl:text>Component/Vertical</xsl:text></th>
+	    <!-- Headers are domains (ie. verticals) -->
 	    <xsl:for-each 
 	       select="//*[generate-id()=
 		       generate-id(key('domains',@domain)[1])]">
-	      <!-- Just skip the empty features -->
+	      <!-- Just skip the empty domains -->
 	      <xsl:if test="@domain!=''">
-		<th class="matrixtype">
+		<th class="center">
 		  <xsl:value-of select="@domain"/>
 		</th>
 	      </xsl:if>
 	    </xsl:for-each>
-	    <th class="matrixtype"><xsl:text>Total</xsl:text></th>
+	    <th class="center"><xsl:text>Total</xsl:text></th>
 	  </tr>
 	</thead>
 	
-	<!-- Start going through the features, and inside each go through
+	<!-- Start going through the components, and inside each go through
 	     the domains and count cases -->
 	<xsl:for-each 
 	   select="//*[generate-id()=
-		   generate-id(key('features',@feature)[1])]">
-	  <xsl:variable name="current_feature">
-	    <xsl:value-of select="@feature"/>
+		   generate-id(key('components',@component)[1])]">
+	  <xsl:variable name="current_component">
+	    <xsl:value-of select="@component"/>
 	  </xsl:variable>
 	  
-	  <!-- Skip empty features -->
-          <xsl:if test="$current_feature!=''">
-	    <!-- Check that cases with this feature and non-empty 
+	  <!-- Skip empty components -->
+          <xsl:if test="$current_component!=''">
+	    <!-- Check that cases with this component and non-empty 
 		 domain exist -->
 	    <xsl:if test="count(//case
 			  [
-			  (ancestor-or-self::*/@feature)[last()]=
-			  $current_feature 
+			  (ancestor-or-self::*/@component)[last()]=
+			  $current_component 
 			  and
 			  (ancestor-or-self::*/@domain)[last()]!=''
 			  ])">
-	      <tr class="even">
-		<td class="domaintitle">
-		  <xsl:value-of select="$current_feature"/>
+	      <tr>
+		<td>
+		  <xsl:value-of select="$current_component"/>
 		</td>
 		<!-- Go through the domains -->
 		<xsl:for-each
@@ -744,13 +743,13 @@
 		  
 		  <!-- Skip also empty domains -->
 		  <xsl:if test="$current_domain!=''">
-		    <td class="matrixnumberbold">
+		    <td class="center">
 		      <xsl:value-of
 			 select="count(
 				 //case
 				 [
-				 (ancestor-or-self::*/@feature)[last()]=
-				 $current_feature 
+				 (ancestor-or-self::*/@component)[last()]=
+				 $current_component 
 				 and
 				 (ancestor-or-self::*/@domain)[last()]=
 				 $current_domain
@@ -760,16 +759,16 @@
 		</xsl:for-each>
 		
 		<!-- Row sum -->
-		<td class="matrixnumberbold">
-		  <!-- Cases from current feature that have a domain -->
+		<td class="center">
+		  <!-- Cases from current component that have a domain -->
 		  <xsl:value-of
 		     select="count(
 			     //case
 			     [
 			     (ancestor-or-self::*/@domain)[last()]!=''
 			     and
-			     (ancestor-or-self::*/@feature)[last()]=
-			     $current_feature
+			     (ancestor-or-self::*/@component)[last()]=
+			     $current_component
 			     ])"/>
 		</td>
 	      </tr>
@@ -778,8 +777,8 @@
 	</xsl:for-each>
 	
 	<!-- Last row holds column totals -->
-	<tr class="even">
-	  <td class="domaintitle"><xsl:text>Total</xsl:text></td>
+	<tr>
+	  <td><xsl:text>Total</xsl:text></td>
 	  <xsl:for-each
 	     select="//*[generate-id()=generate-id(key('domains',@domain)[1])]">
 	    <xsl:variable name="current_domain">
@@ -787,27 +786,27 @@
 	    </xsl:variable>
 	    
 	    <xsl:if test="$current_domain!=''">
-	      <td class="matrixnumberbold">
+	      <td class="center">
 		<xsl:value-of
 		   select="count(
 			   //case[
 			   (ancestor-or-self::*/@domain)[last()]=
 			   $current_domain
 			   and
-			   (ancestor-or-self::*/@feature)[last()]!=''
+			   (ancestor-or-self::*/@component)[last()]!=''
 			   ])"/>
 	      </td>
 	    </xsl:if>
 	  </xsl:for-each>
 	  <!-- Total of totals, but not the count of all cases
-	       since we skipped the empty features and types -->
-	  <td class="matrixnumberbold">
+	       since we skipped the empty components and domains -->
+	  <td class="center">
 	    <xsl:value-of
 	       select="count(//case
 		       [
 		       (ancestor-or-self::*/@domain)[last()]!=''
 		       and
-		       (ancestor-or-self::*/@feature)[last()]!=''
+		       (ancestor-or-self::*/@component)[last()]!=''
 		       ])"/>
 	  </td>
 	</tr>
