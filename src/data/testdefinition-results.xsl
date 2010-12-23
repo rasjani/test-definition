@@ -688,7 +688,9 @@
 			<xsl:text>stdout:</xsl:text>
 		      </td>
 		      <td class="monospace">
-			<xsl:value-of select="stdout"/>
+			<xsl:call-template name="newlines_to_br">
+			  <xsl:with-param name="string" select="stdout"/>
+			</xsl:call-template>
 		      </td>
 		    </tr>
 		    <tr>
@@ -696,7 +698,9 @@
 			<xsl:text>stderr:</xsl:text>
 		      </td>
 		      <td class="monospace">
-			<xsl:value-of select="stderr"/>
+			<xsl:call-template name="newlines_to_br">
+			  <xsl:with-param name="string" select="stderr"/>
+			</xsl:call-template>
 		      </td>
 		    </tr>
 		  </xsl:for-each>
@@ -729,6 +733,25 @@
 	</xsl:choose>
       </strong>
     </td>
+  </xsl:template>
+
+  <!-- Convert newlines to <br/> -->
+  <xsl:template name="newlines_to_br">
+    <xsl:param name="string"/>
+
+    <xsl:choose>
+      <xsl:when test="contains($string, '&#10;')">
+	<xsl:value-of select="substring-before($string, '&#10;')"/>
+	<br/>
+	<xsl:call-template name="newlines_to_br">
+	  <xsl:with-param name="string"
+			  select="substring-after($string, '&#10;')"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<xsl:value-of select="substring-before($string, '&#10;')"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>
