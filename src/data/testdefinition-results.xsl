@@ -564,21 +564,28 @@
 		</xsl:if>
 	      </xsl:attribute>
 	      <td class="testcase_name">
-		<xsl:element name="a">
-		  <xsl:attribute name="href">
-		    <xsl:text>#</xsl:text>
-		  </xsl:attribute>
-		  <xsl:attribute name="title">
-		    <xsl:text>Show Steps</xsl:text>
-		  </xsl:attribute>
-		  <xsl:attribute name="onclick">
-		    <xsl:text>javascript:return showHideSteps('</xsl:text>
-		    <xsl:text>test-case-steps-</xsl:text>
-		    <xsl:value-of select="$tc_id"/>
-		    <xsl:text>');</xsl:text>
-		  </xsl:attribute>
-		  <xsl:value-of select="@name"/>
-		</xsl:element>
+		<xsl:choose>
+		  <xsl:when test="count(step) &gt; 0">
+		    <xsl:element name="a">
+		      <xsl:attribute name="href">
+			<xsl:text>#</xsl:text>
+		      </xsl:attribute>
+		      <xsl:attribute name="title">
+			<xsl:text>Show Steps</xsl:text>
+		      </xsl:attribute>
+		      <xsl:attribute name="onclick">
+			<xsl:text>javascript:return showHideSteps('</xsl:text>
+			<xsl:text>test-case-steps-</xsl:text>
+			<xsl:value-of select="$tc_id"/>
+			<xsl:text>');</xsl:text>
+		      </xsl:attribute>
+		      <xsl:value-of select="@name"/>
+		    </xsl:element>
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <xsl:value-of select="@name"/>
+		  </xsl:otherwise>
+		</xsl:choose>
 	      </td>
 	      <xsl:element name="td">
 		<xsl:attribute name="class">
