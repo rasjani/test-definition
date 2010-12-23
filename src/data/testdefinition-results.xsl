@@ -78,10 +78,7 @@
 	      media="screen" 
 	      rel="stylesheet" 
 	      type="text/css" />
-	<xsl:element name="style">
-	  <xsl:attribute name="type">
-	    <xsl:text>text/css</xsl:text>
-	  </xsl:attribute>
+	<style type="text/css">
 	  <xsl:text>
 	    table.basictable {
 	    width : auto;
@@ -128,7 +125,52 @@
 	    }
 
 	  </xsl:text>
-	</xsl:element>
+	</style>
+	<!-- Notice: JS with XSLT has many restrictions since the  DOM tree
+	     is not constructed yet when browser reads JS code -->
+	<script language="javascript" type="text/javascript">
+	  <xsl:text disable-output-escaping="yes">
+	  function showHideAll(showall)
+	  {
+	  var all_button = document.getElementById('see_all_button');
+	  var failed_button = document.getElementById('see_only_failed_button');
+
+	  if (showall)
+	  {
+	    all_button.className = 'sort_btn active';
+	    failed_button.className = 'sort_btn';
+	  }
+	  else
+	  {
+	    all_button.className = 'sort_btn';
+	    failed_button.className = 'sort_btn active';
+	  }
+
+	  var results = document.getElementById('detailed_results');
+	  var rows = results.getElementsByTagName('tr');
+	  for (var i = 0; i &lt; rows.length; ++i)
+          {
+            var node = rows[i];
+	    if (node.className)
+	    {
+	      if (node.className.match('result_pass'))
+	      {
+	        if (showall)
+	        {
+	          node.style.display = '';
+	        }
+	        else
+	        {
+	          node.style.display = 'none';
+	        }
+	      }
+	    }
+	  }
+
+	  return false;
+          }
+          </xsl:text>
+	</script>
       </head>
       <body>
 	<div id="wrapper">
@@ -339,12 +381,22 @@
 	<xsl:variable name="set_pass" select="count(case[@result='PASS'])"/>
 	<xsl:variable name="set_fail" select="count(case[@result='FAIL'])"/>
 	<xsl:variable name="set_na" select="count(case[@result='N/A'])"/>
-	<tr class="feature_record even" 
-	    id="test-set-TODO">
+	<tr class="feature_record even">
     	  <td>
-            <a href="#test-set-TODO">
+	    <xsl:element name="a">
+	      <xsl:attribute name="href">
+		<xsl:text>#test-set-</xsl:text>
+		<xsl:value-of select="concat(
+				      translate(../@name, ' ', '_'),
+				      '_',
+				      translate(@name, ' ', '_'))"/>
+	      </xsl:attribute>
+	      <xsl:attribute name="title">
+		<xsl:text>Detailed Results for </xsl:text>
+		<xsl:value-of select="@name"/>
+	      </xsl:attribute>
 	      <xsl:value-of select="@name"/>
-            </a>
+            </xsl:element>
 	  </td>
 	  <td class="total">
 	    <xsl:value-of select="$set_total"/>
@@ -394,7 +446,7 @@
 
   <!-- Detailed result listing -->
   <xsl:template name="detailed_results">
-    <h2 id="detailed_results">Detailed Test Results</h2>
+    <h2 id="detailed_results_h">Detailed Test Results</h2>
     
     <table id="detailed_results">
       <thead>
@@ -407,12 +459,14 @@
 	      <span class="sort">
 		<a href="#" 
 		   id="see_only_failed_button" 
-		   class="sort_btn active">
+		   class="sort_btn active"
+		   onclick="javascript:return showHideAll(false);">
 		  <xsl:text>See only failed</xsl:text>
 		</a>
 		<a href="#" 
 		   id="see_all_button" 
-		   class="sort_btn">
+		   class="sort_btn"
+		   onclick="javascript:return showHideAll(true);">
 		  <xsl:text>See all</xsl:text>
 		</a>
 	      </span>
@@ -423,85 +477,93 @@
       
       <xsl:for-each select="//set">
 	<tbody>
-	  <tr class="feature_name" id="test-set-TODO">
+	  <xsl:element name="tr">
+	    <xsl:attribute name="class">
+	      <xsl:text>feature_name</xsl:text>
+	    </xsl:attribute>
+	    <xsl:attribute name="id">
+	      <xsl:text>test-set-</xsl:text>
+	      <xsl:value-of select="concat(
+				    translate(../@name, ' ', '_'),
+				    '_',
+				    translate(@name, ' ', '_'))"/>
+	    </xsl:attribute>
 	    <td colspan="3">
 	      <xsl:value-of select="@name"/>
-	      <a href="#" class="see_all_toggle">
-		<xsl:text>+ see passing tests</xsl:text>
-	      </a>
 	    </td>
-	  </tr>
+	  </xsl:element>
 	</tbody>
-	  
-	<xsl:for-each select="case"> 
-	  <xsl:element name="tr">
-	    <xsl:attribute name="id">
-	      <xsl:text>TODO</xsl:text>
-	    </xsl:attribute>
-	    <xsl:attribute name="class">
-	      <xsl:text>testcase </xsl:text>
-	      <xsl:choose>
-		<xsl:when test="@result='PASS'">
-		  <xsl:text>result_pass</xsl:text>
-		</xsl:when>
-		<xsl:when test="@result='FAIL'">
-		  <xsl:text>result_fail</xsl:text>
-		</xsl:when>
-		<xsl:otherwise>
-		  <xsl:text>result_na</xsl:text>
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </xsl:attribute>
-	    <xsl:attribute name="style">
-	      <xsl:if test="@result='PASS'">
-		<xsl:text>display : none;</xsl:text>
-	      </xsl:if>
-	    </xsl:attribute>
-	    <td class="testcase_name">
-	      <xsl:value-of select="@name"/>
-	    </td>
-	    <xsl:element name="td">
+	<tbody>
+	  <xsl:for-each select="case"> 
+	    <xsl:element name="tr">
+	      <xsl:attribute name="id">
+	      <xsl:text>test-case-</xsl:text>
+	      <xsl:value-of select="concat(
+				    translate(../../@name, ' ', '_'),
+				    '_',
+				    translate(../@name, ' ', '_'),
+				    '_',
+				    translate(@name, ' ', '_'))"/>
+	      </xsl:attribute>
 	      <xsl:attribute name="class">
-		<xsl:text>testcase_result </xsl:text>
+		<xsl:text>testcase </xsl:text>
 		<xsl:choose>
 		  <xsl:when test="@result='PASS'">
-		    <xsl:text>pass</xsl:text>
+		    <xsl:text>result_pass</xsl:text>
 		  </xsl:when>
 		  <xsl:when test="@result='FAIL'">
-		    <xsl:text>fail</xsl:text>
+		    <xsl:text>result_fail</xsl:text>
 		  </xsl:when>
 		  <xsl:otherwise>
-		    <xsl:text>na</xsl:text>
+		    <xsl:text>result_na</xsl:text>
 		  </xsl:otherwise>
 		</xsl:choose>
 	      </xsl:attribute>
-	      <span class="content">
-		<xsl:value-of select="@result"/>
-	      </span>
-	    </xsl:element>
-	    <td class="testcase_notes">
-	      <div class="content">
-		<xsl:if test="@bugzilla_id!=''">
-		  <xsl:element name="a">
-		    <xsl:attribute name="class">
-		      <xsl:text>
-			bugzilla fetch bugzilla bugzilla_status 
-			bugzilla_append
-		      </xsl:text>
-		    </xsl:attribute>
-		    <xsl:attribute name="href">
-		      <xsl:text>http://bugs.meego.com/show_bug.cgi?id=</xsl:text>
-		      <xsl:value-of select="@bugzilla_id"/>
-		    </xsl:attribute>
-		    <xsl:value-of select="@bugzilla_id"/>
-		    <br/>
-		  </xsl:element>
+	      <xsl:attribute name="style">
+		<xsl:if test="@result='PASS'">
+		  <xsl:text>display : none;</xsl:text>
 		</xsl:if>
-		<xsl:value-of select="@comment"/>
-	      </div>
-	    </td>
-	  </xsl:element>
-	</xsl:for-each>
+	      </xsl:attribute>
+	      <td class="testcase_name">
+		<xsl:value-of select="@name"/>
+	      </td>
+	      <xsl:element name="td">
+		<xsl:attribute name="class">
+		  <xsl:text>testcase_result </xsl:text>
+		  <xsl:choose>
+		    <xsl:when test="@result='PASS'">
+		      <xsl:text>pass</xsl:text>
+		    </xsl:when>
+		    <xsl:when test="@result='FAIL'">
+		      <xsl:text>fail</xsl:text>
+		    </xsl:when>
+		    <xsl:otherwise>
+		      <xsl:text>na</xsl:text>
+		    </xsl:otherwise>
+		  </xsl:choose>
+		</xsl:attribute>
+		<span class="content">
+		  <xsl:value-of select="@result"/>
+		</span>
+	      </xsl:element>
+	      <td class="testcase_notes">
+		<div class="content">
+		  <xsl:if test="@bugzilla_id!=''">
+		    <xsl:element name="a">
+		      <xsl:attribute name="href">
+			<xsl:text>http://bugs.meego.com/show_bug.cgi?id=</xsl:text>
+			<xsl:value-of select="@bugzilla_id"/>
+		      </xsl:attribute>
+		      <xsl:value-of select="@bugzilla_id"/>
+		      <br/>
+		    </xsl:element>
+		  </xsl:if>
+		  <xsl:value-of select="@comment"/>
+		</div>
+	      </td>
+	    </xsl:element>
+	  </xsl:for-each>
+	</tbody>
       </xsl:for-each>
     </table>
   </xsl:template>
