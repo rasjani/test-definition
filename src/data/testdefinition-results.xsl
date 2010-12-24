@@ -516,17 +516,20 @@
       </thead>
       
       <xsl:for-each select="//set">
+	<xsl:variable name="set_id">
+	  <xsl:text>test-set-</xsl:text>
+	  <xsl:value-of select="concat(
+				translate(../@name, ' ', '_'),
+				'_',
+				translate(@name, ' ', '_'))"/>
+	</xsl:variable>
 	<tbody>
 	  <xsl:element name="tr">
 	    <xsl:attribute name="class">
 	      <xsl:text>feature_name</xsl:text>
 	    </xsl:attribute>
 	    <xsl:attribute name="id">
-	      <xsl:text>test-set-</xsl:text>
-	      <xsl:value-of select="concat(
-				    translate(../@name, ' ', '_'),
-				    '_',
-				    translate(@name, ' ', '_'))"/>
+	      <xsl:value-of select="$set_id"/>
 	    </xsl:attribute>
 	    <td colspan="3">
 	      <xsl:value-of select="@name"/>
