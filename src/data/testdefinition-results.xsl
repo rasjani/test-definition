@@ -177,7 +177,10 @@
 
 	  var results = document.getElementById('detailed_results');
 	  var rows = results.getElementsByTagName('tr');
-	  for (var i = 0; i &lt; rows.length; ++i)
+
+	  var i = 0;
+	  // Google Chrome breaks if we try to put out less than sign
+	  while (i != rows.length)
           {
             var node = rows[i];
 	    if (node.className)
@@ -201,6 +204,7 @@
 	        }
 	      }
 	    }
+	    ++i;
 	  }
 
 	  return false;
