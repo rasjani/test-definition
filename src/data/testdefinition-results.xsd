@@ -122,10 +122,12 @@
 
   <xs:element name="case">
     <xs:complexType>
-      <xs:sequence>
-	<xs:element ref="step" minOccurs="0" maxOccurs="unbounded" />
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	<xs:choice>
+	  <xs:element name="description" minOccurs="0" maxOccurs="1" />
+	  <xs:element ref="step" minOccurs="0" maxOccurs="unbounded" />
+	</xs:choice>
       </xs:sequence>
-
       <xs:attributeGroup ref="general_attributes"/>
       <xs:attribute name="result" use="required">
 	<xs:simpleType>

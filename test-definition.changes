@@ -1,3 +1,5 @@
+* Mon Dec 27 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.3
+- Added description element for case in result schema (BMC#11767)
 * Tue Dec 21 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.2
 - Test case description field formatting improved in XSLT (BMC#11344)
 - XSLT support for wiki.meego.com/TestCaseTemplate alignment (BMC#11551)

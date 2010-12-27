@@ -1,3 +1,9 @@
+test-definition (1.2.3) unstable; urgency=low
+
+  * Added description element for case in result schema (BMC#11767)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Mon, 27 Dec 2010 16:37:31 +0200
+
 test-definition (1.2.2) unstable; urgency=low
 
   * Test case description field formatting improved in XSLT (BMC#11344)
