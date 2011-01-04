@@ -164,21 +164,7 @@
 	</xs:complexType>
       </xs:element>
       <xs:element name="environments" minOccurs="0" maxOccurs="1" />
-      <xs:element name="get" minOccurs="0" maxOccurs="1">
-        <xs:complexType>
-	  <xs:sequence>
-            <xs:element name="file" minOccurs="1" maxOccurs="unbounded">
-	      <xs:complexType>
-		<xs:simpleContent>
-		  <xs:extension base="xs:string">
-		    <xs:attribute name="delete_after" type="xs:boolean" default="false" />
-		  </xs:extension>
-		</xs:simpleContent>
-	      </xs:complexType>
-	    </xs:element>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element ref="get" minOccurs="0" maxOccurs="1"/>
       </xs:choice>
     </xs:sequence>
     <xs:attributeGroup ref="general_attributes"/>
@@ -188,6 +174,24 @@
       <xs:field xpath="@name"/>
     </xs:unique>
 
+</xs:element>
+
+
+<xs:element name="get">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="file" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:simpleContent>
+	    <xs:extension base="xs:string">
+	      <xs:attribute name="delete_after" type="xs:boolean" default="false" />
+	      <xs:attribute name="measurement" type="xs:boolean" default="false" />
+	    </xs:extension>
+	  </xs:simpleContent>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 </xs:element>
 
 <xs:element name="step">
