@@ -111,17 +111,15 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="environments" minOccurs="0" maxOccurs="1" />
-      <xs:element ref="get" minOccurs="0" maxOccurs="1">
+      <xs:element ref="get" minOccurs="0" maxOccurs="1"/>
       </xs:choice>
     </xs:sequence>
-
     <xs:attributeGroup ref="general_attributes"/>
   </xs:complexType>
-    <xs:unique name="uniqueCaseName">
-      <xs:selector xpath=".//case"/>
-      <xs:field xpath="@name"/>
-    </xs:unique>
-
+  <xs:unique name="uniqueCaseName">
+    <xs:selector xpath=".//case"/>
+    <xs:field xpath="@name"/>
+  </xs:unique>
 </xs:element>
 
 <xs:element name="step">
