@@ -187,7 +187,7 @@
 	    <img class="logoimage"
 		 alt="MeeGo"
 		 src="http://meego.com/sites/all/themes/meego/images/site_name.png"/>
-	    <h1>
+	    <h1 id="top">
 	      <xsl:text>Test plan</xsl:text>
 	    </h1>
 	    <!-- Top "navigation" links -->
@@ -219,7 +219,12 @@
 	      
 	      <xsl:if test="$show_matrix">
 		<a id="matrix"></a>
-		<h2><xsl:text>Component vertical matrix</xsl:text></h2>
+		<h2>
+		  <xsl:text>Component vertical matrix</xsl:text>
+		  <span class="heading_actions">
+		    <a href="#top">Back to top</a>
+		  </span>
+		</h2>
 		<xsl:call-template name="component_vertical_matrix"/>
 	      </xsl:if>
 	    </div>
@@ -265,7 +270,16 @@
     
     <xsl:if test="$has_cases">
       <a id="cases"></a>
-      <h1><xsl:text>Test cases</xsl:text></h1>
+      <h1>
+	<xsl:text>Test cases</xsl:text>
+	<span class="heading_actions">
+	  <a href="#top">Back to top</a>
+	</span>
+      </h1>
+      <!-- Menu -->
+      <xsl:call-template name="case_structure_menu">
+	<xsl:with-param name="planned_cases_mode" select="0"/>
+      </xsl:call-template>
 
       <!-- Handle suites -->
       <xsl:for-each select="suite">
@@ -285,7 +299,16 @@
 
     <xsl:if test="$has_planned_cases">
       <a id="planned_cases"></a>
-      <h1><xsl:text>Planned cases</xsl:text></h1>
+      <h1>
+	<xsl:text>Planned cases</xsl:text>
+	<span class="heading_actions">
+	  <a href="#top">Back to top</a>
+	</span>
+      </h1>
+      <!-- Menu -->
+      <xsl:call-template name="case_structure_menu">
+	<xsl:with-param name="planned_cases_mode" select="1"/>
+      </xsl:call-template>
 
       <!-- Handle suites -->
       <xsl:for-each select="suite">
@@ -313,7 +336,20 @@
 	 sets containing only planned cases are skipped and vice versa -->
     <xsl:param name="planned_cases_mode"/>
 
-    <h2><xsl:value-of select="@name"/></h2>
+    <xsl:element name="h2">
+      <xsl:attribute name="id">
+	<xsl:choose>
+	  <xsl:when test="not($planned_cases_mode)">
+	    <xsl:text>suite_</xsl:text>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:text>planned_suite_</xsl:text>
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:value-of select="translate(@name, ' ', '_')"/>
+      </xsl:attribute>
+      <xsl:value-of select="@name"/>
+    </xsl:element>
 
     <p class="smaller_margin">
       <strong><xsl:text>Description: </xsl:text></strong>
@@ -355,8 +391,37 @@
 
     <div class="sectioncontainer">
       <div class="test_results">
-	<h2 id="test_results"
-	    style="font-size : 1.1em;"><xsl:value-of select="@name"/></h2>
+	<xsl:element name="h2">
+	  <xsl:attribute name="id">
+	    <xsl:choose>
+	      <xsl:when test="not($planned_cases_mode)">
+		<xsl:text>set_</xsl:text>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:text>planned_set_</xsl:text>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	    <xsl:value-of
+	       select="concat(
+		       translate(../@name, ' ', '_'),
+		       '_',
+		       translate(@name, ' ', '_'))"/>
+	  </xsl:attribute>
+	  <xsl:attribute name="style">
+	    <xsl:text>font-size : 1.1em;</xsl:text>
+	  </xsl:attribute>
+	  <xsl:value-of select="@name"/>
+	  <span class="heading_actions">
+	    <xsl:choose>
+	      <xsl:when test="not($planned_cases_mode)">
+		<a href="#cases">Back to cases</a>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<a href="#planned_cases">Back to cases</a>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </span>
+	</xsl:element>
 
 	<div class="container">
 	  <p class="smaller_margin">
@@ -812,6 +877,92 @@
 	</tr>
       </table>
     </div>
+  </xsl:template>
+
+  <xsl:template name="case_structure_menu">
+    <xsl:param name="planned_cases_mode"/>
+
+    <xsl:element name="ol">
+      <xsl:attribute name="class">
+	<xsl:text>toc</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="style">
+	<xsl:text>
+	  width : auto; display : table-cell; min-width : 21em;
+	</xsl:text>
+      </xsl:attribute>
+      <xsl:for-each select="suite">
+	<xsl:sort select="@name"/>
+	<!-- Depending on the mode skip suites having only planned cases
+	     or having no planned cases -->
+	<xsl:if
+	   test="(not($planned_cases_mode) and
+		 count(set/case[@state='Design' or @state='design'])
+		 != count(set/case))
+		 or
+		 ($planned_cases_mode and
+		 count(set/case[@state='Design' or @state='design']) &gt; 0)">
+
+	  <li>
+	    <xsl:element name="a">
+	      <xsl:attribute name="href">
+		<xsl:choose>
+		  <xsl:when test="not($planned_cases_mode)">
+		    <xsl:text>#suite_</xsl:text>
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <xsl:text>#planned_suite_</xsl:text>
+		  </xsl:otherwise>
+		</xsl:choose>
+		<xsl:value-of select="translate(@name, ' ', '_')"/>
+	      </xsl:attribute>
+	      <xsl:attribute name="title">
+		<xsl:value-of select="@name"/>
+	      </xsl:attribute>
+	      <xsl:value-of select="@name"/>
+	    </xsl:element>
+	  </li>
+	  <ol>
+	    <xsl:for-each select="set">
+	      <xsl:sort select="@name"/>
+	      <!-- Again depending on the mode -->
+	      <xsl:if
+		 test="(not($planned_cases_mode) and
+		       count(case[@state='Design' or @state='design'])
+		       != count(case))
+		       or
+		       ($planned_cases_mode and
+		       count(case[@state='Design' or @state='design']) &gt; 0)">
+
+		<li>
+		  <xsl:element name="a">
+		    <xsl:attribute name="href">
+		      <xsl:choose>
+			<xsl:when test="not($planned_cases_mode)">
+			  <xsl:text>#set_</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+			  <xsl:text>#planned_set_</xsl:text>
+			</xsl:otherwise>
+		      </xsl:choose>
+		      <xsl:value-of
+			 select="concat(
+				 translate(../@name, ' ', '_'),
+				 '_',
+				 translate(@name, ' ', '_'))"/>
+		    </xsl:attribute>
+		    <xsl:attribute name="title">
+		      <xsl:value-of select="@name"/>
+		    </xsl:attribute>
+		    <xsl:value-of select="@name"/>
+		  </xsl:element>
+		</li>
+	      </xsl:if>
+	    </xsl:for-each>
+	  </ol>
+	</xsl:if>
+      </xsl:for-each>
+    </xsl:element>
   </xsl:template>
 
 </xsl:stylesheet>
