@@ -28,6 +28,7 @@ install: build
 	install -m 644 src/data/testdefinition-syntax.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
 	install -m 644 src/data/testdefinition-syntax.xsl $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
 	install -m 644 src/data/testdefinition-tm_terms.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
+	install -m 644 src/data/testdefinition-results.xsl $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
 	install -m 644 src/data/testdefinition-results.xsd $(CURDIR)/debian/$(APPNAME)/usr/share/$(APPNAME)/
 	install -d $(CURDIR)/debian/$(APPNAME)/usr/share/man/man5/
 	groff -man -Tascii src/doc/test-definition.man > $(CURDIR)/debian/$(APPNAME)/usr/share/man/man5/test-definition.5
