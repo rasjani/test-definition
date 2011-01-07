@@ -1,3 +1,9 @@
+* Fri Jan 07 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.4
+- Enhanced the set of type attribute values (by Matti Salmi)
+- Test result XSLT complains about HTML in description elements (BMC#11202)
+- Feature coverage matrix removed and component coverage added (BMC#11650) 
+- Added TOC for test cases in syntax xls (BMC#12084)
+- Added XSLT for result XMLs (BMC#8870)
 * Mon Dec 27 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.3
 - Added description element for case in result schema (BMC#11767)
 * Tue Dec 21 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.2

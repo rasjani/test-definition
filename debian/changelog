@@ -1,3 +1,13 @@
+test-definition (1.2.4) unstable; urgency=low
+
+  * Enhanced the set of type attribute values (by Matti Salmi)
+  * Test result XSLT complains about HTML in description elements (BMC#11202)
+  * Feature coverage matrix removed and component coverage added (BMC#11650)
+  * Added TOC for test cases in syntax xls (BMC#12084)
+  * Added XSLT for result XMLs (BMC#8870)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Fri, 07 Jan 2011 14:00:25 +0200
+
 test-definition (1.2.3) unstable; urgency=low
 
   * Added description element for case in result schema (BMC#11767)
