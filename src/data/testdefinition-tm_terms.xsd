@@ -144,10 +144,12 @@
       </xs:element>
       <xs:element name="case" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
-          <xs:sequence>
-            <xs:element name="description" minOccurs="0" maxOccurs="1" />
-            <xs:element ref="step" minOccurs="0" maxOccurs="unbounded" />
-	    <xs:element ref="get" minOccurs="0" maxOccurs="1"/>
+          <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:choice>
+              <xs:element name="description" minOccurs="0" maxOccurs="1" />
+              <xs:element ref="step" minOccurs="0" maxOccurs="unbounded" />
+	      <xs:element ref="get" minOccurs="0" maxOccurs="1"/>
+	    </xs:choice>
           </xs:sequence>
           <xs:attributeGroup ref="general_attributes"/>
           <xs:attribute name="subfeature"/>
