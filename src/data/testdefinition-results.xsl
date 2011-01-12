@@ -109,13 +109,26 @@
 	    line-height : 1px;
 	    }
 
-	    table.steptable {
+	    table.steptable, table.measurements {
 	    border : none;
 	    width : auto;
 	    }
 
-	    table.steptable td, th {
+	    table.steptable td, table.steptable th {
 	    border : none;
+	    }
+
+	    table.measurements td, th {
+	    border : none;
+	    }
+
+	    table.measurements tr.title th {
+	    padding-left : 25px;
+	    }
+
+	    table.measurements tr th.title
+	    table.measurements tr td.title {
+	    padding-left : 50px;
 	    }
 
 	    table.steptable th {
@@ -572,7 +585,8 @@
 	      </xsl:attribute>
 	      <td class="testcase_name">
 		<xsl:choose>
-		  <xsl:when test="count(step) &gt; 0">
+		  <xsl:when test="count(step) &gt; 0 or
+				  count(measurement) &gt; 0">
 		    <xsl:element name="a">
 		      <xsl:attribute name="href">
 			<xsl:text>#</xsl:text>
@@ -644,74 +658,161 @@
 	      </xsl:attribute>
 	      
 	      <td colspan="4">
-		<table class="steptable">
-		  <xsl:for-each select="step">
-		    <tr>
-		      <th colspan="2">
-			<xsl:text>Step | </xsl:text>
-			<xsl:element name="span">
-			  <xsl:attribute name="class">
-			    <xsl:text>testcase_result </xsl:text>
-			    <xsl:choose>
-			      <xsl:when test="@result='PASS'">
-				<xsl:text>pass</xsl:text>
-			      </xsl:when>
-			      <xsl:when test="@result='FAIL'">
-				<xsl:text>fail</xsl:text>
-			      </xsl:when>
-			      <xsl:otherwise>
-				<xsl:text>na</xsl:text>
-			      </xsl:otherwise>
-			    </xsl:choose>
-			  </xsl:attribute>
-			  <xsl:value-of select="@result"/>
-			</xsl:element>
-		      </th>
+		<xsl:if test="count(measurement) &gt; 0">
+		  <table class="measurements">
+		    <tr class="title">
+		      <th colspan="5"><xsl:text>Measurements</xsl:text></th>
 		    </tr>
 		    <tr>
-		      <td class="title">
-			<xsl:text>Command:</xsl:text>
-		      </td>
-		      <td class="monospace">
-			<xsl:value-of select="@command"/>
-		      </td>
+		      <th class="title"><xsl:text>Name</xsl:text></th>
+		      <th><xsl:text>Unit</xsl:text></th>
+		      <th><xsl:text>Value</xsl:text></th>
+		      <th><xsl:text>Target</xsl:text></th>
+		      <th><xsl:text>Fail&#160;limit</xsl:text></th>
+		      <th><xsl:text>Verdict</xsl:text></th>
 		    </tr>
-		    <tr>
-		      <td class="title">
-			<xsl:text>Expected Result:</xsl:text>
-		      </td>
-		      <td><xsl:value-of select="expected_result"/></td>
-		    </tr>
-		    <tr>
-		      <td class="title">
-			<xsl:text>Return Code:</xsl:text>
-		      </td>
-		      <td class="monospace">
-			<xsl:value-of select="return_code"/>
-		      </td>
-		    </tr>
-		    <tr>
-		      <td class="title">
-			<xsl:text>stdout:</xsl:text>
-		      </td>
-		      <td class="monospace">
-			<xsl:call-template name="newlines_to_br">
-			  <xsl:with-param name="string" select="stdout"/>
-			</xsl:call-template>
-		      </td>
-		    </tr>
-		    <tr>
-		      <td class="title">
-			<xsl:text>stderr:</xsl:text>
-		      </td>
-		      <td class="monospace">
-			<xsl:call-template name="newlines_to_br">
-			  <xsl:with-param name="string" select="stderr"/>
-			</xsl:call-template>
-		      </td>
-		    </tr>
-		  </xsl:for-each>
-		</table>
+		    <xsl:for-each select="measurement">
+		      <tr>
+			<td class="title"><xsl:value-of select="@name"/></td>
+			<td><xsl:value-of select="@unit"/></td>
+			<td><xsl:value-of select="@value"/></td>
+			<td><xsl:value-of select="@target"/></td>
+			<td><xsl:value-of select="@failure"/></td>
+			<xsl:variable name="verdict">
+			  <xsl:choose>
+			    <!-- Can't determine verdict without all values -->
+			    <xsl:when test="@value and @target and @failure">
+			      <xsl:choose>
+				<!-- Target lt Failure means measurement passed
+				     when Value lt Failure.
+				  -->
+				<xsl:when test="number(@target) &lt;
+						number(@failure)">
+				  <xsl:choose>
+				    <!-- Thus if Value gt Failure it FAIL -->
+				    <xsl:when test="number(@value) &gt;
+						    number(@failure)">
+				      <xsl:text>FAIL</xsl:text>
+				    </xsl:when>
+				    <!-- Otherwise (same or lt) PASS -->
+				    <xsl:otherwise>
+				      <xsl:text>PASS</xsl:text>
+				    </xsl:otherwise>
+				  </xsl:choose>
+				</xsl:when>
+				<!-- Target gt Failure means measurement passed
+				     when value gt Failure (we execute this
+				     comparison also when target == failure)
+				  -->
+				<xsl:otherwise>
+				  <xsl:choose>
+				    <!-- So, Target lt Failure is FAIL -->
+				    <xsl:when test="number(@value) &lt;
+						    number(@failure)">
+				      <xsl:text>FAIL</xsl:text>
+				    </xsl:when>
+				    <!-- Target gt or same as Failure is PASS-->
+				    <xsl:otherwise>
+				      <xsl:text>PASS</xsl:text>
+				    </xsl:otherwise>
+				  </xsl:choose>
+				</xsl:otherwise>
+			      </xsl:choose>
+			    </xsl:when>
+			    <xsl:otherwise>
+			      <xsl:text>N/A</xsl:text>
+			    </xsl:otherwise>
+			  </xsl:choose>
+			</xsl:variable>
+			<td>
+			  <xsl:element name="span">
+			    <xsl:attribute name="class">
+			      <xsl:choose>
+				<xsl:when test="$verdict='PASS'">
+				  <xsl:text>pass</xsl:text>
+				</xsl:when>
+				<xsl:when test="$verdict='FAIL'">
+				  <xsl:text>fail</xsl:text>
+				</xsl:when>
+			      </xsl:choose>
+			    </xsl:attribute>
+			    <xsl:value-of select="$verdict"/>
+			  </xsl:element>
+			</td>
+		      </tr>
+		    </xsl:for-each>
+		  </table>
+		</xsl:if>
+		<xsl:if test="count(step) &gt; 0">
+		  <table class="steptable">
+		    <xsl:for-each select="step">
+		      <tr>
+			<th colspan="2">
+			  <xsl:text>Step | </xsl:text>
+			  <xsl:element name="span">
+			    <xsl:attribute name="class">
+			      <xsl:text>testcase_result </xsl:text>
+			      <xsl:choose>
+				<xsl:when test="@result='PASS'">
+				  <xsl:text>pass</xsl:text>
+				</xsl:when>
+				<xsl:when test="@result='FAIL'">
+				  <xsl:text>fail</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				  <xsl:text>na</xsl:text>
+				</xsl:otherwise>
+			      </xsl:choose>
+			    </xsl:attribute>
+			    <xsl:value-of select="@result"/>
+			  </xsl:element>
+			</th>
+		      </tr>
+		      <tr>
+			<td class="title">
+			  <xsl:text>Command:</xsl:text>
+			</td>
+			<td class="monospace">
+			  <xsl:value-of select="@command"/>
+			</td>
+		      </tr>
+		      <tr>
+			<td class="title">
+			  <xsl:text>Expected Result:</xsl:text>
+			</td>
+			<td><xsl:value-of select="expected_result"/></td>
+		      </tr>
+		      <tr>
+			<td class="title">
+			  <xsl:text>Return Code:</xsl:text>
+			</td>
+			<td class="monospace">
+			  <xsl:value-of select="return_code"/>
+			</td>
+		      </tr>
+		      <tr>
+			<td class="title">
+			  <xsl:text>stdout:</xsl:text>
+			</td>
+			<td class="monospace">
+			  <xsl:call-template name="newlines_to_br">
+			    <xsl:with-param name="string" select="stdout"/>
+			  </xsl:call-template>
+			</td>
+		      </tr>
+		      <tr>
+			<td class="title">
+			  <xsl:text>stderr:</xsl:text>
+			</td>
+			<td class="monospace">
+			  <xsl:call-template name="newlines_to_br">
+			    <xsl:with-param name="string" select="stderr"/>
+			  </xsl:call-template>
+			</td>
+		      </tr>
+		    </xsl:for-each>
+		  </table>
+		</xsl:if>
 	      </td>
 	    </xsl:element>
 	  </xsl:for-each>
