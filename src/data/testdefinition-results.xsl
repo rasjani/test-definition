@@ -612,8 +612,12 @@
 		  <xsl:value-of select="measurement[1]/@name"/>
 		  <xsl:text>&#160;</xsl:text>
 		  <xsl:choose>
-		    <xsl:when test="measurement[1]/@value">
-		      <xsl:value-of select="measurement[1]/@value"/>
+		    <xsl:when test="measurement[1]/@value and
+				    measurement[1]/@value != ''">
+		      <xsl:call-template name="meas_value">
+			<xsl:with-param name="measurement"
+					select="measurement[1]"/>
+		      </xsl:call-template>
 		    </xsl:when>
 		    <xsl:otherwise>
 		      <xsl:text>N/A</xsl:text>
@@ -700,7 +704,9 @@
 			<xsl:variable name="verdict">
 			  <xsl:choose>
 			    <!-- Can't determine verdict without all values -->
-			    <xsl:when test="@value and @target and @failure">
+			    <xsl:when test="@value and @target and @failure and
+					    @value != '' and @target != '' and
+					    @failure != ''">
 			      <xsl:choose>
 				<!-- Target lt Failure means measurement passed
 				     when Value lt Failure.
