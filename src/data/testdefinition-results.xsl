@@ -887,11 +887,6 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- This variable is for getting the format for measurement results -->
-  <xsl:variable name="digits">
-    <xsl:text>&#35;&#35;&#35;&#35;&#35;&#35;&#35;&#35;&#35;&#35;</xsl:text>
-  </xsl:variable>
-
   <!-- Show the measurement value using the number of decimals from
        target value -->
   <xsl:template name="meas_value">
@@ -924,18 +919,10 @@
 				  string-length(
 				  substring-after($comparison, '.')
 				  )))"/>
-<!--	    <xsl:value-of select="format-number($measurement/@value,
-				  concat(
-				  '0.',
-				  substring($digits, 1,
-				  string-length(
-				  substring-after($comparison, '.')
-				  ))))"/> -->
 	  </xsl:when>
 	  <!-- No decimals -->
 	  <xsl:otherwise>
 	    <xsl:value-of select="substring-before($measurement/@value, '.')"/>
-<!--	    <xsl:value-of select="format-number($measurement/@value, '0')"/>-->
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
