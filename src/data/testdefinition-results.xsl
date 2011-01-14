@@ -126,7 +126,7 @@
 	    padding-left : 25px;
 	    }
 
-	    table.measurements tr th.title
+	    table.measurements tr th.title,
 	    table.measurements tr td.title {
 	    padding-left : 50px;
 	    }
@@ -607,6 +607,21 @@
 		    <xsl:value-of select="@name"/>
 		  </xsl:otherwise>
 		</xsl:choose>
+		<xsl:if test="count(measurement) &gt; 0">
+		  <xsl:text>&#160;-&#160;</xsl:text>
+		  <xsl:value-of select="measurement[1]/@name"/>
+		  <xsl:text>&#160;</xsl:text>
+		  <xsl:choose>
+		    <xsl:when test="measurement[1]/@value">
+		      <xsl:value-of select="measurement[1]/@value"/>
+		    </xsl:when>
+		    <xsl:otherwise>
+		      <xsl:text>N/A</xsl:text>
+		    </xsl:otherwise>
+		  </xsl:choose>
+		  <xsl:text>&#160;</xsl:text>
+		  <xsl:value-of select="measurement[1]/@unit"/>
+		</xsl:if>
 	      </td>
 	      <xsl:element name="td">
 		<xsl:attribute name="class">
@@ -666,7 +681,7 @@
 		    <tr>
 		      <th class="title"><xsl:text>Name</xsl:text></th>
 		      <th><xsl:text>Unit</xsl:text></th>
-		      <th><xsl:text>Value</xsl:text></th>
+		      <th><xsl:text>Measurement&#160;result</xsl:text></th>
 		      <th><xsl:text>Target</xsl:text></th>
 		      <th><xsl:text>Fail&#160;limit</xsl:text></th>
 		      <th><xsl:text>Verdict</xsl:text></th>
@@ -675,7 +690,11 @@
 		      <tr>
 			<td class="title"><xsl:value-of select="@name"/></td>
 			<td><xsl:value-of select="@unit"/></td>
-			<td><xsl:value-of select="@value"/></td>
+			<td>
+			  <xsl:call-template name="meas_value">
+			    <xsl:with-param name="measurement" select="."/>
+			  </xsl:call-template>
+			</td>
 			<td><xsl:value-of select="@target"/></td>
 			<td><xsl:value-of select="@failure"/></td>
 			<xsl:variable name="verdict">
@@ -858,6 +877,65 @@
       </xsl:when>
       <xsl:otherwise>
 	<xsl:value-of select="substring-before($string, '&#10;')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- This variable is for getting the format for measurement results -->
+  <xsl:variable name="digits">
+    <xsl:text>&#35;&#35;&#35;&#35;&#35;&#35;&#35;&#35;&#35;&#35;</xsl:text>
+  </xsl:variable>
+
+  <!-- Show the measurement value using the number of decimals from
+       target value -->
+  <xsl:template name="meas_value">
+    <xsl:param name="measurement"/>
+
+    <xsl:variable name="comparison">
+      <xsl:if test="$measurement/@target or $measurement/@failure">
+	<xsl:if test="$measurement/@target and $measurement/@target != ''">
+	  <xsl:value-of select="$measurement/@target"/>
+	</xsl:if>
+	<xsl:if test="$measurement/@failure and
+		      (not($measurement/@target) or $measurement/@target='')">
+	  <xsl:value-of select="$measurement/@failure"/>
+	</xsl:if>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:choose>
+      <!-- Either target or fail limit set -->
+      <xsl:when test="$comparison and $comparison != ''">
+	<xsl:choose>
+	  <!-- Has a dot ie. decimals -->
+	  <xsl:when test="contains($comparison, '.')">
+	    <xsl:value-of select="concat(
+				  substring-before($measurement/@value, '.'),
+				  '.',
+				  substring(
+				  substring-after($measurement/@value, '.'),
+				  1,
+				  string-length(
+				  substring-after($comparison, '.')
+				  )))"/>
+<!--	    <xsl:value-of select="format-number($measurement/@value,
+				  concat(
+				  '0.',
+				  substring($digits, 1,
+				  string-length(
+				  substring-after($comparison, '.')
+				  ))))"/> -->
+	  </xsl:when>
+	  <!-- No decimals -->
+	  <xsl:otherwise>
+	    <xsl:value-of select="substring-before($measurement/@value, '.')"/>
+<!--	    <xsl:value-of select="format-number($measurement/@value, '0')"/>-->
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:when>
+      <!-- Neither target nor fail set, just show the value -->
+      <xsl:otherwise>
+	<xsl:value-of select="$measurement/@value"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
