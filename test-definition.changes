@@ -1,3 +1,5 @@
+* Fri Jan 14 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.5
+- Schemas support for obtaining and showing measurement data (BMC#11039)
 * Fri Jan 07 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.4
 - Enhanced the set of type attribute values (by Matti Salmi)
 - Test result XSLT complains about HTML in description elements (BMC#11202)

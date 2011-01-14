@@ -1,3 +1,9 @@
+test-definition (1.2.5) unstable; urgency=low
+
+  * Schemas support for obtaining and showing measurement data (BMC#11039)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Fri, 14 Jan 2011 14:48:21 +0200
+
 test-definition (1.2.4) unstable; urgency=low
 
   * Enhanced the set of type attribute values (by Matti Salmi)
