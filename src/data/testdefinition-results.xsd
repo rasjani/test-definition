@@ -126,6 +126,7 @@
 	<xs:choice>
 	  <xs:element name="description" minOccurs="0" maxOccurs="1" />
 	  <xs:element ref="step" minOccurs="0" maxOccurs="unbounded" />
+	  <xs:element ref="event" minOccurs="0" maxOccurs="unbounded" />
 	  <xs:element ref="measurement" minOccurs="0" maxOccurs="unbounded" />
 	</xs:choice>
       </xs:sequence>
@@ -170,6 +171,53 @@
 	</xs:simpleType>
       </xs:attribute>
       <xs:attribute name="failure_info" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="event">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:string">
+		<xs:attribute name="type" use="required">
+		  <xs:simpleType>
+		    <xs:restriction base="xs:token">
+		      <xs:enumeration value="null"/>
+		      <xs:enumeration value="boolean"/>
+		      <xs:enumeration value="number"/>
+		      <xs:enumeration value="object"/>
+		      <xs:enumeration value="array"/>
+		      <xs:enumeration value="string"/>
+		    </xs:restriction>
+		  </xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="name" use="required" type="xs:string" />
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+      </xs:sequence>
+      <xs:attribute name="type" use="required">
+	<xs:simpleType>
+	  <xs:restriction base="xs:token">
+            <xs:enumeration value="send"/>
+            <xs:enumeration value="wait"/>
+	  </xs:restriction>
+	</xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="resource" use="required" type="xs:string" />
+      <xs:attribute name="timeout" default="90" type="xs:positiveInteger"/>
+      <xs:attribute name="result" use="required">
+	<xs:simpleType>
+	  <xs:restriction base="xs:string">
+	    <xs:enumeration value="FAIL" />
+	    <xs:enumeration value="PASS" />
+	    <xs:enumeration value="N/A" />
+	  </xs:restriction>
+	</xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
