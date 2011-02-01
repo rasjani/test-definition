@@ -130,6 +130,7 @@
     <xs:attribute name="bugzilla_id" type="xs:positiveInteger"/>
     <xs:attribute name="TC_ID"/>
     <xs:attribute name="state"/>
+    <xs:attribute name="target"/>
   </xs:complexType>
 </xs:element>
 
