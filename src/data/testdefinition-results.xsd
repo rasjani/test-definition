@@ -45,6 +45,18 @@
     <xs:attribute name="hwid"/>
   </xs:attributeGroup>
 
+  <xs:element name="vcsurl">
+    <xs:simpleType>
+      <xs:restriction base="xs:anyURI"/>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="packageurl">
+    <xs:simpleType>
+      <xs:restriction base="xs:anyURI"/>
+    </xs:simpleType>
+  </xs:element>
+
   <xs:element name="testresults">
     <xs:complexType>
       <xs:sequence minOccurs="0" maxOccurs="unbounded">
