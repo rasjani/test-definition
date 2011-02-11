@@ -22,7 +22,7 @@ Used for validating test results.
 Written by Riku Halonen and Sami Lahtinen
 
 .SH COPYRIGHT
-test-definition, © Nokia 2010, licensed under the GNU Lesser General Public License version 2.1, Contact: Ville Ilvonen, ville.p.ilvonen@nokia.com
+test-definition, © Nokia 2010, licensed under the GNU Lesser General Public License version 2.1, Contact: MeeGo Quality Assurance, meego-qa@lists.meego.com
 
 .SH "SEE ALSO"
 .BR http://wiki.meego.com/Test_Packaging, 
