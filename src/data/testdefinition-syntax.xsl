@@ -674,6 +674,8 @@
 		      starts-with($lcase, 'method:') or
 		      starts-with($lcase, 'references:') or
 		      starts-with($lcase, 'pre/post-conditions:') or
+		      starts-with($lcase, 'pre-conditions:') or
+		      starts-with($lcase, 'post-conditions:') or
 		      starts-with($lcase, 'run instructions:') or
 		      starts-with($lcase, 'pass/fail criteria:') or
 		      starts-with($lcase, 'test environment:') or
