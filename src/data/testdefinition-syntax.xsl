@@ -474,6 +474,8 @@
 	      <xsl:apply-templates select=".">
 		<xsl:with-param name="rowclass"
 				select="$color"/>
+		<xsl:with-param name="planned_cases_mode" 
+				select="$planned_cases_mode"/>
 	      </xsl:apply-templates>
 	    </xsl:for-each>
 	  </table>
@@ -485,10 +487,28 @@
   <!-- Process single test case. Produces a row to a table -->
   <xsl:template match="case">
     <xsl:param name="rowclass"/>
+    <xsl:param name="planned_cases_mode"/>
     
     <xsl:element name="tr">
       <xsl:attribute name="class">
 	<xsl:value-of select="$rowclass"/>
+      </xsl:attribute>
+      <xsl:attribute name="id">
+	<xsl:choose>
+	  <xsl:when test="not($planned_cases_mode)">
+	    <xsl:text>case_</xsl:text>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:text>planned_case_</xsl:text>
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:value-of
+	   select="concat(
+		   translate(../../@name, ' ', '_'),
+		   '_',
+		   translate(../@name, ' ', '_'),
+		   '_',
+		   translate(@name, ' ', '_'))"/>
       </xsl:attribute>
       <td><xsl:value-of select="@name"/></td>
       <td>
@@ -674,6 +694,8 @@
 		      starts-with($lcase, 'method:') or
 		      starts-with($lcase, 'references:') or
 		      starts-with($lcase, 'pre/post-conditions:') or
+		      starts-with($lcase, 'pre-conditions:') or
+		      starts-with($lcase, 'post-conditions:') or
 		      starts-with($lcase, 'run instructions:') or
 		      starts-with($lcase, 'pass/fail criteria:') or
 		      starts-with($lcase, 'test environment:') or
