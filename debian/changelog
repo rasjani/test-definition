@@ -1,3 +1,9 @@
+test-definition (1.2.7) unstable; urgency=low
+
+  * Anchors for cases in syntax XSLT (BMC#13763)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Wed, 23 Feb 2011 16:05:16 +0200
+
 test-definition (1.2.6) unstable; urgency=low
 
   * Support for package and VCS URLs in result schema (BMC#11408)

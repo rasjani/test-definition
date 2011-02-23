@@ -1,3 +1,5 @@
+* Wed Feb 23 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.7
+- Anchors for cases in syntax XSLT (BMC#13763)
 * Tue Feb 08 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.6
 - Support for package and VCS URLs in result schema (BMC#11408)
 * Fri Jan 14 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.5
