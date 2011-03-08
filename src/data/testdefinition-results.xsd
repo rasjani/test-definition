@@ -140,6 +140,7 @@
 	  <xs:element ref="step" minOccurs="0" maxOccurs="unbounded" />
 	  <xs:element ref="event" minOccurs="0" maxOccurs="unbounded" />
 	  <xs:element ref="measurement" minOccurs="0" maxOccurs="unbounded" />
+	  <xs:element ref="series" minOccurs="0" maxOccurs="unbounded" />
 	</xs:choice>
       </xs:sequence>
       <xs:attributeGroup ref="general_attributes"/>
@@ -248,6 +249,26 @@
     <xs:attribute name="unit" type="xs:string" use="required"/>
     <xs:attribute name="target" type="xs:float"/>
     <xs:attribute name="failure" type="xs:float"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="series">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="measurement" minOccurs="0" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:attribute name="value" type="xs:float" use="required"/>
+	  <xs:attribute name="timestamp" type="xs:dateTime"/>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="unit" type="xs:string" use="required"/>
+    <xs:attribute name="group" type="xs:string"/>
+    <xs:attribute name="target" type="xs:float"/>
+    <xs:attribute name="failure" type="xs:float"/>
+    <xs:attribute name="interval" type="xs:positiveInteger"/>
+    <xs:attribute name="interval_unit" type="xs:string"/>
   </xs:complexType>
 </xs:element>
 
