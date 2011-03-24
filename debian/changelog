@@ -1,3 +1,9 @@
+test-definition (1.3.0) unstable; urgency=low
+
+  * Support for structured measurement series in test results (BMC#13914)
+
+ -- Sampo Saaristo <sampo.saaristo@sofica.fi>  Thu, 24 Mar 2011 11:50:48 +0200
+
 test-definition (1.2.7) unstable; urgency=low
 
   * Anchors for cases in syntax XSLT (BMC#13763)
