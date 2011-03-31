@@ -538,7 +538,7 @@
 	  </tr>
 	  <tr>
 	    <td><xsl:text>Feature:</xsl:text></td>
-	    <td class="noborder">
+	    <td class="noborder featurecell">
 	      <xsl:value-of 
 		 select="(ancestor-or-self::*/@feature)[last()]"/>
 	    </td>
