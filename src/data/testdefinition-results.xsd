@@ -141,6 +141,7 @@
 	  <xs:element ref="event" minOccurs="0" maxOccurs="unbounded" />
 	  <xs:element ref="measurement" minOccurs="0" maxOccurs="unbounded" />
 	  <xs:element ref="series" minOccurs="0" maxOccurs="unbounded" />
+          <xs:element ref="rich_core_uuid" minOccurs="0" maxOccurs="1" />
 	</xs:choice>
       </xs:sequence>
       <xs:attributeGroup ref="general_attributes"/>
@@ -286,6 +287,14 @@
 	</xs:complexType>
       </xs:element>
     </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="rich_core_uuid">
+  <xs:complexType>
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
   </xs:complexType>
 </xs:element>
 
