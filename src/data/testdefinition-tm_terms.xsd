@@ -39,36 +39,14 @@
     <xs:simpleType>
       <xs:restriction base="xs:token">
         <xs:enumeration value="unknown"/>
-        <xs:enumeration value="Functional" />
-        <xs:enumeration value="Certification" />
-        <xs:enumeration value="Internationalisation" />
-        <xs:enumeration value="Localisation" />
-        <xs:enumeration value="Integration" />
-        <xs:enumeration value="System integration" />
-        <xs:enumeration value="Variant integration" />
-        <xs:enumeration value="3rd party integration" />
-        <xs:enumeration value="Services integration" />
+        <xs:enumeration value="Functional positive" />
+        <xs:enumeration value="Functional negative" />
         <xs:enumeration value="Security" />
         <xs:enumeration value="Performance" />
-        <xs:enumeration value="Latency" />
-        <xs:enumeration value="Response time" />
-        <xs:enumeration value="Frame rate" />
-        <xs:enumeration value="Benchmark" />
-        <xs:enumeration value="Resource utilisation" />
-        <xs:enumeration value="Memory consumption" />
-        <xs:enumeration value="Throughput" />
-        <xs:enumeration value="Load" />
-        <xs:enumeration value="Power management" />
-        <xs:enumeration value="Robustness" />
-        <xs:enumeration value="Low resource" />
-        <xs:enumeration value="Recovery" />
-        <xs:enumeration value="Iterative" />
-        <xs:enumeration value="Long lasting" />
-        <xs:enumeration value="Feature interaction" />
-        <xs:enumeration value="Long period" />
-        <xs:enumeration value="Usability" />
-        <xs:enumeration value="User experience" />
-        <xs:enumeration value="On-site" />
+	<xs:enumeration value="Reliability" />
+        <xs:enumeration value="User Experience" />
+        <xs:enumeration value="Maintainability" />
+        <xs:enumeration value="Portability" />
       </xs:restriction>
     </xs:simpleType>
   </xs:attribute>
