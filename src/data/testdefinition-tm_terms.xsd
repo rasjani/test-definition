@@ -44,7 +44,7 @@
         <xs:enumeration value="Security" />
         <xs:enumeration value="Performance" />
 	<xs:enumeration value="Reliability" />
-        <xs:enumeration value="User Experience" />
+        <xs:enumeration value="User experience" />
         <xs:enumeration value="Maintainability" />
         <xs:enumeration value="Portability" />
       </xs:restriction>
