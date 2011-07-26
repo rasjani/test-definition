@@ -2,7 +2,7 @@ test-definition (1.4.1) unstable; urgency=low
 
   * Using consistent naming in test-definition (BMC#21726)
 
- -- Timo Härkönen <timo.harkonen@digia.com> Mon, 25 Jul 2011 08:40:13 +0300
+ -- Timo Härkönen <timo.harkonen@digia.com>  Mon, 25 Jul 2011 08:40:13 +0300
 
 test-definition (1.4.0) unstable; urgency=low
 
