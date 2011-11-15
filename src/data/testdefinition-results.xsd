@@ -176,14 +176,23 @@
       </xs:sequence>
       <xs:attribute name="manual" type="xs:boolean" />
       <xs:attribute name="command" use="required" />
+      <xs:attribute name="control">
+	    <xs:simpleType>
+	      <xs:restriction base="xs:string">
+	        <xs:enumeration value="none" />
+	        <xs:enumeration value="reboot" />
+	        <xs:enumeration value="reboot_expected" />
+	      </xs:restriction>
+	    </xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="result" use="required">
-	<xs:simpleType>
-	  <xs:restriction base="xs:string">
-	    <xs:enumeration value="FAIL" />
-	    <xs:enumeration value="PASS" />
-	    <xs:enumeration value="N/A" />
-	  </xs:restriction>
-	</xs:simpleType>
+	    <xs:simpleType>
+	      <xs:restriction base="xs:string">
+	        <xs:enumeration value="FAIL" />
+	        <xs:enumeration value="PASS" />
+	        <xs:enumeration value="N/A" />
+	      </xs:restriction>
+	    </xs:simpleType>
       </xs:attribute>
       <xs:attribute name="failure_info" />
     </xs:complexType>
