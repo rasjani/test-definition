@@ -173,6 +173,14 @@
 	<xs:element name="end" minOccurs="1" maxOccurs="1" />
 	<xs:element name="stdout" minOccurs="0" maxOccurs="1" />
 	<xs:element name="stderr" minOccurs="0" maxOccurs="1" />
+	<xs:element name="post_reboot_steps" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+		<xs:element ref="step" maxOccurs="unbounded" />
+              </xs:sequence>
+	      <xs:attribute name="timeout" type="xs:positiveInteger"/>
+            </xs:complexType>
+	  </xs:element>
       </xs:sequence>
       <xs:attribute name="manual" type="xs:boolean" />
       <xs:attribute name="command" use="required" />

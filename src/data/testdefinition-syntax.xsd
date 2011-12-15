@@ -96,6 +96,14 @@
 	  <xs:attribute name="timeout" type="xs:positiveInteger"/>
         </xs:complexType>
       </xs:element>
+   <xs:element name="post_reboot_steps" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="step" maxOccurs="unbounded" />
+          </xs:sequence>
+	  <xs:attribute name="timeout" type="xs:positiveInteger"/>
+        </xs:complexType>
+    </xs:element>
       <xs:element name="case" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
           <xs:sequence minOccurs="0" maxOccurs="unbounded">
