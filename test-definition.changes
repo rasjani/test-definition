@@ -1,0 +1,85 @@
+* Tue Dec 13 2011 Joonas Kylänpää <ext-joonas.kylanpaa@nokia.com> 1.4.3
+- Support for post reboot steps
+
+* Mon Nov 14 2011 Joonas Kylänpää <ext-joonas.kylanpaa@nokia.com> 1.4.2
+- Support for reboot feature
+
+* Mon Jul 25 2011 Timo Härkönen <timo.harkonen@digia.com> 1.4.1
+- Using consistent naming in test-defintion (BMC#21726)
+
+* Wed Jun 08 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.4.0
+- New test types enforced by the strict schema (BMC#18355)
+
+* Thu May 19 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.3.2
+- New element crash_id to results (BMC#17755)
+
+* Fri Apr 29 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.3.1
+- Identifier to feature cell added to XSLT (BMC#15069)
+- New element rich_core_uuid to results (by rikhalon)
+
+* Thu Mar 23 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.3.0
+- Support for structured measurement series in test results (BMC#13914)
+
+* Wed Feb 23 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.7
+- Anchors for cases in syntax XSLT (BMC#13763)
+
+* Tue Feb 08 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.6
+- Support for package and VCS URLs in result schema (BMC#11408)
+
+* Fri Jan 14 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.5
+- Schemas support for obtaining and showing measurement data (BMC#11039)
+
+* Fri Jan 07 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.4
+- Enhanced the set of type attribute values (by Matti Salmi)
+- Test result XSLT complains about HTML in description elements (BMC#11202)
+- Feature coverage matrix removed and component coverage added (BMC#11650) 
+- Added TOC for test cases in syntax xls (BMC#12084)
+- Added XSLT for result XMLs (BMC#8870)
+
+* Mon Dec 27 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.3
+- Added description element for case in result schema (BMC#11767)
+
+* Tue Dec 21 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.2
+- Test case description field formatting improved in XSLT (BMC#11344)
+- XSLT support for wiki.meego.com/TestCaseTemplate alignment (BMC#11551)
+- Planned test cases (state=Design) listed separately in XSLT (BMC#11478)
+- Schemas support wiki.meego.com/TestCaseTemplate alignment (BMC#11474)
+
+* Fri Dec 10 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.1
+- Result schema updated to accept the same attributes as test definition (BMC#10862)
+
+* Thu Nov 25 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.2.0
+- Added bugzilla_id attribute for case (BMC#10359) 
+
+* Mon Nov 22 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.1.9
+- Added XSTL for test definition (BMC#9938) by Vesa Poikajärvi
+
+* Mon Nov 01 2010 Sampo Saaristo <sampo.saaristo@sofica.fi> 1.1.8
+- Attributes and elements for user defined hw detection (by Sami Lahtinen)
+
+* Fri Sep 03 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.7
+- Allow automatic/manual selection on test step level (BMC#5717) by Timo Härkönen
+
+* Tue Jun 29 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.6
+- Added domain attribute to result schema
+
+* Mon Jun 28 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.5
+- Added delete_after attribute to file element
+
+* Mon Jun 21 2010 Sampo Saaristo <ext-sampo.2.saaristo@nokia.com> 1.1.4
+- Added failure_info attribute to test case in results schema
+
+* Tue Jun 15 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.3
+- Added attribute timeout for elements pre_steps and post_steps in XML Schemas
+
+* Wed Jun 9 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.2
+- License field in spec and dependencies updated
+
+* Mon Jun 7 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.1
+- Added XML Schema for results file of testrunner-lite
+
+* Fri Jun 4 2010 Sami Lahtinen <ext-sami.t.lahtinen@nokia.com> 1.1.0
+- Test package for test-definition
+
+* Mon May 10 2010 Timo Harkonen <timo.harkonen@digia.com> 1.0.1
+- Initial RPM packaging
