@@ -1,13 +1,13 @@
 * Thu Oct 03 2013 Matti Kosola <matti.kosola@jollamobile.com> - 1.4.4
 - Format to git pkg for mer-tools
 
-* Tue Dec 13 2011 Joonas Kylänpää <ext-joonas.kylanpaa@nokia.c - 1.4.3
+* Tue Dec 13 2011 Joonas Kylänpää <ext-joonas.kylanpaa@nokia.com> - 1.4.3
 - Support for post reboot steps
 
-* Mon Nov 14 2011 Joonas Kylänpää <ext-joonas.kylanpaa@nokia.c - 1.4.2
+* Mon Nov 14 2011 Joonas Kylänpää <ext-joonas.kylanpaa@nokia.com> - 1.4.2
 - Support for reboot feature
 
-* Mon Jul 25 2011 Timo Härkönen <timo.harkonen@digia.c> - 1.4
+* Mon Jul 25 2011 Timo Härkönen <timo.harkonen@digia.com> - 1.4
 - Using consistent naming in test-defintion (BMC#21726)
 
 * Wed Jun 08 2011 Sampo Saaristo <sampo.saaristo@sofica.fi> - 1.4.0
