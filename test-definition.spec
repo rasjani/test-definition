@@ -54,8 +54,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc
 %{_mandir}/man5/test-definition.5.gz
+%dir /usr/share/test-definition
 /usr/share/test-definition/*
 
 %files tests
 %defattr(-,root,root,-)
+%dir /usr/share/test-definition-tests
 /usr/share/test-definition-tests/*
